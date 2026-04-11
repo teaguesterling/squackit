@@ -6,11 +6,10 @@ live project data, and handle missing data gracefully.
 """
 
 import asyncio
-import os
 
 import pytest
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from conftest import PROJECT_ROOT
 
 try:
     import fastmcp  # noqa: F401

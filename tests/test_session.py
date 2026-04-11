@@ -18,7 +18,7 @@ requires_fastmcp = pytest.mark.skipif(
     not HAS_FASTMCP, reason="fastmcp not installed"
 )
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from conftest import PROJECT_ROOT
 
 
 class TestAccessLog:

@@ -5,7 +5,6 @@ omission messages, max_lines/max_results parameters, and range-param bypass.
 """
 
 import asyncio
-import os
 import pytest
 
 from squawkit.server import (
@@ -18,7 +17,7 @@ from squawkit.server import (
     _TEXT_FORMAT,
 )
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from conftest import PROJECT_ROOT
 
 try:
     import fastmcp  # noqa: F401
