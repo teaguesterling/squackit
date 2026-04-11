@@ -1,0 +1,45 @@
+[project]
+name = "squawkit"
+version = "0.1.0"
+description = "Semi-QUalified Agent Wingman Kit — the stateful intelligence + MCP server layer for fledgling-equipped agents."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+authors = [
+    { name = "Teague Sterling" },
+]
+keywords = ["mcp", "ai-agents", "code-intelligence", "fledgling", "duckdb"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+    "fledgling-mcp>=0.6.2",
+    "duckdb>=1.5.0",
+    "fastmcp>=3.0",
+]
+
+[project.scripts]
+squawkit = "squawkit.server:main"
+
+[project.urls]
+Repository = "https://github.com/teaguesterling/squawkit"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["squawkit"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[dependency-groups]
+test = [
+    "pytest>=7.0",
+]
