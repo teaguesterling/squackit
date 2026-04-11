@@ -7,9 +7,9 @@ redundant computation within a session.
 from __future__ import annotations
 
 import json
-import os
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 
 
 SESSION_LIFETIME = 0  # TTL value meaning "never expires within this session"
@@ -78,7 +78,7 @@ class SessionCache:
         """Check whether all tracked files still have their cached mtime."""
         for path, cached_mtime in file_mtimes.items():
             try:
-                if os.path.getmtime(path) != cached_mtime:
+                if Path(path).stat().st_mtime != cached_mtime:
                     return False
             except OSError:
                 return False  # file deleted or inaccessible

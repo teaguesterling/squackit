@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import inspect
 import logging
+from pathlib import Path
 from typing import Optional, TYPE_CHECKING
 
 from squawkit.formatting import _format_markdown_table, _truncate_rows
@@ -95,7 +96,7 @@ def explore(con, defaults, path=None):
     """First-contact codebase briefing."""
     # Scope patterns to path if provided
     code_pattern = defaults.scoped_code_pattern(path) if path else defaults.code_pattern
-    doc_pattern = f"{path}/**/*.md" if path else defaults.doc_pattern
+    doc_pattern = str(Path(path) / "**" / "*.md") if path else defaults.doc_pattern
 
     sections = []
 

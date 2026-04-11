@@ -31,10 +31,10 @@ class ProjectDefaults:
     to_rev: str = "HEAD"
     languages: list[str] = field(default_factory=list)
 
-    def scoped_code_pattern(self, path: str) -> str:
+    def scoped_code_pattern(self, path: str | Path) -> str:
         """Scope the code pattern to a subdirectory path."""
-        filename_glob = self.code_pattern.split("/")[-1]
-        return f"{path}/**/{filename_glob}"
+        filename_glob = self.code_pattern.rsplit("/", 1)[-1]
+        return str(Path(path) / "**" / filename_glob)
 
 
 def apply_defaults(
@@ -126,11 +126,20 @@ def _code_glob(extensions: list[str]) -> str:
     return f"**/*.{extensions[0]}"
 
 
-def _find_doc_dir(con: Connection) -> str | None:
-    """Check for common doc directories using list_files."""
+def _find_doc_dir(con: Connection, root: str | Path) -> str | None:
+    """Check for common doc directories under `root` using list_files.
+
+    Uses an absolute glob (``{root}/{d}/*``) so the probe doesn't depend
+    on the connection's ``session_root`` matching the caller's intended
+    project root. The previous relative-pattern form silently failed when
+    ``session_root`` and the ``root`` parameter diverged, causing
+    doc_pattern to fall back to ``**/*.md``.
+    """
+    root_path = Path(root)
     for d in _DOC_DIRS:
         try:
-            rows = con.list_files(f"{d}/*").fetchall()
+            pattern = str(root_path / d / "*")
+            rows = con.list_files(pattern).fetchall()
             if rows:
                 return d
         except Exception:
@@ -144,7 +153,7 @@ def _infer_main_branch(root: str | Path) -> str:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--abbrev-ref", "origin/HEAD"],
-            capture_output=True, text=True, cwd=str(root), timeout=5,
+            capture_output=True, text=True, cwd=str(Path(root)), timeout=5,
         )
         if result.returncode == 0:
             # Output is "origin/main" or "origin/master" — strip prefix
@@ -195,8 +204,8 @@ def infer_defaults(
         log.debug("project_overview inference failed", exc_info=True)
 
     # ── Doc pattern ─────────────────────────────────────────────
-    doc_dir = _find_doc_dir(con)
-    doc_pattern = f"{doc_dir}/**/*.md" if doc_dir else "**/*.md"
+    doc_dir = _find_doc_dir(con, root or ".")
+    doc_pattern = str(Path(doc_dir) / "**" / "*.md") if doc_dir else "**/*.md"
 
     # ── Main branch ─────────────────────────────────────────────
     main_branch = _infer_main_branch(root or ".")

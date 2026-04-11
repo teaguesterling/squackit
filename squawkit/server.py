@@ -21,7 +21,7 @@ Usage::
 from __future__ import annotations
 
 import inspect
-import os
+from pathlib import Path
 from typing import Optional
 
 import fledgling
@@ -169,7 +169,7 @@ def create_server(
     mcp = FastMCP(name)
 
     # Infer smart defaults, merge with config file overrides
-    project_root = root or os.getcwd()
+    project_root = Path(root) if root else Path.cwd()
     overrides = load_config(project_root)
     defaults = infer_defaults(con, overrides=overrides, root=project_root)
     mcp._defaults = defaults
@@ -432,7 +432,7 @@ def _register_tool(
                 path = filtered.get(p)
                 if path:
                     try:
-                        file_mtimes[path] = os.path.getmtime(path)
+                        file_mtimes[path] = Path(path).stat().st_mtime
                     except OSError:
                         pass
             cache.put(macro_name, cache_args, text, displayed_rows,
