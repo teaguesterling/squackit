@@ -1,12 +1,28 @@
 """Shared fixtures for squawkit tests.
 
-Tests dog-food against the fledgling repo (same pattern as fledgling's own
-test suite). Set FLEDGLING_REPO_PATH to override the auto-discovered path.
+Tests dog-food against fledgling's SQL macros and data files. Discovery
+order for the fledgling root:
+
+1. ``FLEDGLING_REPO_PATH`` env var (explicit override)
+2. Repo layout — the parent of ``fledgling.__file__``'s directory, if it
+   contains ``sql/sandbox.sql``. Matches a source checkout or editable
+   install where the package is a subdir of a repo.
+3. Installed-package layout — the fledgling package directory itself, if
+   it bundles ``sql/sandbox.sql`` as package data. Matches a wheel install.
+
+Path constants (``PROJECT_ROOT``, ``SQL_DIR``, etc.) are resolved lazily
+via module ``__getattr__`` so tests that don't touch them (e.g. the
+import-only smoke tests) don't pay the discovery cost.
 """
 
 import os
 import pytest
 import duckdb
+
+
+CLAUDE_PROJECTS_DIR = os.path.expanduser("~/.claude/projects")
+
+_discovered_root = None
 
 
 def _discover_fledgling_repo() -> str:
@@ -16,29 +32,44 @@ def _discover_fledgling_repo() -> str:
     import fledgling
     pkg_dir = os.path.dirname(os.path.abspath(fledgling.__file__))
     repo_guess = os.path.dirname(pkg_dir)
-    marker = os.path.join(repo_guess, "sql", "sandbox.sql")
-    if os.path.exists(marker):
+    if os.path.exists(os.path.join(repo_guess, "sql", "sandbox.sql")):
         return repo_guess
+    if os.path.exists(os.path.join(pkg_dir, "sql", "sandbox.sql")):
+        return pkg_dir
     raise RuntimeError(
-        "squawkit tests require the fledgling repo for test data. "
-        "Set FLEDGLING_REPO_PATH or install fledgling-mcp in editable mode."
+        "squawkit tests require fledgling SQL macros. Set "
+        "FLEDGLING_REPO_PATH, or install a fledgling distribution that "
+        "bundles sql/ (either as a sibling of the package or inside it)."
     )
 
 
-PROJECT_ROOT = _discover_fledgling_repo()
-SQL_DIR = os.path.join(PROJECT_ROOT, "sql")
-CLAUDE_PROJECTS_DIR = os.path.expanduser("~/.claude/projects")
+def _get_project_root() -> str:
+    global _discovered_root
+    if _discovered_root is None:
+        _discovered_root = _discover_fledgling_repo()
+    return _discovered_root
 
-SPEC_PATH = os.path.join(PROJECT_ROOT, "docs/vision/PRODUCT_SPEC.md")
-ANALYSIS_PATH = os.path.join(PROJECT_ROOT, "docs/vision/CONVERSATION_ANALYSIS.md")
-CONFTEST_PATH = os.path.join(PROJECT_ROOT, "tests/conftest.py")
-SKILL_PATH = os.path.join(PROJECT_ROOT, "SKILL.md")
-REPO_PATH = PROJECT_ROOT
+
+_LAZY_PATHS = {
+    "PROJECT_ROOT": lambda r: r,
+    "REPO_PATH":    lambda r: r,
+    "SQL_DIR":      lambda r: os.path.join(r, "sql"),
+    "SPEC_PATH":    lambda r: os.path.join(r, "docs/vision/PRODUCT_SPEC.md"),
+    "ANALYSIS_PATH": lambda r: os.path.join(r, "docs/vision/CONVERSATION_ANALYSIS.md"),
+    "CONFTEST_PATH": lambda r: os.path.join(r, "tests/conftest.py"),
+    "SKILL_PATH":   lambda r: os.path.join(r, "SKILL.md"),
+}
+
+
+def __getattr__(name):
+    if name in _LAZY_PATHS:
+        return _LAZY_PATHS[name](_get_project_root())
+    raise AttributeError(f"module 'conftest' has no attribute {name!r}")
 
 
 def load_sql(con, filename):
     """Load a SQL macro file into a DuckDB connection."""
-    path = os.path.join(SQL_DIR, filename)
+    path = os.path.join(_get_project_root(), "sql", filename)
     with open(path) as f:
         sql = f.read()
     lines = [l for l in sql.split("\n") if not l.strip().startswith("--")]
@@ -51,7 +82,8 @@ def load_sql(con, filename):
 
 def materialize_help(con):
     """Set up help path for help.sql bootstrap."""
-    con.execute(f"SET VARIABLE _help_path = '{SKILL_PATH}'")
+    skill_path = os.path.join(_get_project_root(), "SKILL.md")
+    con.execute(f"SET VARIABLE _help_path = '{skill_path}'")
 
 
 @pytest.fixture
