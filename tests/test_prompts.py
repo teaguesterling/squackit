@@ -1,4 +1,4 @@
-"""Tests for fledgling-pro MCP prompt templates.
+"""Tests for fledgling MCP prompt templates.
 
 Validates that FastMCP prompts registered in create_server() are
 discoverable, return non-empty content with workflow instructions and

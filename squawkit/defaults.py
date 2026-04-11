@@ -1,4 +1,4 @@
-"""Smart project-aware defaults for fledgling-pro tools.
+"""Smart project-aware defaults for fledgling tools.
 
 Infers sensible default patterns (code globs, doc paths, git revisions)
 from the project at server startup. Users can override via

@@ -1,4 +1,4 @@
-"""Tests for fledgling-pro MCP resources.
+"""Tests for fledgling MCP resources.
 
 Validates that FastMCP resources registered in create_server() are
 discoverable and return correct content matching direct macro output.

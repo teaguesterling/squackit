@@ -1,4 +1,4 @@
-"""Fledgling Pro: FastMCP server wrapping fledgling's SQL macros.
+"""Fledgling: FastMCP server wrapping fledgling's SQL macros.
 
 Auto-generates MCP tools from every fledgling table macro. Each tool
 accepts the macro's parameters and returns results as formatted text.

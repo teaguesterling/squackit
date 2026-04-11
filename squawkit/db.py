@@ -1,4 +1,4 @@
-"""DuckDB connection for fledgling-pro.
+"""DuckDB connection for fledgling.
 
 Thin wrapper around fledgling.connect() for the FastMCP layer.
 """

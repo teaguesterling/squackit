@@ -1,4 +1,4 @@
-"""Shared formatting and truncation helpers for fledgling-pro.
+"""Shared formatting and truncation helpers for fledgling.
 
 Used by both server.py (auto-registered tools) and workflows.py
 (compound tools) without circular imports.

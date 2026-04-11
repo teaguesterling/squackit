@@ -1,4 +1,4 @@
-"""Fledgling Pro: Session state — caching and access logging.
+"""Fledgling: Session state — caching and access logging.
 
 Tracks tool usage in a SQL table and caches macro results to avoid
 redundant computation within a session.

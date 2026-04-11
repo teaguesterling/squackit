@@ -1,4 +1,4 @@
-"""Tests for fledgling-pro session state: caching and access logging."""
+"""Tests for fledgling session state: caching and access logging."""
 
 import asyncio
 import os

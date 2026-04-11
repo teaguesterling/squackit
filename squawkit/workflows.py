@@ -1,4 +1,4 @@
-"""Fledgling Pro: Compound workflow tools.
+"""Fledgling: Compound workflow tools.
 
 Orchestrate multiple fledgling SQL macros in a single call, returning
 formatted markdown briefings. Supplements individual tools — shortcuts

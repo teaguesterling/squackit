@@ -1,4 +1,4 @@
-"""Tests for fledgling-pro token-aware output truncation.
+"""Tests for fledgling token-aware output truncation.
 
 Tests the truncation logic in squawkit.server: head/tail display,
 omission messages, max_lines/max_results parameters, and range-param bypass.
@@ -134,7 +134,7 @@ class TestFormatConstants:
 
 @pytest.fixture(scope="module")
 def mcp():
-    """Create a fledgling-pro FastMCP server for testing."""
+    """Create a fledgling FastMCP server for testing."""
     pytest.importorskip("fastmcp")
     from squawkit.server import create_server
     return create_server(root=PROJECT_ROOT, init=False)

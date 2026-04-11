@@ -1,4 +1,4 @@
-"""Fledgling Pro: MCP prompt templates.
+"""Fledgling: MCP prompt templates.
 
 Parameterized workflow instructions with live project data pre-filled.
 Each prompt calls the corresponding P4-004 workflow function to gather

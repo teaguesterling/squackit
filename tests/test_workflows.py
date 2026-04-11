@@ -1,4 +1,4 @@
-"""Tests for fledgling-pro compound workflow tools.
+"""Tests for fledgling compound workflow tools.
 
 Tests the compound tools (explore, investigate, review, search) that
 orchestrate multiple fledgling macros in a single call.
@@ -109,7 +109,7 @@ def _text(result) -> str:
 
 @pytest.fixture(scope="module")
 def mcp():
-    """Create a fledgling-pro FastMCP server for testing."""
+    """Create a fledgling FastMCP server for testing."""
     pytest.importorskip("fastmcp")
     from squawkit.server import create_server
     return create_server(root=PROJECT_ROOT, init=False)
