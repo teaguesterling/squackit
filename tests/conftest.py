@@ -1,4 +1,4 @@
-"""Shared fixtures for squawkit tests.
+"""Shared fixtures for squackit tests.
 
 Tests dog-food against fledgling's SQL macros and data files. Discovery
 order for the fledgling root:
@@ -37,7 +37,7 @@ def _discover_fledgling_repo() -> str:
     if os.path.exists(os.path.join(pkg_dir, "sql", "sandbox.sql")):
         return pkg_dir
     raise RuntimeError(
-        "squawkit tests require fledgling SQL macros. Set "
+        "squackit tests require fledgling SQL macros. Set "
         "FLEDGLING_REPO_PATH, or install a fledgling distribution that "
         "bundles sql/ (either as a sibling of the package or inside it)."
     )

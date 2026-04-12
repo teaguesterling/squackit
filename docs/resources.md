@@ -42,4 +42,4 @@ total latency. Useful for the agent to understand what it has already explored.
 
 !!! note "URI prefix"
     Resource URIs currently use the `fledgling://` scheme for backwards
-    compatibility. A future release may migrate to `squawkit://`.
+    compatibility. A future release may migrate to `squackit://`.

@@ -6,10 +6,10 @@ accepts the macro's parameters and returns results as formatted text.
 Usage::
 
     # As a module
-    python -m squawkit.server
+    python -m squackit.server
 
     # Programmatic
-    from squawkit.server import create_server
+    from squackit.server import create_server
     mcp = create_server()
     mcp.run()
 
@@ -25,12 +25,12 @@ from pathlib import Path
 from typing import Optional
 
 from pluckit import Plucker
-from squawkit.defaults import (
+from squackit.defaults import (
     ProjectDefaults, apply_defaults, infer_defaults, load_config,
 )
 import time as _time
 
-from squawkit.formatting import (
+from squackit.formatting import (
     _format_markdown_table,
     _truncate_rows,
     _HEAD_TAIL,
@@ -38,9 +38,9 @@ from squawkit.formatting import (
     _MAX_LINES,
     _MAX_ROWS,
 )
-from squawkit.prompts import register_prompts
-from squawkit.session import AccessLog, SessionCache
-from squawkit.workflows import register_workflows
+from squackit.prompts import register_prompts
+from squackit.session import AccessLog, SessionCache
+from squackit.workflows import register_workflows
 
 
 # ── Tool descriptions for known macros ───────────────────────────────

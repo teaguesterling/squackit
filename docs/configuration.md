@@ -2,7 +2,7 @@
 
 ## Smart defaults
 
-squawkit infers project settings at startup by analyzing the codebase:
+squackit infers project settings at startup by analyzing the codebase:
 
 | Default | How it's inferred | Fallback |
 |---------|-------------------|----------|
@@ -18,7 +18,7 @@ These defaults are used whenever a tool parameter is omitted. For example,
 Override inferred defaults with a TOML config file at the project root:
 
 ```
-.squawkit/config.toml
+.squackit/config.toml
 ```
 
 Or the legacy path:
@@ -41,8 +41,8 @@ main_branch = "develop"
 From highest to lowest priority:
 
 1. **Explicit tool parameter** — the agent passes `file_pattern="src/**/*.go"` in the tool call
-2. **Config file override** — `.squawkit/config.toml` sets `code_pattern`
-3. **Inferred default** — squawkit analyzes the project at startup
+2. **Config file override** — `.squackit/config.toml` sets `code_pattern`
+3. **Inferred default** — squackit analyzes the project at startup
 4. **Hard-coded fallback** — `**/*.py`, `docs/**/*.md`, `main`
 
 ## Session cache
@@ -59,7 +59,7 @@ Cache policies vary by tool:
 | `recent_changes` | 30 seconds | Time-based |
 | `working_tree_status` | 10 seconds | Time-based |
 
-When a cached result is returned, squawkit appends a note:
+When a cached result is returned, squackit appends a note:
 `"(cached — N seconds ago)"`.
 
 ## Token-aware truncation
@@ -96,10 +96,10 @@ so the cap gets out of the way.
 
 ## create_server() parameters
 
-When using squawkit programmatically:
+When using squackit programmatically:
 
 ```python
-from squawkit.server import create_server
+from squackit.server import create_server
 
 mcp = create_server(
     name="fledgling",       # MCP server name

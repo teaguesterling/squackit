@@ -35,7 +35,7 @@ def _run_async(coro):
 def mcp():
     """FastMCP server instance with fledgling prompts."""
     pytest.importorskip("fastmcp")
-    from squawkit.server import create_server
+    from squackit.server import create_server
     return create_server(root=PROJECT_ROOT, init=False)
 
 
@@ -223,7 +223,7 @@ class TestGracefulDegradation:
         interference with the module-scoped ``mcp`` fixture — each class
         gets its own server lifecycle.
         """
-        from squawkit.server import create_server
+        from squackit.server import create_server
         return create_server(root=PROJECT_ROOT, init=False,
                              modules=["source", "code"])
 

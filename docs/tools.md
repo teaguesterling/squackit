@@ -1,6 +1,6 @@
 # Tools Reference
 
-squawkit registers fledgling's SQL macros as MCP tools automatically. Each tool
+squackit registers fledgling's SQL macros as MCP tools automatically. Each tool
 accepts the macro's parameters and returns results as formatted text with
 token-aware truncation.
 

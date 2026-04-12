@@ -12,11 +12,11 @@ import logging
 from pathlib import Path
 from typing import Optional, TYPE_CHECKING
 
-from squawkit.formatting import _format_markdown_table, _truncate_rows
+from squackit.formatting import _format_markdown_table, _truncate_rows
 
 if TYPE_CHECKING:
     from duckdb import DuckDBPyConnection as Connection
-    from squawkit.defaults import ProjectDefaults
+    from squackit.defaults import ProjectDefaults
 
 log = logging.getLogger(__name__)
 

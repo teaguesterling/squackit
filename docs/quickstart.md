@@ -5,44 +5,44 @@
 ### From PyPI
 
 ```bash
-pip install squawkit
+pip install squackit
 ```
 
-This installs squawkit and its dependencies ([ast-pluckit](https://pypi.org/project/ast-pluckit/),
+This installs squackit and its dependencies ([ast-pluckit](https://pypi.org/project/ast-pluckit/),
 fastmcp, and transitively fledgling and duckdb).
 
 ### From source (development)
 
 ```bash
-git clone https://github.com/teaguesterling/squawkit.git
-cd squawkit
+git clone https://github.com/teaguesterling/squackit.git
+cd squackit
 pip install -e ".[docs,test]"
 ```
 
 ## Running the MCP server
 
-squawkit is an [MCP](https://modelcontextprotocol.io/) server that communicates
+squackit is an [MCP](https://modelcontextprotocol.io/) server that communicates
 over stdio. Start it with:
 
 ```bash
-squawkit
+squackit
 ```
 
 Or via Python:
 
 ```bash
-python -m squawkit
+python -m squackit
 ```
 
 ### Claude Code integration
 
-Add squawkit to your Claude Code MCP configuration (`.mcp.json`):
+Add squackit to your Claude Code MCP configuration (`.mcp.json`):
 
 ```json
 {
   "mcpServers": {
-    "squawkit": {
-      "command": "squawkit",
+    "squackit": {
+      "command": "squackit",
       "args": []
     }
   }
@@ -52,7 +52,7 @@ Add squawkit to your Claude Code MCP configuration (`.mcp.json`):
 ### Programmatic usage
 
 ```python
-from squawkit.server import create_server
+from squackit.server import create_server
 
 # Default: uses current directory, analyst profile
 mcp = create_server()
@@ -69,8 +69,8 @@ mcp.run()
 
 ## Configuration
 
-squawkit infers sensible defaults for your project on startup. Override them
-with a config file at `.squawkit/config.toml` (or `.fledgling-python/config.toml`)
+squackit infers sensible defaults for your project on startup. Override them
+with a config file at `.squackit/config.toml` (or `.fledgling-python/config.toml`)
 in your project root:
 
 ```toml
@@ -87,7 +87,7 @@ See [Configuration](configuration.md) for all options and precedence rules.
 After installing, check that everything works:
 
 ```python
-from squawkit.db import create_connection
+from squackit.db import create_connection
 
 con = create_connection(repo=".")
 print(con.project_overview().df())

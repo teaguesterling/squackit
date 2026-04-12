@@ -1,4 +1,4 @@
-"""DuckDB connection for squawkit.
+"""DuckDB connection for squackit.
 
 Thin wrapper over pluckit's Plucker that returns a fledgling-enabled
 connection proxy with auto-generated macro wrappers.
@@ -12,6 +12,6 @@ def create_connection(**kwargs):
 
     Accepts the same kwargs as :class:`pluckit.Plucker` (``repo``,
     ``profile``, ``modules``, ``init``). Returns the fledgling Connection
-    proxy — the same object squawkit's server.py uses as ``con``.
+    proxy — the same object squackit's server.py uses as ``con``.
     """
     return Plucker(**kwargs).connection

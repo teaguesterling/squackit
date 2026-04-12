@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "squawkit": {
+      "command": "/home/teague/.local/share/venv/bin/squawkit",
+      "args": []
+    },
+    "blq": {
+      "command": "/home/teague/.local/share/venv/bin/blq",
+      "args": ["mcp", "serve"]
+    },
+    "jetsam": {
+      "command": "/home/teague/.local/share/venv/bin/jetsam",
+      "args": ["serve"]
+    }
+  }
+}

@@ -14,12 +14,12 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from squawkit.workflows import explore, investigate, review
+from squackit.workflows import explore, investigate, review
 
 if TYPE_CHECKING:
     from fastmcp import FastMCP
     from duckdb import DuckDBPyConnection as Connection
-    from squawkit.defaults import ProjectDefaults
+    from squackit.defaults import ProjectDefaults
 
 log = logging.getLogger(__name__)
 

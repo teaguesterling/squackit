@@ -2,13 +2,13 @@
 
 ## Layering
 
-squawkit sits at the top of the fledgling stack, adding stateful intelligence
+squackit sits at the top of the fledgling stack, adding stateful intelligence
 on top of the stateless query layers below it.
 
 ```
 Layer 4   Consumers (Claude Code, agents, IDE extensions)
               │
-Layer 3b  squawkit ─── stateful MCP server + intelligence
+Layer 3b  squackit ─── stateful MCP server + intelligence
               │        smart defaults, caching, truncation,
               │        workflows, prompts, resources
               │
@@ -33,18 +33,18 @@ Layer 0   DuckDB extensions
 
 These are enforced at the package level, not just by convention:
 
-1. **squawkit imports pluckit, never fledgling-python.** If squawkit needs
+1. **squackit imports pluckit, never fledgling-python.** If squackit needs
    a capability pluckit doesn't expose, pluckit grows the capability.
 
-2. **squawkit never constructs SQL strings.** It calls tools via the
+2. **squackit never constructs SQL strings.** It calls tools via the
    fledgling Connection proxy that pluckit provides, which auto-generates
    Python wrappers for every published SQL macro.
 
-3. **squawkit is the only layer with session state.** Pluckit holds no
+3. **squackit is the only layer with session state.** Pluckit holds no
    per-call memory. Fledgling-python holds no per-call memory.
 
-4. **squawkit is the only layer that knows about MCP.** FastMCP wiring,
-   prompt templates, and resource handlers live exclusively in squawkit.
+4. **squackit is the only layer that knows about MCP.** FastMCP wiring,
+   prompt templates, and resource handlers live exclusively in squackit.
 
 ## Module responsibilities
 
@@ -86,18 +86,18 @@ server.py: _register_tool handler
     └─ Return formatted text to agent
 ```
 
-## What squawkit is NOT
+## What squackit is NOT
 
-- **Not a code editor.** squawkit reads and analyzes code; it doesn't
+- **Not a code editor.** squackit reads and analyzes code; it doesn't
   modify it. Write operations belong to the agent or IDE.
 
-- **Not an LLM.** squawkit provides structured data to agents; the
+- **Not an LLM.** squackit provides structured data to agents; the
   intelligence is in the agent that consumes the tools.
 
-- **Not a generic MCP framework.** squawkit is specifically about
+- **Not a generic MCP framework.** squackit is specifically about
   fledgling's code intelligence macros. For generic MCP servers, use
   [FastMCP](https://github.com/jlowin/fastmcp) directly.
 
 - **Not pluckit.** pluckit is a stateless fluent API for developers.
-  squawkit is a stateful MCP server for agents. They share the same
+  squackit is a stateful MCP server for agents. They share the same
   SQL backbone but serve different audiences with different needs.

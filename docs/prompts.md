@@ -1,6 +1,6 @@
 # Prompt Templates
 
-squawkit registers three MCP prompt templates that pre-load live project data
+squackit registers three MCP prompt templates that pre-load live project data
 into structured workflows. Each prompt gathers data from the project at call
 time, so the agent starts with real context instead of asking for it.
 

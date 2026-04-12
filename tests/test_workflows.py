@@ -28,12 +28,12 @@ class TestFormatBriefing:
     """Test the _format_briefing helper."""
 
     def test_produces_markdown_with_title(self):
-        from squawkit.workflows import _format_briefing
+        from squackit.workflows import _format_briefing
         result = _format_briefing("My Title", [("Section A", "content a")])
         assert result.startswith("## My Title")
 
     def test_sections_have_headings(self):
-        from squawkit.workflows import _format_briefing
+        from squackit.workflows import _format_briefing
         result = _format_briefing("T", [
             ("Alpha", "aaa"),
             ("Beta", "bbb"),
@@ -44,12 +44,12 @@ class TestFormatBriefing:
         assert "bbb" in result
 
     def test_empty_sections_list(self):
-        from squawkit.workflows import _format_briefing
+        from squackit.workflows import _format_briefing
         result = _format_briefing("Empty", [])
         assert "## Empty" in result
 
     def test_section_order_preserved(self):
-        from squawkit.workflows import _format_briefing
+        from squackit.workflows import _format_briefing
         result = _format_briefing("T", [
             ("First", "111"),
             ("Second", "222"),
@@ -62,25 +62,25 @@ class TestSection:
     """Test the _section helper."""
 
     def test_returns_content_on_success(self):
-        from squawkit.workflows import _section
+        from squackit.workflows import _section
         heading, content = _section("Test", lambda: "hello")
         assert heading == "Test"
         assert content == "hello"
 
     def test_returns_error_note_on_exception(self):
-        from squawkit.workflows import _section
+        from squackit.workflows import _section
         heading, content = _section("Bad", lambda: 1 / 0)
         assert heading == "Bad"
         assert "could not load" in content.lower()
 
     def test_returns_no_data_when_empty(self):
-        from squawkit.workflows import _section
+        from squackit.workflows import _section
         heading, content = _section("Empty", lambda: "")
         assert heading == "Empty"
         assert "no data" in content.lower()
 
     def test_returns_no_data_when_none(self):
-        from squawkit.workflows import _section
+        from squackit.workflows import _section
         heading, content = _section("Nil", lambda: None)
         assert heading == "Nil"
         assert "no data" in content.lower()
@@ -90,12 +90,12 @@ class TestHasModule:
     """Test the _has_module helper."""
 
     def test_detects_loaded_module(self, all_macros):
-        from squawkit.workflows import _has_module
+        from squackit.workflows import _has_module
         # all_macros loads all modules including "source"
         assert _has_module(all_macros, "source") is True
 
     def test_rejects_missing_module(self, all_macros):
-        from squawkit.workflows import _has_module
+        from squackit.workflows import _has_module
         assert _has_module(all_macros, "nonexistent") is False
 
 
@@ -111,7 +111,7 @@ def _text(result) -> str:
 def mcp():
     """Create a fledgling FastMCP server for testing."""
     pytest.importorskip("fastmcp")
-    from squawkit.server import create_server
+    from squackit.server import create_server
     return create_server(root=PROJECT_ROOT, init=False)
 
 
@@ -282,7 +282,7 @@ class TestGracefulDegradation:
     @pytest.fixture(scope="class")
     def partial_mcp(self):
         """Server with only source + code modules (no git, no docs)."""
-        from squawkit.server import create_server
+        from squackit.server import create_server
         return create_server(root=PROJECT_ROOT, init=False,
                              modules=["source", "code"])
 

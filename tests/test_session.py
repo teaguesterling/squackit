@@ -32,7 +32,7 @@ class TestAccessLog:
 
     @pytest.fixture
     def log(self, con):
-        from squawkit.session import AccessLog
+        from squackit.session import AccessLog
         return AccessLog(con)
 
     def test_log_creates_table(self, con, log):
@@ -91,7 +91,7 @@ class TestSessionCache:
 
     @pytest.fixture
     def cache(self):
-        from squawkit.session import SessionCache
+        from squackit.session import SessionCache
         return SessionCache()
 
     def test_miss_returns_none(self, cache):
@@ -116,7 +116,7 @@ class TestSessionCache:
     def test_ttl_expiry(self, cache):
         cache.put("read_source", {"file_path": "foo.py"},
                   text="old", row_count=1, ttl=10)
-        with patch("squawkit.session.time.time", return_value=time.time() + 11):
+        with patch("squackit.session.time.time", return_value=time.time() + 11):
             assert cache.get("read_source", {"file_path": "foo.py"}) is None
 
     def test_ttl_not_expired(self, cache):
@@ -167,7 +167,7 @@ class TestCacheMtimeInvalidation:
 
     @pytest.fixture
     def cache(self):
-        from squawkit.session import SessionCache
+        from squackit.session import SessionCache
         return SessionCache()
 
     def test_valid_when_file_unchanged(self, cache, tmp_path):
@@ -224,7 +224,7 @@ class TestServerCacheIntegration:
 
     @pytest.fixture(scope="class")
     def mcp(self):
-        from squawkit.server import create_server
+        from squackit.server import create_server
         return create_server(root=PROJECT_ROOT, init=False)
 
     @pytest.fixture(autouse=True)
@@ -275,7 +275,7 @@ class TestServerAccessLogIntegration:
     @pytest.fixture
     def mcp_with_log(self):
         """Fresh server per test so log is clean."""
-        from squawkit.server import create_server
+        from squackit.server import create_server
         return create_server(root=PROJECT_ROOT, init=False)
 
     @pytest.mark.anyio
@@ -319,7 +319,7 @@ class TestSessionResource:
 
     @pytest.fixture(scope="class")
     def mcp(self):
-        from squawkit.server import create_server
+        from squackit.server import create_server
         return create_server(root=PROJECT_ROOT, init=False)
 
     def _read_session(self, mcp):

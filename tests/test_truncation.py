@@ -1,13 +1,13 @@
 """Tests for fledgling token-aware output truncation.
 
-Tests the truncation logic in squawkit.server: head/tail display,
+Tests the truncation logic in squackit.server: head/tail display,
 omission messages, max_lines/max_results parameters, and range-param bypass.
 """
 
 import asyncio
 import pytest
 
-from squawkit.server import (
+from squackit.server import (
     _truncate_rows,
     _format_markdown_table,
     _HEAD_TAIL,
@@ -136,7 +136,7 @@ class TestFormatConstants:
 def mcp():
     """Create a fledgling FastMCP server for testing."""
     pytest.importorskip("fastmcp")
-    from squawkit.server import create_server
+    from squackit.server import create_server
     return create_server(root=PROJECT_ROOT, init=False)
 
 

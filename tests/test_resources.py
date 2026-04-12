@@ -9,7 +9,7 @@ import asyncio
 import pytest
 from fastmcp import Client
 
-from squawkit.server import create_server
+from squackit.server import create_server
 
 RESOURCE_URIS = [
     "fledgling://project",

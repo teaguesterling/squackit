@@ -1,14 +1,14 @@
-# squawkit
+# squackit
 
-[![PyPI](https://img.shields.io/pypi/v/squawkit)](https://pypi.org/project/squawkit/)
-[![Docs](https://readthedocs.org/projects/squawkit/badge/?version=latest)](https://squawkit.readthedocs.io/)
+[![PyPI](https://img.shields.io/pypi/v/squackit)](https://pypi.org/project/squackit/)
+[![Docs](https://readthedocs.org/projects/squackit/badge/?version=latest)](https://squackit.readthedocs.io/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
-**Semi-QUalified Agent Wingman Kit.** The stateful intelligence + MCP server
+**Semi-QUalified Agent Companion Kit.** The stateful intelligence + MCP server
 layer for [fledgling](https://github.com/teaguesterling/fledgling)-equipped
 agents.
 
-squawkit wraps fledgling's SQL macros (via
+squackit wraps fledgling's SQL macros (via
 [pluckit](https://github.com/teaguesterling/pluckit) — `pip install ast-pluckit`) with smart defaults,
 token-aware output, session caching, compound workflows, an MCP server,
 prompt templates, and live resources.
@@ -16,13 +16,13 @@ prompt templates, and live resources.
 ## Install
 
 ```bash
-pip install squawkit
+pip install squackit
 ```
 
 ## Run
 
 ```bash
-squawkit
+squackit
 ```
 
 Starts the FastMCP server on stdio. Connect it to Claude Code, Cursor, or any
@@ -40,19 +40,19 @@ MCP-compatible client.
 ## Architecture
 
 ```
-squawkit → ast-pluckit → fledgling-python → fledgling (SQL) → DuckDB extensions
+squackit → ast-pluckit → fledgling-python → fledgling (SQL) → DuckDB extensions
 ```
 
 > **Note:** pluckit is published on PyPI as
 > [`ast-pluckit`](https://pypi.org/project/ast-pluckit/). The Python import
 > name is still `pluckit`.
 
-squawkit is the opinionated top layer. It adds session state, MCP protocol,
+squackit is the opinionated top layer. It adds session state, MCP protocol,
 and intelligence heuristics on top of the stateless query layers below it.
 
 ## Documentation
 
-Full docs at **[squawkit.readthedocs.io](https://squawkit.readthedocs.io/)**.
+Full docs at **[squackit.readthedocs.io](https://squackit.readthedocs.io/)**.
 
 ## License
 

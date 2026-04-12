@@ -1,11 +1,11 @@
-"""Tests for squawkit.defaults — smart project-aware defaults."""
+"""Tests for squackit.defaults — smart project-aware defaults."""
 
 import asyncio
 import pytest
 from dataclasses import fields
 
-from squawkit.db import create_connection
-from squawkit.defaults import ProjectDefaults, TOOL_DEFAULTS, apply_defaults, load_config, infer_defaults
+from squackit.db import create_connection
+from squackit.defaults import ProjectDefaults, TOOL_DEFAULTS, apply_defaults, load_config, infer_defaults
 from conftest import PROJECT_ROOT
 
 
@@ -223,7 +223,7 @@ class TestInferDefaults:
 # ── Server integration tests ───────────────────────────────────────
 
 try:
-    from squawkit.server import create_server
+    from squackit.server import create_server
     _has_fastmcp = True
 except ImportError:
     _has_fastmcp = False
