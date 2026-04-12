@@ -17,7 +17,7 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
-    "pluckit>=0.7.0",
+    "ast-pluckit>=0.7.0",
     "fastmcp>=3.0",
 ]
 
