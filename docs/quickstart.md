@@ -25,13 +25,21 @@ squackit is an [MCP](https://modelcontextprotocol.io/) server that communicates
 over stdio. Start it with:
 
 ```bash
-squackit
+squackit mcp serve
 ```
 
 Or via Python:
 
 ```bash
-python -m squackit
+python -m squackit mcp serve
+```
+
+Options:
+
+```bash
+squackit mcp serve --transport sse --port 8080   # SSE transport
+squackit mcp serve --root /path/to/project        # explicit project root
+squackit mcp serve --profile analyst              # security profile
 ```
 
 ### Claude Code integration
@@ -43,7 +51,7 @@ Add squackit to your Claude Code MCP configuration (`.mcp.json`):
   "mcpServers": {
     "squackit": {
       "command": "squackit",
-      "args": []
+      "args": ["mcp", "serve"]
     }
   }
 }

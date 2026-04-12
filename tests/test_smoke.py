@@ -3,7 +3,7 @@
 
 def test_import_squackit():
     import squackit
-    assert squackit.__version__ == "0.1.0"
+    assert squackit.__version__ == "0.2.1"
 
 
 def test_fledgling_available():
@@ -14,8 +14,14 @@ def test_fledgling_available():
 
 def test_entry_point_importable():
     """The `squackit` CLI entry point must resolve to a callable."""
-    from squackit.server import main
-    assert callable(main)
+    from squackit.cli import cli
+    assert callable(cli)
+
+
+def test_server_create_importable():
+    """create_server must remain importable for programmatic use."""
+    from squackit.server import create_server
+    assert callable(create_server)
 
 
 def test_cli_script_installed():

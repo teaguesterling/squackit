@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "squawkit": {
-      "command": "/home/teague/.local/share/venv/bin/squawkit",
-      "args": []
+    "squackit": {
+      "command": "/home/teague/.local/share/venv/bin/squackit",
+      "args": ["mcp", "serve"]
     },
     "blq": {
       "command": "/home/teague/.local/share/venv/bin/blq",

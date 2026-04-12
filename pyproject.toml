@@ -18,11 +18,12 @@ classifiers = [
 ]
 dependencies = [
     "ast-pluckit>=0.7.0",
+    "click>=8.0",
     "fastmcp>=3.0",
 ]
 
 [project.scripts]
-squackit = "squackit.server:main"
+squackit = "squackit.cli:cli"
 
 [project.optional-dependencies]
 docs = [

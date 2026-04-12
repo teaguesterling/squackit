@@ -1,5 +1,5 @@
-"""Run fledgling MCP server: python -m squackit"""
+"""Run squackit CLI: python -m squackit"""
 
-from squackit.server import main
+from squackit.cli import cli
 
-main()
+cli()
