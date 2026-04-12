@@ -1,7 +1,10 @@
 """Tests for squackit.tool_config — ToolPresentation and name resolution."""
 
 from fledgling.tools import ToolInfo
-from squackit.tool_config import normalize_tool_name, to_kebab, to_camel, ToolPresentation
+from squackit.tool_config import (
+    normalize_tool_name, to_kebab, to_camel, ToolPresentation,
+    build_tool_registry, SKIP, OVERRIDES,
+)
 
 
 class TestNameNormalization:
@@ -133,3 +136,57 @@ class TestToolPresentation:
     def test_numeric_params_without_schema(self):
         tp = ToolPresentation(info=self._make_info())
         assert "ctx" in tp.numeric_params
+
+
+class TestBuildToolRegistry:
+
+    def test_builds_from_tools_iterable(self):
+        tools = [
+            ToolInfo(macro_name="find_definitions", params=["file_pattern", "name_pattern"]),
+            ToolInfo(macro_name="list_files", params=["pattern", "commit"]),
+        ]
+        registry = build_tool_registry(tools)
+        assert "find_definitions" in registry
+        assert "list_files" in registry
+        assert len(registry) == 2
+
+    def test_skips_macros_in_skip_set(self):
+        tools = [
+            ToolInfo(macro_name="find_definitions", params=["file_pattern"]),
+            ToolInfo(macro_name="ast_ancestors", params=["ast_table", "child_node_id"]),
+        ]
+        registry = build_tool_registry(tools)
+        assert "find_definitions" in registry
+        assert "ast_ancestors" not in registry
+
+    def test_applies_overrides(self):
+        tools = [
+            ToolInfo(macro_name="pss_render", params=["source", "selector"]),
+        ]
+        registry = build_tool_registry(tools)
+        assert "select_code" in registry
+        assert "pss_render" not in registry
+        assert registry["select_code"].macro_name == "pss_render"
+
+    def test_override_format(self):
+        tools = [
+            ToolInfo(macro_name="read_source", params=["file_path", "lines", "ctx", "match"]),
+        ]
+        registry = build_tool_registry(tools)
+        assert registry["read_source"].format == "text"
+
+    def test_override_required(self):
+        tools = [
+            ToolInfo(macro_name="read_source", params=["file_path", "lines", "ctx", "match"]),
+        ]
+        registry = build_tool_registry(tools)
+        assert registry["read_source"].required == ["file_path"]
+
+    def test_skip_set_covers_known_internal_macros(self):
+        assert "ast_ancestors" in SKIP
+        assert "load_conversations" in SKIP
+        assert "ast_select" in SKIP
+
+    def test_overrides_has_key_tools(self):
+        assert "pss_render" in OVERRIDES
+        assert "read_source" in OVERRIDES
