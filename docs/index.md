@@ -4,7 +4,7 @@
 layer for [fledgling](https://github.com/teaguesterling/fledgling)-equipped
 agents.
 
-squawkit wraps fledgling's SQL macros (via [pluckit](https://github.com/teaguesterling/pluckit))
+squawkit wraps fledgling's SQL macros (via [pluckit](https://github.com/teaguesterling/pluckit) — [`ast-pluckit`](https://pypi.org/project/ast-pluckit/) on PyPI)
 with smart defaults, token-aware output, session caching, compound workflows,
 an MCP server, prompt templates, and live resources. It is the Python-side
 "cold-start agent support" layer — the opinionated features that don't belong

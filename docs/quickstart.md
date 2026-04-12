@@ -8,8 +8,8 @@
 pip install squawkit
 ```
 
-This installs squawkit and its dependencies (pluckit, fastmcp, and transitively
-fledgling and duckdb).
+This installs squawkit and its dependencies ([ast-pluckit](https://pypi.org/project/ast-pluckit/),
+fastmcp, and transitively fledgling and duckdb).
 
 ### From source (development)
 
