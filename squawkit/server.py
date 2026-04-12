@@ -48,7 +48,7 @@ from squawkit.workflows import register_workflows
 
 _DESCRIPTIONS = {
     "find_definitions": "Find function, class, and module definitions by AST analysis. Use name_pattern with SQL LIKE wildcards (%).",
-    "find_in_ast": "Search code by semantic category: calls, imports, definitions, loops, conditionals, strings, comments.",
+    "select_code": "Select code using CSS-like selectors over ASTs. Use pluckit selector syntax: .fn for functions, .class for classes, #name for by-name, [attr] for attributes. Returns rendered markdown with headings and source blocks.",
     "code_structure": "Structural overview with complexity metrics. Good first step for unfamiliar code.",
     "list_files": "Find files by glob pattern.",
     "read_source": "Read file lines with optional range, context, and match filtering.",
@@ -97,8 +97,13 @@ _SKIP = {
     "session_summary",    # ChatDetail covers this
     "model_usage",        # too low-level
     "search_tool_inputs", # too low-level
-    "find_calls",         # find_in_ast covers this
-    "find_imports",       # find_in_ast covers this
+    "find_in_ast",        # select_code (ast_select_render) replaces this
+    "find_calls",         # select_code covers this
+    "find_imports",       # select_code covers this
+    "ast_select",         # raw — use select_code (pss_render) instead
+    "ast_select_list",    # internal
+    "ast_select_rules",   # internal
+    "ast_select_render",  # pss_render covers this with better source extraction
     "find_code_examples", # niche
     "doc_stats",          # niche
     "repo_files",         # list_files covers this
@@ -109,7 +114,7 @@ _SKIP = {
 # Output format hints — which macros return content vs. structure
 _TEXT_FORMAT = {
     "read_source", "read_context", "file_diff", "file_at_version",
-    "find_in_ast", "read_doc_section", "help",
+    "select_code", "read_doc_section", "help",
 }
 
 # Params that should be coerced from string to int.
@@ -123,11 +128,17 @@ _NUMERIC_PARAMS = {
 _RANGE_PARAMS = {
     "read_source": {"lines", "match"},
     "find_definitions": {"name_pattern"},
-    "find_in_ast": {"name"},
+    "select_code": {"selector"},
     "doc_outline": {"search"},
 }
 
-# ── Session cache policy ───────────────────────────────────────────
+# ── Tool aliases ───────────────────────────────────────────────────
+# Map fledgling macro names to friendlier MCP tool names.
+_ALIASES = {
+    "pss_render": "select_code",
+}
+
+# ── Session cache policy───────────────────────────────────────────
 # Tools listed here cache their results. TTL in seconds; 0 = session lifetime.
 
 CACHE_POLICY: dict[str, dict] = {
@@ -186,7 +197,8 @@ def create_server(
         if macro_name in _SKIP:
             continue
 
-        _register_tool(mcp, con, macro_name, params, defaults, cache, access_log)
+        tool_name = _ALIASES.get(macro_name, macro_name)
+        _register_tool(mcp, con, tool_name, macro_name, params, defaults, cache, access_log)
 
     # ── MCP Resources ───────────────────────────────────────────────
     # Static/slow-changing context available without tool calls.
@@ -294,6 +306,7 @@ def create_server(
 def _register_tool(
     mcp,  # FastMCP type annotation removed to avoid import at module level
     con,
+    tool_name: str,
     macro_name: str,
     params: list[str],
     defaults: ProjectDefaults,
@@ -302,23 +315,23 @@ def _register_tool(
 ):
     """Register a single macro as an MCP tool."""
     description = _DESCRIPTIONS.get(
-        macro_name,
-        f"Query: {macro_name}({', '.join(params)})"
+        tool_name,
+        f"Query: {tool_name}({', '.join(params)})"
     )
-    is_text = macro_name in _TEXT_FORMAT
+    is_text = tool_name in _TEXT_FORMAT
 
-    # Determine truncation config for this macro
-    if macro_name in _MAX_LINES:
+    # Determine truncation config — look up by tool_name (the MCP-facing name)
+    if tool_name in _MAX_LINES:
         limit_param = "max_lines"
-        default_limit = _MAX_LINES[macro_name]
-    elif macro_name in _MAX_ROWS:
+        default_limit = _MAX_LINES[tool_name]
+    elif tool_name in _MAX_ROWS:
         limit_param = "max_results"
-        default_limit = _MAX_ROWS[macro_name]
+        default_limit = _MAX_ROWS[tool_name]
     else:
         limit_param = None
         default_limit = 0
 
-    range_params = _RANGE_PARAMS.get(macro_name, set())
+    range_params = _RANGE_PARAMS.get(tool_name, set())
 
     # Build the tool function dynamically
     # FastMCP uses the function signature for parameter schema
@@ -360,12 +373,12 @@ def _register_tool(
             cache_args[limit_param] = max_rows
 
         # Check cache
-        policy = CACHE_POLICY.get(macro_name)
+        policy = CACHE_POLICY.get(tool_name)
         if policy is not None:
-            cached = cache.get(macro_name, cache_args)
+            cached = cache.get(tool_name, cache_args)
             if cached is not None:
                 elapsed = (_time.time() - t0) * 1000
-                access_log.record(macro_name, cache_args, cached.row_count,
+                access_log.record(tool_name, cache_args, cached.row_count,
                                   cached=True, elapsed_ms=elapsed)
                 age = int(cached.age_seconds())
                 return f"(cached — same as {age}s ago)\n{cached.text}"
@@ -380,13 +393,13 @@ def _register_tool(
             etype = type(e).__name__
             if etype in ("IOException", "InvalidInputException"):
                 elapsed = (_time.time() - t0) * 1000
-                access_log.record(macro_name, cache_args, 0,
+                access_log.record(tool_name, cache_args, 0,
                                   cached=False, elapsed_ms=elapsed)
                 return "(no results)"
             raise
         if not rows:
             elapsed = (_time.time() - t0) * 1000
-            access_log.record(macro_name, cache_args, 0,
+            access_log.record(tool_name, cache_args, 0,
                               cached=False, elapsed_ms=elapsed)
             return "(no results)"
 
@@ -434,18 +447,18 @@ def _register_tool(
                         file_mtimes[path] = Path(path).stat().st_mtime
                     except OSError:
                         pass
-            cache.put(macro_name, cache_args, text, displayed_rows,
+            cache.put(tool_name, cache_args, text, displayed_rows,
                       ttl=policy["ttl"], file_mtimes=file_mtimes)
 
         # Log access
-        access_log.record(macro_name, cache_args, displayed_rows,
+        access_log.record(tool_name, cache_args, displayed_rows,
                           cached=False, elapsed_ms=elapsed)
 
         return text
 
     # Set function metadata for FastMCP
-    tool_fn.__name__ = macro_name
-    tool_fn.__qualname__ = macro_name
+    tool_fn.__name__ = tool_name
+    tool_fn.__qualname__ = tool_name
     tool_fn.__doc__ = description
 
     # Build parameter annotations for FastMCP schema generation
