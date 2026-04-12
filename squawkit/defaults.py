@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING
 log = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from fledgling.connection import Connection
+    from duckdb import DuckDBPyConnection as Connection
 
 
 @dataclass

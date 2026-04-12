@@ -24,8 +24,7 @@ import inspect
 from pathlib import Path
 from typing import Optional
 
-import fledgling
-from fledgling.connection import Connection
+from pluckit import Plucker
 from squawkit.defaults import (
     ProjectDefaults, apply_defaults, infer_defaults, load_config,
 )
@@ -165,7 +164,7 @@ def create_server(
     """
     from fastmcp import FastMCP
 
-    con = fledgling.connect(init=init, root=root, modules=modules, profile=profile)
+    con = Plucker(repo=root, profile=profile, modules=modules, init=init).connection
     mcp = FastMCP(name)
 
     # Infer smart defaults, merge with config file overrides
@@ -294,7 +293,7 @@ def create_server(
 
 def _register_tool(
     mcp,  # FastMCP type annotation removed to avoid import at module level
-    con: Connection,
+    con,
     macro_name: str,
     params: list[str],
     defaults: ProjectDefaults,

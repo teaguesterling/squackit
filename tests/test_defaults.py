@@ -4,7 +4,7 @@ import asyncio
 import pytest
 from dataclasses import fields
 
-import fledgling
+from squawkit.db import create_connection
 from squawkit.defaults import ProjectDefaults, TOOL_DEFAULTS, apply_defaults, load_config, infer_defaults
 from conftest import PROJECT_ROOT
 
@@ -183,7 +183,7 @@ class TestInferDefaults:
 
     @pytest.fixture
     def con(self):
-        return fledgling.connect(root=str(PROJECT_ROOT))
+        return create_connection(repo=str(PROJECT_ROOT))
 
     def test_code_pattern_is_python(self, con):
         """This repo is primarily Python, so code_pattern should be **/*.py."""

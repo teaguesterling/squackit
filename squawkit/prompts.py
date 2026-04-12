@@ -18,7 +18,7 @@ from squawkit.workflows import explore, investigate, review
 
 if TYPE_CHECKING:
     from fastmcp import FastMCP
-    from fledgling.connection import Connection
+    from duckdb import DuckDBPyConnection as Connection
     from squawkit.defaults import ProjectDefaults
 
 log = logging.getLogger(__name__)
