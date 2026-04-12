@@ -87,3 +87,12 @@ def _format_markdown_table(cols: list[str], rows: list[tuple]) -> str:
         line = "| " + " | ".join(v.ljust(widths[i]) for i, v in enumerate(str_row)) + " |"
         lines.append(line)
     return "\n".join(lines)
+
+
+import json as _json
+
+
+def format_json(cols: list[str], rows: list[tuple]) -> str:
+    """Format query results as a JSON array of objects."""
+    result = [dict(zip(cols, row)) for row in rows]
+    return _json.dumps(result, indent=2, default=str)
