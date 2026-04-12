@@ -1,15 +1,17 @@
-"""DuckDB connection for fledgling.
+"""DuckDB connection for squawkit.
 
-Thin wrapper around fledgling.connect() for the FastMCP layer.
+Thin wrapper over pluckit's Plucker that returns a fledgling-enabled
+connection proxy with auto-generated macro wrappers.
 """
 
-import fledgling
+from pluckit import Plucker
 
 
 def create_connection(**kwargs):
-    """Create a fledgling-enabled DuckDB connection.
+    """Create a fledgling-enabled DuckDB connection via pluckit.
 
-    All arguments are passed to fledgling.connect().
-    See fledgling.connection.connect for full documentation.
+    Accepts the same kwargs as :class:`pluckit.Plucker` (``repo``,
+    ``profile``, ``modules``, ``init``). Returns the fledgling Connection
+    proxy — the same object squawkit's server.py uses as ``con``.
     """
-    return fledgling.connect(**kwargs)
+    return Plucker(**kwargs).connection
