@@ -9,7 +9,7 @@ layer for [fledgling](https://github.com/teaguesterling/fledgling)-equipped
 agents.
 
 squawkit wraps fledgling's SQL macros (via
-[pluckit](https://github.com/teaguesterling/pluckit)) with smart defaults,
+[pluckit](https://github.com/teaguesterling/pluckit) — `pip install ast-pluckit`) with smart defaults,
 token-aware output, session caching, compound workflows, an MCP server,
 prompt templates, and live resources.
 
@@ -40,8 +40,12 @@ MCP-compatible client.
 ## Architecture
 
 ```
-squawkit → pluckit → fledgling-python → fledgling (SQL) → DuckDB extensions
+squawkit → ast-pluckit → fledgling-python → fledgling (SQL) → DuckDB extensions
 ```
+
+> **Note:** pluckit is published on PyPI as
+> [`ast-pluckit`](https://pypi.org/project/ast-pluckit/). The Python import
+> name is still `pluckit`.
 
 squawkit is the opinionated top layer. It adds session state, MCP protocol,
 and intelligence heuristics on top of the stateless query layers below it.
