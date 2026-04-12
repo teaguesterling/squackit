@@ -1,0 +1,84 @@
+site_name: squawkit
+site_description: "Semi-QUalified Agent Wingman Kit — stateful intelligence + MCP server layer for fledgling-equipped agents."
+site_url: https://squawkit.readthedocs.io/
+repo_url: https://github.com/teaguesterling/squawkit
+repo_name: teaguesterling/squawkit
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - toc.follow
+    - search.highlight
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep-purple
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep-purple
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search
+  - exclude:
+      glob:
+        - superpowers/**
+
+nav:
+  - Home: index.md
+  - Getting Started: quickstart.md
+  - Tools Reference: tools.md
+  - Resources: resources.md
+  - Prompts: prompts.md
+  - Configuration: configuration.md
+  - Architecture: architecture.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/teaguesterling/squawkit
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/squawkit/

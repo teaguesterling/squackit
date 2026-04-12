@@ -24,8 +24,19 @@ dependencies = [
 [project.scripts]
 squawkit = "squawkit.server:main"
 
+[project.optional-dependencies]
+docs = [
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
+    "mkdocs-exclude>=1.0",
+    "pymdown-extensions>=10.9",
+]
+
 [project.urls]
+Homepage = "https://github.com/teaguesterling/squawkit"
+Documentation = "https://squawkit.readthedocs.io"
 Repository = "https://github.com/teaguesterling/squawkit"
+Issues = "https://github.com/teaguesterling/squawkit/issues"
 
 [build-system]
 requires = ["hatchling"]
