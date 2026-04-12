@@ -23,3 +23,9 @@ def test_cli_script_installed():
     import shutil
     assert shutil.which("squawkit") is not None, \
         "squawkit CLI script not on PATH — re-run `pip install -e .`"
+
+
+def test_pluckit_available():
+    """squawkit's runtime depends on pluckit — verify it's importable."""
+    import pluckit
+    assert hasattr(pluckit, "Plucker")
