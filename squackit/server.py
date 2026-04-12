@@ -34,128 +34,16 @@ from squackit.formatting import (
     _format_markdown_table,
     _truncate_rows,
     _HEAD_TAIL,
-    _HINTS,
-    _MAX_LINES,
-    _MAX_ROWS,
 )
 from squackit.prompts import register_prompts
 from squackit.session import AccessLog, SessionCache
+from squackit.tool_config import ToolPresentation, build_tool_registry
 from squackit.workflows import register_workflows
-
-
-# ── Tool descriptions for known macros ───────────────────────────────
-# Override auto-generated descriptions for key tools.
-
-_DESCRIPTIONS = {
-    "find_definitions": "Find function, class, and module definitions by AST analysis. Use name_pattern with SQL LIKE wildcards (%).",
-    "select_code": "Select code using CSS-like selectors over ASTs. Use pluckit selector syntax: .fn for functions, .class for classes, #name for by-name, [attr] for attributes. Returns rendered markdown with headings and source blocks.",
-    "code_structure": "Structural overview with complexity metrics. Good first step for unfamiliar code.",
-    "list_files": "Find files by glob pattern.",
-    "read_source": "Read file lines with optional range, context, and match filtering.",
-    "read_context": "Read lines centered around a specific line number.",
-    "project_overview": "File counts by language for the project.",
-    "doc_outline": "Markdown section outlines with optional keyword/regex search.",
-    "read_doc_section": "Read a specific markdown section by ID.",
-    "recent_changes": "Git commit history.",
-    "file_changes": "Files changed between two git revisions.",
-    "file_diff": "Line-level unified diff between revisions.",
-    "file_at_version": "File content at a specific git revision.",
-    "branch_list": "List git branches.",
-    "tag_list": "List git tags.",
-    "working_tree_status": "Untracked and modified files.",
-    "structural_diff": "Semantic diff: added/removed/modified definitions between revisions.",
-    "changed_function_summary": "Changed functions ranked by complexity between revisions.",
-    "complexity_hotspots": "Most complex functions in the codebase.",
-    "sessions": "Claude Code conversation sessions.",
-    "messages": "Flattened conversation messages.",
-    "tool_calls": "Tool usage from conversations.",
-    "search_messages": "Full-text search across conversation content.",
-    "help": "Fledgling skill guide. No args for outline, section ID for details.",
-    "dr_fledgling": "Runtime diagnostics: version, profile, modules, extensions.",
-}
-
-# Macros to skip (internal, too low-level, or require table references)
-_SKIP = {
-    # sitting_duck ast_* macros (take table references, not file paths)
-    "ast_ancestors", "ast_call_arguments", "ast_children", "ast_class_members",
-    "ast_containing_line", "ast_dead_code", "ast_definitions", "ast_descendants",
-    "ast_function_metrics", "ast_function_scope", "ast_functions_containing",
-    "ast_in_range", "ast_match", "ast_nesting_analysis", "ast_pattern",
-    "ast_security_audit", "ast_siblings", "ast_definition_parent",
-    # Other extension macros
-    "duckdb_logs_parsed", "duckdb_profiling_settings",
-    "histogram", "histogram_values",
-    # Fledgling internal/low-level
-    "load_conversations",
-    "read_source_batch",  # read_source covers this
-    "file_line_count",    # project_overview is better
-    "content_blocks",     # too low-level
-    "tool_results",       # too low-level
-    "token_usage",        # too low-level
-    "tool_frequency",     # ChatToolUsage covers this
-    "bash_commands",      # too low-level
-    "session_summary",    # ChatDetail covers this
-    "model_usage",        # too low-level
-    "search_tool_inputs", # too low-level
-    "find_in_ast",        # select_code (ast_select_render) replaces this
-    "find_calls",         # select_code covers this
-    "find_imports",       # select_code covers this
-    "ast_select",         # raw — use select_code (pss_render) instead
-    "ast_select_list",    # internal
-    "ast_select_rules",   # internal
-    "ast_select_render",  # pss_render covers this with better source extraction
-    "find_code_examples", # niche
-    "doc_stats",          # niche
-    "repo_files",         # list_files covers this
-    "module_dependencies", # niche
-    "function_callers",   # niche
-}
-
-# Output format hints — which macros return content vs. structure
-_TEXT_FORMAT = {
-    "read_source", "read_context", "file_diff", "file_at_version",
-    "select_code", "read_doc_section", "help",
-}
-
-# Params that should be coerced from string to int.
-# MCP sends all values as strings; only these are genuinely numeric.
-_NUMERIC_PARAMS = {
-    "n", "max_lvl", "ctx", "center_line", "lim", "start_line", "end_line",
-    "context_lines", "limit",
-}
-
-# Parameters that indicate the user narrowed their query — skip truncation.
-_RANGE_PARAMS = {
-    "read_source": {"lines", "match"},
-    "find_definitions": {"name_pattern"},
-    "select_code": {"selector"},
-    "doc_outline": {"search"},
-}
-
-# ── Tool aliases ───────────────────────────────────────────────────
-# Map fledgling macro names to friendlier MCP tool names.
-_ALIASES = {
-    "pss_render": "select_code",
-}
-
-# ── Session cache policy───────────────────────────────────────────
-# Tools listed here cache their results. TTL in seconds; 0 = session lifetime.
-
-CACHE_POLICY: dict[str, dict] = {
-    "project_overview": {"ttl": 0},
-    "find_definitions": {"ttl": 300},
-    "code_structure":   {"ttl": 300},
-    "read_source":      {"ttl": 300, "mtime_params": ("file_path",)},
-    "read_context":     {"ttl": 300, "mtime_params": ("file_path",)},
-    "doc_outline":      {"ttl": 0},
-    "recent_changes":   {"ttl": 30},
-    "working_tree_status": {"ttl": 10},
-}
 
 
 
 def create_server(
-    name: str = "fledgling",
+    name: str = "squackit",
     root: Optional[str] = None,
     init: Optional[str | bool] = None,
     modules: Optional[list[str]] = None,
@@ -190,15 +78,9 @@ def create_server(
     mcp.access_log = access_log
 
     # Register each macro as an MCP tool
-    for macro_info in con._tools.list():
-        macro_name = macro_info["name"]
-        params = macro_info["params"]
-
-        if macro_name in _SKIP:
-            continue
-
-        tool_name = _ALIASES.get(macro_name, macro_name)
-        _register_tool(mcp, con, tool_name, macro_name, params, defaults, cache, access_log)
+    registry = build_tool_registry(con._tools)
+    for presentation in registry.values():
+        _register_tool(mcp, con, presentation, defaults, cache, access_log)
 
     # ── MCP Resources ───────────────────────────────────────────────
     # Static/slow-changing context available without tool calls.
@@ -306,32 +188,32 @@ def create_server(
 def _register_tool(
     mcp,  # FastMCP type annotation removed to avoid import at module level
     con,
-    tool_name: str,
-    macro_name: str,
-    params: list[str],
+    presentation: ToolPresentation,
     defaults: ProjectDefaults,
     cache: SessionCache,
     access_log: AccessLog,
 ):
     """Register a single macro as an MCP tool."""
-    description = _DESCRIPTIONS.get(
-        tool_name,
-        f"Query: {tool_name}({', '.join(params)})"
-    )
-    is_text = tool_name in _TEXT_FORMAT
+    tool_name = presentation.name
+    macro_name = presentation.macro_name
+    params = presentation.params
+    description = presentation.description
+    is_text = presentation.format == "text"
+    numeric_params = presentation.numeric_params
 
-    # Determine truncation config — look up by tool_name (the MCP-facing name)
-    if tool_name in _MAX_LINES:
+    if presentation.max_lines is not None:
         limit_param = "max_lines"
-        default_limit = _MAX_LINES[tool_name]
-    elif tool_name in _MAX_ROWS:
+        default_limit = presentation.max_lines
+    elif presentation.max_rows is not None:
         limit_param = "max_results"
-        default_limit = _MAX_ROWS[tool_name]
+        default_limit = presentation.max_rows
     else:
         limit_param = None
         default_limit = 0
 
-    range_params = _RANGE_PARAMS.get(tool_name, set())
+    range_params = presentation.range_params
+    cache_ttl = presentation.cache_ttl
+    cache_mtime_params = presentation.cache_mtime_params
 
     # Build the tool function dynamically
     # FastMCP uses the function signature for parameter schema
@@ -356,13 +238,13 @@ def _register_tool(
             max_rows = 0
 
         # Remove None values; coerce known numeric params to int.
-        # Only _NUMERIC_PARAMS are coerced — blanket isdigit() would
+        # Only numeric_params are coerced — blanket isdigit() would
         # break git SHAs like "1234567".
         filtered = {}
         for k, v in kwargs.items():
             if v is None:
                 continue
-            if k in _NUMERIC_PARAMS and isinstance(v, str) and v.isdigit():
+            if k in numeric_params and isinstance(v, str) and v.isdigit():
                 filtered[k] = int(v)
             else:
                 filtered[k] = v
@@ -373,8 +255,7 @@ def _register_tool(
             cache_args[limit_param] = max_rows
 
         # Check cache
-        policy = CACHE_POLICY.get(tool_name)
-        if policy is not None:
+        if cache_ttl is not None:
             cached = cache.get(tool_name, cache_args)
             if cached is not None:
                 elapsed = (_time.time() - t0) * 1000
@@ -438,9 +319,9 @@ def _register_tool(
         elapsed = (_time.time() - t0) * 1000
 
         # Store in cache
-        if policy is not None:
+        if cache_ttl is not None:
             file_mtimes = {}
-            for p in policy.get("mtime_params", ()):
+            for p in cache_mtime_params:
                 path = filtered.get(p)
                 if path:
                     try:
@@ -448,7 +329,7 @@ def _register_tool(
                     except OSError:
                         pass
             cache.put(tool_name, cache_args, text, displayed_rows,
-                      ttl=policy["ttl"], file_mtimes=file_mtimes)
+                      ttl=cache_ttl, file_mtimes=file_mtimes)
 
         # Log access
         access_log.record(tool_name, cache_args, displayed_rows,
@@ -461,31 +342,27 @@ def _register_tool(
     tool_fn.__qualname__ = tool_name
     tool_fn.__doc__ = description
 
-    # Build parameter annotations for FastMCP schema generation
+    # Build parameter annotations for FastMCP schema generation.
+    # All params get default=None so FastMCP validation passes even when
+    # the caller omits them — apply_defaults fills them in at runtime.
     annotations = {}
+    sig_params = []
     for p in params:
         annotations[p] = Optional[str]
+        sig_params.append(inspect.Parameter(
+            p, inspect.Parameter.KEYWORD_ONLY, default=None,
+            annotation=Optional[str],
+        ))
     if limit_param:
         annotations[limit_param] = Optional[int]
-    tool_fn.__annotations__ = {**annotations, "return": str}
-
-    # Create proper signature with Optional[str] defaults
-    sig_params = [
-        inspect.Parameter(
-            p,
-            inspect.Parameter.KEYWORD_ONLY,
-            default=None,
-            annotation=Optional[str],
-        )
-        for p in params
-    ]
-    if limit_param:
         sig_params.append(inspect.Parameter(
             limit_param,
             inspect.Parameter.KEYWORD_ONLY,
             default=None,
             annotation=Optional[int],
         ))
+    tool_fn.__annotations__ = {**annotations, "return": str}
+
     tool_fn.__signature__ = inspect.Signature(
         sig_params,
         return_annotation=str,

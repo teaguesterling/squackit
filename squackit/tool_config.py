@@ -188,6 +188,7 @@ OVERRIDES: dict[str, dict] = {
     },
     "help": {
         "format_override": "text",
+        "required_override": [],
     },
     "find_definitions": {
         "description_override": "Find function, class, and module definitions by AST analysis.",

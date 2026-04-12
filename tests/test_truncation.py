@@ -7,14 +7,13 @@ omission messages, max_lines/max_results parameters, and range-param bypass.
 import asyncio
 import pytest
 
-from squackit.server import (
+from squackit.formatting import (
     _truncate_rows,
     _format_markdown_table,
     _HEAD_TAIL,
     _MAX_LINES,
     _MAX_ROWS,
     _HINTS,
-    _TEXT_FORMAT,
 )
 
 from conftest import PROJECT_ROOT
@@ -118,7 +117,8 @@ class TestFormatConstants:
     """Verify configuration consistency."""
 
     def test_file_at_version_is_text_format(self):
-        assert "file_at_version" in _TEXT_FORMAT
+        from squackit.tool_config import OVERRIDES
+        assert OVERRIDES["file_at_version"]["format_override"] == "text"
 
     def test_all_max_lines_tools_have_hints(self):
         for name in _MAX_LINES:
