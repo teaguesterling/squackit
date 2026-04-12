@@ -113,7 +113,7 @@ def _make_tool_command(presentation: ToolPresentation, con) -> click.Command:
         params.append(click.Option([f"--{p}"], default=None))
 
     @click.pass_context
-    def callback(ctx, **kwargs):
+    def callback(click_ctx, **kwargs):
         filtered = {k: v for k, v in kwargs.items() if v is not None}
 
         for k in list(filtered):
@@ -130,14 +130,14 @@ def _make_tool_command(presentation: ToolPresentation, con) -> click.Command:
             rows = rel.fetchall()
         except Exception as e:
             click.echo(f"Error: {e}", err=True)
-            ctx.exit(1)
+            click_ctx.exit(1)
             return
 
         if not rows:
             click.echo("(no results)")
             return
 
-        json_output = ctx.obj.get("json", False) if ctx.obj else False
+        json_output = click_ctx.obj.get("json", False) if click_ctx.obj else False
         if json_output:
             click.echo(format_json(cols, rows))
         elif presentation.format == "text":
