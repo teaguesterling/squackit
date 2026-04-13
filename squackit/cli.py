@@ -95,15 +95,66 @@ class ToolGroup(click.Group):
 def _get_registry():
     """Lazily build the tool registry."""
     from pluckit import Plucker
+    from squackit.tools import PLUCKIT_TOOLS
     p = Plucker()
     con = p.connection
-    return build_tool_registry(con._tools), con
+    return build_tool_registry(con._tools, extra_tools=PLUCKIT_TOOLS), con
+
+
+def _format_result(result, presentation, json_output):
+    """Format and output a tool result based on its type."""
+    from squackit.formatting import _format_markdown_table, format_json
+
+    # View object (pluckit)
+    if hasattr(result, 'markdown') and hasattr(result, 'tabular'):
+        if json_output:
+            cols, rows = result.tabular
+            click.echo(format_json(cols, rows))
+        else:
+            click.echo(result.markdown)
+        return
+
+    # list of strings (find_names)
+    if isinstance(result, list) and result and isinstance(result[0], str):
+        if json_output:
+            click.echo(_json.dumps(result, indent=2))
+        else:
+            for item in result:
+                click.echo(item)
+        return
+
+    # DuckDB relation (fledgling macros, pluckit find/complexity)
+    if hasattr(result, 'columns') and hasattr(result, 'fetchall'):
+        cols = result.columns
+        rows = result.fetchall()
+        if not rows:
+            click.echo("(no results)")
+            return
+        if json_output:
+            click.echo(format_json(cols, rows))
+        elif presentation.format == "text":
+            if len(cols) == 1:
+                for row in rows:
+                    click.echo(str(row[0]))
+            elif "line_number" in cols and "content" in cols:
+                ln_idx = cols.index("line_number")
+                ct_idx = cols.index("content")
+                for row in rows:
+                    click.echo(f"{row[ln_idx]:4d}  {row[ct_idx]}")
+            else:
+                for row in rows:
+                    parts = [str(v) for v in row if v is not None]
+                    click.echo("  ".join(parts))
+        else:
+            click.echo(_format_markdown_table(cols, rows))
+        return
+
+    # Fallback: string or empty
+    click.echo(str(result) if result else "(no results)")
 
 
 def _make_tool_command(presentation: ToolPresentation, con) -> click.Command:
     """Generate a Click command from a ToolPresentation."""
-    from squackit.formatting import _format_markdown_table, format_json
-
     params = []
 
     for p in presentation.required:
@@ -123,38 +174,19 @@ def _make_tool_command(presentation: ToolPresentation, con) -> click.Command:
                 except (TypeError, ValueError):
                     pass
 
-        macro = getattr(con, presentation.macro_name)
         try:
-            rel = macro(**filtered)
-            cols = rel.columns
-            rows = rel.fetchall()
+            if presentation.executor:
+                result = presentation.executor(**filtered)
+            else:
+                macro = getattr(con, presentation.macro_name)
+                result = macro(**filtered)
         except Exception as e:
             click.echo(f"Error: {e}", err=True)
             click_ctx.exit(1)
             return
 
-        if not rows:
-            click.echo("(no results)")
-            return
-
         json_output = click_ctx.obj.get("json", False) if click_ctx.obj else False
-        if json_output:
-            click.echo(format_json(cols, rows))
-        elif presentation.format == "text":
-            if len(cols) == 1:
-                for row in rows:
-                    click.echo(str(row[0]))
-            elif "line_number" in cols and "content" in cols:
-                ln_idx = cols.index("line_number")
-                ct_idx = cols.index("content")
-                for row in rows:
-                    click.echo(f"{row[ln_idx]:4d}  {row[ct_idx]}")
-            else:
-                for row in rows:
-                    parts = [str(v) for v in row if v is not None]
-                    click.echo("  ".join(parts))
-        else:
-            click.echo(_format_markdown_table(cols, rows))
+        _format_result(result, presentation, json_output)
 
     return click.Command(
         name=presentation.name,
