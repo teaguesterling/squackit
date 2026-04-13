@@ -78,7 +78,8 @@ def create_server(
     mcp.access_log = access_log
 
     # Register each macro as an MCP tool
-    registry = build_tool_registry(con._tools)
+    from squackit.tools import PLUCKIT_TOOLS
+    registry = build_tool_registry(con._tools, extra_tools=PLUCKIT_TOOLS)
     for presentation in registry.values():
         _register_tool(mcp, con, presentation, defaults, cache, access_log)
 
@@ -185,6 +186,73 @@ def create_server(
     return mcp
 
 
+def _register_executor_tool(mcp, presentation: ToolPresentation):
+    """Register an executor-based tool (e.g. pluckit) as an MCP tool."""
+    tool_name = presentation.name
+    params = presentation.params
+    description = presentation.description
+    is_text = presentation.format == "text"
+    executor = presentation.executor
+
+    async def tool_fn(**kwargs) -> str:
+        filtered = {k: v for k, v in kwargs.items() if v is not None}
+
+        try:
+            result = executor(**filtered)
+        except Exception as e:
+            etype = type(e).__name__
+            if etype == "PluckerError":
+                return f"Error: {e}"
+            raise
+
+        # View -> markdown
+        if hasattr(result, 'markdown'):
+            return result.markdown or "(no results)"
+        # DuckDB relation -> table
+        if hasattr(result, 'columns') and hasattr(result, 'fetchall'):
+            cols = result.columns
+            rows = result.fetchall()
+            if not rows:
+                return "(no results)"
+            if is_text:
+                lines = []
+                for row in rows:
+                    parts = [str(v) for v in row if v is not None]
+                    lines.append("  ".join(parts))
+                return "\n".join(lines)
+            return _format_markdown_table(cols, rows)
+        # list -> joined
+        if isinstance(result, list):
+            return "\n".join(str(item) for item in result) if result else "(no results)"
+        return str(result) if result else "(no results)"
+
+    tool_fn.__name__ = tool_name
+    tool_fn.__qualname__ = tool_name
+    tool_fn.__doc__ = description
+
+    required_set = set(presentation.required)
+    annotations = {}
+    sig_params = []
+    for p in params:
+        if p in required_set:
+            annotations[p] = str
+            sig_params.append(inspect.Parameter(
+                p, inspect.Parameter.KEYWORD_ONLY, annotation=str,
+            ))
+        else:
+            annotations[p] = Optional[str]
+            sig_params.append(inspect.Parameter(
+                p, inspect.Parameter.KEYWORD_ONLY,
+                default=None, annotation=Optional[str],
+            ))
+    tool_fn.__annotations__ = {**annotations, "return": str}
+    tool_fn.__signature__ = inspect.Signature(
+        sig_params, return_annotation=str,
+    )
+
+    mcp.add_tool(tool_fn)
+
+
 def _register_tool(
     mcp,  # FastMCP type annotation removed to avoid import at module level
     con,
@@ -194,6 +262,10 @@ def _register_tool(
     access_log: AccessLog,
 ):
     """Register a single macro as an MCP tool."""
+    if presentation.executor:
+        _register_executor_tool(mcp, presentation)
+        return
+
     tool_name = presentation.name
     macro_name = presentation.macro_name
     params = presentation.params

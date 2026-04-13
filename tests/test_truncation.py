@@ -172,9 +172,7 @@ class TestToolRegistration:
         param_names = list(tools["read_source"].parameters.get("properties", {}).keys())
         assert "max_lines" in param_names
 
-    def test_find_definitions_has_max_results(self, tools):
-        param_names = list(tools["find_definitions"].parameters.get("properties", {}).keys())
-        assert "max_results" in param_names
+    # find_definitions is now masked by pluckit (replaced by find/find_names)
 
     def test_help_has_no_truncation_param(self, tools):
         """Tools not in _MAX_LINES or _MAX_ROWS get no truncation param."""
@@ -252,22 +250,7 @@ class TestTextTruncation:
 class TestMarkdownTruncation:
     """Test truncation of markdown-format (tabular) tools."""
 
-    @pytest.mark.anyio
-    async def test_find_definitions_truncates(self, mcp):
-        result = _text(await mcp.call_tool("find_definitions", {
-            "file_pattern": f"{PROJECT_ROOT}/**/*.py",
-            "max_results": 15,
-        }))
-        assert "--- omitted" in result
-        assert _HINTS["find_definitions"] in result
-
-    @pytest.mark.anyio
-    async def test_find_definitions_name_pattern_bypasses(self, mcp):
-        result = _text(await mcp.call_tool("find_definitions", {
-            "file_pattern": f"{PROJECT_ROOT}/**/*.py",
-            "name_pattern": "load%",
-        }))
-        assert "--- omitted" not in result
+    # find_definitions is now masked by pluckit (replaced by find/find_names)
 
     @pytest.mark.anyio
     async def test_list_files_truncates(self, mcp):

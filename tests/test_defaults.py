@@ -263,20 +263,7 @@ class TestToolCallDefaults:
         # ToolResult.content is a list of TextContent
         return result.content[0].text
 
-    def test_find_definitions_uses_default_pattern(self, server):
-        """find_definitions with no file_pattern uses inferred default."""
-        result = self._call(server, "find_definitions", {})
-        assert result != "(no results)"
-        # Should find Python definitions (this is a Python project).
-        # find_definitions returns markdown table with name/kind columns.
-        assert "function" in result.lower() or "class" in result.lower()
-
-    def test_find_definitions_explicit_overrides(self, server):
-        """Explicit pattern overrides the default."""
-        result = self._call(
-            server, "find_definitions", {"file_pattern": "nonexistent/**/*.xyz"}
-        )
-        assert result == "(no results)"
+    # find_definitions is now masked by pluckit (replaced by find/find_names)
 
     def test_doc_outline_uses_default_pattern(self, server):
         """doc_outline with no file_pattern uses inferred doc pattern."""
@@ -290,19 +277,5 @@ class TestToolCallDefaults:
         )
         assert result == "(no results)"
 
-    def test_code_structure_uses_default_pattern(self, server):
-        """code_structure with no file_pattern uses inferred default."""
-        result = self._call(server, "code_structure", {})
-        assert result != "(no results)"
-
-    def test_code_structure_explicit_overrides(self, server):
-        """Explicit pattern overrides the default for code_structure."""
-        result = self._call(
-            server, "code_structure", {"file_pattern": "nonexistent/**/*.xyz"}
-        )
-        assert result == "(no results)"
-
-    def test_complexity_hotspots_uses_default_pattern(self, server):
-        """complexity_hotspots with no file_pattern uses inferred default."""
-        result = self._call(server, "complexity_hotspots", {})
-        assert result != "(no results)"
+    # code_structure and complexity_hotspots are now masked by pluckit
+    # (replaced by find and complexity tools)
