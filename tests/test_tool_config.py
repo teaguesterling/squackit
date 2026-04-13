@@ -3,7 +3,7 @@
 from fledgling.tools import ToolInfo
 from squackit.tool_config import (
     normalize_tool_name, to_kebab, to_camel, ToolPresentation,
-    build_tool_registry, SKIP, OVERRIDES,
+    build_tool_registry, SKIP, OVERRIDES, MASKED_BY_PLUCKIT,
 )
 
 
@@ -190,3 +190,76 @@ class TestBuildToolRegistry:
     def test_overrides_has_key_tools(self):
         assert "pss_render" in OVERRIDES
         assert "read_source" in OVERRIDES
+
+
+class TestExecutorField:
+
+    def test_executor_default_none(self):
+        info = ToolInfo(macro_name="test", params=["a"])
+        tp = ToolPresentation(info=info)
+        assert tp.executor is None
+
+    def test_executor_set(self):
+        def my_exec(**kwargs):
+            return kwargs
+        info = ToolInfo(macro_name="test", params=["a"])
+        tp = ToolPresentation(info=info, executor=my_exec)
+        assert tp.executor is my_exec
+
+
+class TestExtraTools:
+
+    def test_extra_tools_registered(self):
+        def my_exec(**kwargs):
+            return kwargs
+        extra = [
+            ToolPresentation(
+                info=ToolInfo(macro_name="my_tool", params=["x"]),
+                executor=my_exec,
+            ),
+        ]
+        fledgling_tools = [
+            ToolInfo(macro_name="list_files", params=["pattern"]),
+        ]
+        registry = build_tool_registry(fledgling_tools, extra_tools=extra)
+        assert "my_tool" in registry
+        assert "list_files" in registry
+
+    def test_extra_tools_take_priority(self):
+        def my_exec(**kwargs):
+            return kwargs
+        extra = [
+            ToolPresentation(
+                info=ToolInfo(macro_name="find_definitions", params=["source", "selector"]),
+                executor=my_exec,
+            ),
+        ]
+        fledgling_tools = [
+            ToolInfo(macro_name="find_definitions", params=["file_pattern", "name_pattern"]),
+        ]
+        registry = build_tool_registry(fledgling_tools, extra_tools=extra)
+        assert registry["find_definitions"].executor is my_exec
+
+    def test_masked_by_pluckit(self):
+        assert "pss_render" in MASKED_BY_PLUCKIT
+        assert "find_definitions" in MASKED_BY_PLUCKIT
+        assert "code_structure" in MASKED_BY_PLUCKIT
+        assert "complexity_hotspots" in MASKED_BY_PLUCKIT
+
+    def test_masked_tools_skipped_when_extra_present(self):
+        def my_exec(**kwargs):
+            return kwargs
+        extra = [
+            ToolPresentation(
+                info=ToolInfo(macro_name="view", params=["source", "selector"]),
+                executor=my_exec,
+            ),
+        ]
+        fledgling_tools = [
+            ToolInfo(macro_name="pss_render", params=["source", "selector"]),
+            ToolInfo(macro_name="list_files", params=["pattern"]),
+        ]
+        registry = build_tool_registry(fledgling_tools, extra_tools=extra)
+        assert "view" in registry
+        assert "select_code" not in registry
+        assert "list_files" in registry

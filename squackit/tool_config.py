@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Literal, Optional
+from typing import Callable, Literal, Optional
 
 from fledgling.tools import ToolInfo
 
@@ -53,6 +53,7 @@ class ToolPresentation:
     range_params: frozenset[str] = field(default_factory=frozenset)
     cache_ttl: int | None = None
     cache_mtime_params: tuple[str, ...] = ()
+    executor: Callable | None = None
 
     @property
     def name(self) -> str:
@@ -142,6 +143,14 @@ SKIP: set[str] = {
     "repo_files",
     "module_dependencies",
     "function_callers",
+}
+
+# ── Masked by pluckit ────────────────────────────────────────────────
+MASKED_BY_PLUCKIT: set[str] = {
+    "pss_render",
+    "find_definitions",
+    "code_structure",
+    "complexity_hotspots",
 }
 
 # ── Per-tool overrides ────────────────────────────────────────────────
@@ -261,14 +270,23 @@ OVERRIDES: dict[str, dict] = {
 def build_tool_registry(
     tools_iterable,
     skip: set[str] | None = None,
+    extra_tools: list[ToolPresentation] | None = None,
 ) -> dict[str, ToolPresentation]:
     """Build the tool registry from an iterable of ToolInfo objects."""
     skip = skip if skip is not None else SKIP
     registry: dict[str, ToolPresentation] = {}
+
+    if extra_tools:
+        skip = skip | MASKED_BY_PLUCKIT
+        for tp in extra_tools:
+            registry[tp.name] = tp
+
     for tool_info in tools_iterable:
         if tool_info.macro_name in skip:
             continue
         overrides = OVERRIDES.get(tool_info.macro_name, {})
         presentation = ToolPresentation(info=tool_info, **overrides)
-        registry[presentation.name] = presentation
+        if presentation.name not in registry:
+            registry[presentation.name] = presentation
+
     return registry
