@@ -113,15 +113,34 @@ class ToolPresentation:
 # ── Skip set ──────────────────────────────────────────────────────────
 
 SKIP: set[str] = {
+    # ── Raw AST query macros (use pluckit find/view instead) ──
     "ast_ancestors", "ast_call_arguments", "ast_children", "ast_class_members",
     "ast_containing_line", "ast_dead_code", "ast_definitions", "ast_descendants",
     "ast_function_metrics", "ast_function_scope", "ast_functions_containing",
     "ast_in_range", "ast_match", "ast_nesting_analysis", "ast_pattern",
     "ast_security_audit", "ast_siblings", "ast_definition_parent",
+    "ast_callees", "ast_callers", "ast_exports", "ast_follows",
+    "ast_has", "ast_imports", "ast_inside", "ast_not_has",
+    "ast_precedes", "ast_resolve", "ast_source_of",
+    "ast_select", "ast_select_list", "ast_select_rules", "ast_select_render",
+    # ── Superseded by pluckit tools ──
+    "find_in_ast", "find_calls", "find_imports",
+    "find_code", "find_code_grep",
+    "find_code_examples", "find_class_members",
+    "find_exports", "find_imports_structured",
+    "view_code", "view_code_text",
+    # ── Duplicate/variant macros ──
+    "file_diff_text",       # file_diff covers this
+    "read_source_text",     # read_source covers this
+    "read_source_batch",    # read_source covers this
+    # ── Compound query macros (squackit workflows cover these) ──
+    "explore_query", "investigate_query", "review_query", "search_query",
+    # ── Internal/low-level ──
     "duckdb_logs_parsed", "duckdb_profiling_settings",
     "histogram", "histogram_values",
     "load_conversations",
-    "read_source_batch",
+    "parse_ast_list_table",
+    "read_as_table",
     "file_line_count",
     "content_blocks",
     "tool_results",
@@ -131,14 +150,6 @@ SKIP: set[str] = {
     "session_summary",
     "model_usage",
     "search_tool_inputs",
-    "find_in_ast",
-    "find_calls",
-    "find_imports",
-    "ast_select",
-    "ast_select_list",
-    "ast_select_rules",
-    "ast_select_render",
-    "find_code_examples",
     "doc_stats",
     "repo_files",
     "module_dependencies",
