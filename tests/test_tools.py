@@ -15,7 +15,7 @@ from squackit.tools import (
 class TestViewExecutor:
 
     def test_returns_view_object(self):
-        from pluckit.plugins.viewer import View
+        from pluckit.pluckins.viewer import View
         result = view_executor(source="squackit/**/*.py", selector=".fn")
         assert isinstance(result, View)
 
@@ -140,3 +140,143 @@ class TestPluckExecutor:
         result = pluck_executor(argv="")
         parsed = json.loads(result)
         assert "error" in parsed
+
+
+class TestPluckMutationSafety:
+
+    def test_mutation_blocked_by_default(self):
+        import json
+        # rename is a mutation op
+        result = pluck_executor(argv="squackit/cli.py find .fn#nonexistent rename foo")
+        parsed = json.loads(result)
+        assert "error" in parsed
+        assert "blocked" in parsed["error"]
+        assert "rename" in parsed["mutations"]
+
+    def test_mutation_blocked_reports_all_ops(self):
+        import json
+        result = pluck_executor(
+            argv="squackit/cli.py find .fn#x rename new wrap before after"
+        )
+        parsed = json.loads(result)
+        assert "error" in parsed
+        assert "rename" in parsed["mutations"]
+        assert "wrap" in parsed["mutations"]
+
+    def test_mutation_allowed_with_flag_string(self):
+        import json
+        # Target a nonexistent fn so no actual mutation happens, but the
+        # block check should pass and evaluation should proceed
+        result = pluck_executor(
+            argv="squackit/cli.py find .fn#__definitely_not_a_function__ rename bar",
+            allow_mutations="true",
+        )
+        parsed = json.loads(result)
+        # Should NOT be blocked — may have a different error or succeed
+        assert parsed.get("error", "").startswith("blocked") is False
+
+    def test_mutation_allowed_with_flag_bool(self):
+        import json
+        result = pluck_executor(
+            argv="squackit/cli.py find .fn#__definitely_not_a_function__ rename bar",
+            allow_mutations=True,
+        )
+        parsed = json.loads(result)
+        assert parsed.get("error", "").startswith("blocked") is False
+
+    def test_non_mutation_chain_runs_normally(self):
+        import json
+        # No mutation ops — should run regardless of allow_mutations
+        result = pluck_executor(argv="squackit/cli.py find .fn names")
+        parsed = json.loads(result)
+        assert "error" not in parsed
+        assert parsed["type"] == "names"
+
+
+class TestChainMutationOps:
+
+    def test_detects_rename(self):
+        from pluckit import Chain
+        from squackit.tools import _chain_mutation_ops
+        chain = Chain.from_argv(["squackit/cli.py", "find", ".fn", "rename", "new"])
+        assert _chain_mutation_ops(chain) == ["rename"]
+
+    def test_detects_multiple(self):
+        from pluckit import Chain
+        from squackit.tools import _chain_mutation_ops
+        chain = Chain.from_argv([
+            "squackit/cli.py", "find", ".fn", "rename", "new",
+            "wrap", "before", "after",
+        ])
+        assert _chain_mutation_ops(chain) == ["rename", "wrap"]
+
+    def test_no_mutations_returns_empty(self):
+        from pluckit import Chain
+        from squackit.tools import _chain_mutation_ops
+        chain = Chain.from_argv(["squackit/cli.py", "find", ".fn", "names"])
+        assert _chain_mutation_ops(chain) == []
+
+
+class TestCollectPluckinTools:
+    """collect_pluckin_tools walks registered pluckins and calls squackit_tools()."""
+
+    def test_empty_registry_returns_empty(self):
+        from pluckit import Plucker
+        from squackit.tools import collect_pluckin_tools
+        p = Plucker()  # no plugins
+        assert collect_pluckin_tools(p) == []
+
+    def test_pluckin_without_squackit_tools_skipped(self):
+        from pluckit import Plucker
+        from pluckit.pluckins.viewer import AstViewer
+        from squackit.tools import collect_pluckin_tools
+        # AstViewer doesn't implement squackit_tools — should be skipped silently
+        p = Plucker(plugins=[AstViewer])
+        assert collect_pluckin_tools(p) == []
+
+    def test_pluckin_with_squackit_tools_collected(self):
+        from pluckit import Plucker
+        from pluckit.pluckins.base import Pluckin
+        from fledgling.tools import ToolInfo
+        from squackit.tool_config import ToolPresentation
+        from squackit.tools import collect_pluckin_tools
+
+        def exec_fn(*, x: str):
+            return [x]
+
+        sentinel = ToolPresentation(
+            info=ToolInfo(
+                macro_name="_test_sentinel",
+                params=["x"],
+                description="test tool",
+                required=["x"],
+            ),
+            executor=exec_fn,
+        )
+
+        class MyPluckin(Pluckin):
+            name = "MyPluckin"
+            methods = {}
+
+            def squackit_tools(self):
+                return [sentinel]
+
+        p = Plucker(plugins=[MyPluckin])
+        tools = collect_pluckin_tools(p)
+        assert sentinel in tools
+
+    def test_broken_squackit_tools_does_not_crash(self):
+        from pluckit import Plucker
+        from pluckit.pluckins.base import Pluckin
+        from squackit.tools import collect_pluckin_tools
+
+        class BrokenPluckin(Pluckin):
+            name = "BrokenPluckin"
+            methods = {}
+
+            def squackit_tools(self):
+                raise RuntimeError("intentional")
+
+        p = Plucker(plugins=[BrokenPluckin])
+        # Should return empty, not crash
+        assert collect_pluckin_tools(p) == []

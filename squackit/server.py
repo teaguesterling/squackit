@@ -62,8 +62,13 @@ def create_server(
         A FastMCP server instance ready to .run().
     """
     from fastmcp import FastMCP
+    from pluckit.pluckins.viewer import AstViewer
 
-    con = Plucker(repo=root, profile=profile, modules=modules, init=init).connection
+    plucker = Plucker(
+        repo=root, profile=profile, modules=modules, init=init,
+        plugins=[AstViewer],
+    )
+    con = plucker.connection
     mcp = FastMCP(name)
 
     # Infer smart defaults, merge with config file overrides
@@ -78,8 +83,9 @@ def create_server(
     mcp.access_log = access_log
 
     # Register each macro as an MCP tool
-    from squackit.tools import PLUCKIT_TOOLS
-    registry = build_tool_registry(con._tools, extra_tools=PLUCKIT_TOOLS)
+    from squackit.tools import PLUCKIT_TOOLS, collect_pluckin_tools
+    extra = list(PLUCKIT_TOOLS) + collect_pluckin_tools(plucker)
+    registry = build_tool_registry(con._tools, extra_tools=extra)
     for presentation in registry.values():
         _register_tool(mcp, con, presentation, defaults, cache, access_log)
 

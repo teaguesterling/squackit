@@ -95,10 +95,12 @@ class ToolGroup(click.Group):
 def _get_registry():
     """Lazily build the tool registry."""
     from pluckit import Plucker
-    from squackit.tools import PLUCKIT_TOOLS
-    p = Plucker()
+    from pluckit.pluckins.viewer import AstViewer
+    from squackit.tools import PLUCKIT_TOOLS, collect_pluckin_tools
+    p = Plucker(plugins=[AstViewer])
     con = p.connection
-    return build_tool_registry(con._tools, extra_tools=PLUCKIT_TOOLS), con
+    extra = list(PLUCKIT_TOOLS) + collect_pluckin_tools(p)
+    return build_tool_registry(con._tools, extra_tools=extra), con
 
 
 def _format_result(result, presentation, json_output):
@@ -286,20 +288,48 @@ def pluck(click_ctx, argv):
         squackit pluck "src/api.py" find .fn#handler view
         squackit pluck "**/*.py" find .fn names -- find .class names
 
+    Mutations (rename, replaceWith, wrap, etc.) are blocked by default.
+    Pass --write to allow them. Example:
+
+        squackit pluck --write "src/api.py" find .fn#old rename new
+
     See pluckit documentation for full chain grammar.
     """
     from pluckit import Chain
     from squackit.formatting import _format_markdown_table, format_json
+    from squackit.tools import _chain_mutation_ops
 
     if not argv:
         click.echo(click_ctx.get_help())
         return
 
+    # Extract squackit-level --write flag before passing to pluckit
+    argv_list = list(argv)
+    write_mode = "--write" in argv_list
+    if write_mode:
+        argv_list = [a for a in argv_list if a != "--write"]
+
     try:
-        chain = Chain.from_argv(list(argv))
-        result = chain.evaluate()
+        chain = Chain.from_argv(argv_list)
     except SystemExit:
         raise
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        click_ctx.exit(1)
+        return
+
+    mutations = _chain_mutation_ops(chain)
+    if mutations and not write_mode:
+        click.echo(
+            f"Error: chain contains mutation operations: {', '.join(mutations)}\n"
+            f"Pass --write to allow mutations (they modify source files).",
+            err=True,
+        )
+        click_ctx.exit(1)
+        return
+
+    try:
+        result = chain.evaluate()
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         click_ctx.exit(1)

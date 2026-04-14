@@ -15,7 +15,7 @@ from squackit.tool_config import ToolPresentation
 def _make_plucker(source: str):
     """Create a Plucker with AstViewer for tool execution."""
     from pluckit import Plucker
-    from pluckit.plugins.viewer import AstViewer
+    from pluckit.pluckins.viewer import AstViewer
     return Plucker(code=source, plugins=[AstViewer])
 
 
@@ -54,18 +54,60 @@ def complexity_executor(*, source: str, selector: str):
     return rel
 
 
-def pluck_executor(*, argv: str):
+def _chain_mutation_ops(chain) -> list[str]:
+    """Return the list of mutation op names present in the chain (in order)."""
+    from pluckit.chain import Chain as _Chain
+    return [step.op for step in chain.steps if step.op in _Chain._MUTATION_OPS]
+
+
+def collect_pluckin_tools(plucker) -> list:
+    """Collect squackit tools from a Plucker's registered pluckins.
+
+    Pluckins that want to contribute squackit tools expose a
+    ``squackit_tools()`` method returning a list of ToolPresentation
+    objects. This function walks the Plucker's pluckin registry and
+    collects tools from any pluckin that implements the method.
+
+    Plugin authors can add squackit integration without depending on
+    squackit at import time — the import lives inside the method body
+    and only fires when squackit actually calls it.
+    """
+    tools: list = []
+    registry = getattr(plucker, "_registry", None)
+    if registry is None:
+        return tools
+    pluckins = getattr(registry, "pluckins", None)
+    if pluckins is None:
+        return tools
+    for pluckin in pluckins:
+        fn = getattr(pluckin, "squackit_tools", None)
+        if callable(fn):
+            try:
+                tools.extend(fn())
+            except Exception:
+                # A broken pluckin shouldn't break the whole registry.
+                # Squackit's server/CLI will surface the error contextually.
+                pass
+    return tools
+
+
+def pluck_executor(*, argv: str, allow_mutations: str | bool = False):
     """Execute a pluckit chain from a whitespace-separated command string.
 
     Accepts the same grammar as `squackit pluck` on the CLI:
         "source_pattern [method [arg]]... [terminal]"
+
+    **Mutation safety:** chains containing mutation operations (rename,
+    replaceWith, wrap, remove, etc.) are blocked by default. Pass
+    ``allow_mutations=true`` to opt in. Agents should only enable this
+    when the user has explicitly authorized code changes.
 
     Returns a JSON-serialized chain result: {chain, type, data}.
 
     Examples:
         pluck(argv="**/*.py find .fn names")
         pluck(argv="--plugin AstViewer src/api.py find .fn#handler view")
-        pluck(argv="**/*.py find .fn names reset find .class names")
+        pluck(argv="**/*.py find .fn#old rename new_name", allow_mutations=True)
     """
     import shlex
     import json
@@ -76,6 +118,23 @@ def pluck_executor(*, argv: str):
         return json.dumps({"error": "Empty argv"}, indent=2)
 
     chain = Chain.from_argv(tokens)
+
+    # Coerce string "true"/"false" from MCP clients to bool
+    if isinstance(allow_mutations, str):
+        allow = allow_mutations.lower() in ("true", "1", "yes")
+    else:
+        allow = bool(allow_mutations)
+
+    mutations = _chain_mutation_ops(chain)
+    if mutations and not allow:
+        return json.dumps({
+            "error": "blocked: chain contains mutation operations",
+            "mutations": mutations,
+            "hint": "Set allow_mutations=true to enable. Mutations modify "
+                    "source files — ensure the user has authorized changes.",
+            "chain": chain.to_dict(),
+        }, indent=2)
+
     result = chain.evaluate()
     return json.dumps(result, indent=2, default=str)
 
@@ -128,7 +187,7 @@ COMPLEXITY_TOOL = ToolPresentation(
 PLUCK_TOOL = ToolPresentation(
     info=ToolInfo(
         macro_name="pluck",
-        params=["argv"],
+        params=["argv", "allow_mutations"],
         description=(
             "Execute a pluckit chain query. Pass a whitespace-separated "
             "command: 'source_pattern [method [arg]]... [terminal]'. "
@@ -136,7 +195,8 @@ PLUCK_TOOL = ToolPresentation(
             "Use 'reset' to start a new chain from the source. "
             "Example: '**/*.py find .fn containing cache names'. "
             "Use '--plugin AstViewer' prefix for view terminals. "
-            "Returns JSON: {chain, type, data}."
+            "Mutations (rename, replaceWith, wrap, etc.) are blocked "
+            "unless allow_mutations=true. Returns JSON: {chain, type, data}."
         ),
         required=["argv"],
     ),

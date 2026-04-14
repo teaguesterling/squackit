@@ -139,3 +139,20 @@ class TestPluckCommand:
         assert result.exit_code == 0, result.output
         # Should show class names (last chain) not fn names
         assert "ToolGroup" in result.output or "LazyToolGroup" in result.output
+
+    def test_pluck_mutation_blocked_by_default(self):
+        result = runner.invoke(cli, ["pluck", "squackit/cli.py",
+                                      "find", ".fn#nonexistent", "rename", "foo"])
+        assert result.exit_code != 0
+        assert "mutation" in result.output.lower()
+        assert "rename" in result.output
+
+    def test_pluck_mutation_allowed_with_write(self):
+        # Target nonexistent function so no actual mutation occurs,
+        # but block check should pass
+        result = runner.invoke(cli, ["pluck", "--write", "squackit/cli.py",
+                                      "find", ".fn#__definitely_not_a_function__",
+                                      "rename", "bar"])
+        # Should not be blocked by mutation check; may succeed or fail for
+        # other reasons, but the mutation message should not appear
+        assert "chain contains mutation operations" not in result.output
