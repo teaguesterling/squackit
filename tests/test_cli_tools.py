@@ -96,3 +96,46 @@ class TestPluckitToolsCli:
         import json
         parsed = json.loads(result.output)
         assert isinstance(parsed, list)
+
+
+class TestPluckCommand:
+
+    def test_pluck_help_with_no_args(self):
+        result = runner.invoke(cli, ["pluck"])
+        assert result.exit_code == 0
+        assert "pluckit" in result.output.lower() or "chain" in result.output.lower()
+
+    def test_pluck_find_names(self):
+        result = runner.invoke(cli, ["pluck", "squackit/cli.py", "find", ".fn", "names"])
+        assert result.exit_code == 0, result.output
+        assert "cli" in result.output
+
+    def test_pluck_count(self):
+        result = runner.invoke(cli, ["pluck", "squackit/cli.py", "find", ".fn", "count"])
+        assert result.exit_code == 0, result.output
+        # Output should be a number
+        assert result.output.strip().isdigit()
+
+    def test_pluck_view_with_plugin(self):
+        result = runner.invoke(cli, ["pluck", "--plugin", "AstViewer",
+                                      "squackit/cli.py", "find", ".fn#cli", "view"])
+        assert result.exit_code == 0, result.output
+        assert "def cli" in result.output
+
+    def test_pluck_json_output(self):
+        result = runner.invoke(cli, ["--json", "pluck", "squackit/cli.py", "find", ".fn", "names"])
+        assert result.exit_code == 0, result.output
+        import json
+        parsed = json.loads(result.output)
+        assert "chain" in parsed
+        assert "data" in parsed
+        assert isinstance(parsed["data"], list)
+
+    def test_pluck_reset_separates_chains(self):
+        # 'reset' clears the selection so find starts fresh
+        result = runner.invoke(cli, ["pluck", "squackit/cli.py",
+                                      "find", ".fn", "names",
+                                      "reset", "find", ".class", "names"])
+        assert result.exit_code == 0, result.output
+        # Should show class names (last chain) not fn names
+        assert "ToolGroup" in result.output or "LazyToolGroup" in result.output

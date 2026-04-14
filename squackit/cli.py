@@ -269,3 +269,77 @@ def tool_list(ctx):
         cols = ["Name", "Description"]
         rows = [(t["name"], t["description"][:60]) for t in tools]
         click.echo(_format_markdown_table(cols, rows))
+
+
+# ── Pluck command (pluckit chain passthrough) ─────────────────────────
+
+@cli.command("pluck", context_settings={"ignore_unknown_options": True,
+                                         "allow_extra_args": True})
+@click.argument("argv", nargs=-1, type=click.UNPROCESSED)
+@click.pass_context
+def pluck(click_ctx, argv):
+    """Run a pluckit chain. Passes args directly to Plucker.from_argv.
+
+    Examples:
+
+        squackit pluck "**/*.py" find .fn names
+        squackit pluck "src/api.py" find .fn#handler view
+        squackit pluck "**/*.py" find .fn names -- find .class names
+
+    See pluckit documentation for full chain grammar.
+    """
+    from pluckit import Chain
+    from squackit.formatting import _format_markdown_table, format_json
+
+    if not argv:
+        click.echo(click_ctx.get_help())
+        return
+
+    try:
+        chain = Chain.from_argv(list(argv))
+        result = chain.evaluate()
+    except SystemExit:
+        raise
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        click_ctx.exit(1)
+        return
+
+    json_output = click_ctx.obj.get("json", False) if click_ctx.obj else False
+    data = result.get("data")
+    result_type = result.get("type")
+
+    if json_output:
+        click.echo(_json.dumps(result, indent=2, default=str))
+        return
+
+    # Terminal-type dispatch for human-readable output
+    if result_type == "view" and isinstance(data, dict):
+        blocks = data.get("blocks", [])
+        for block in blocks:
+            md = block.get("markdown", "")
+            if md:
+                click.echo(md)
+                click.echo()
+        return
+
+    if result_type in ("names", "text") and isinstance(data, list):
+        for item in data:
+            click.echo(str(item))
+        return
+
+    if result_type == "count":
+        click.echo(str(data))
+        return
+
+    if result_type == "materialize" and isinstance(data, list):
+        if not data:
+            click.echo("(no results)")
+            return
+        cols = list(data[0].keys())
+        rows = [tuple(row.get(c) for c in cols) for row in data]
+        click.echo(_format_markdown_table(cols, rows))
+        return
+
+    # Fallback
+    click.echo(str(data) if data else "(no results)")
