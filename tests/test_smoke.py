@@ -3,7 +3,7 @@
 
 def test_import_squackit():
     import squackit
-    assert squackit.__version__ == "0.3.1"
+    assert squackit.__version__ == "0.3.2"
 
 
 def test_fledgling_available():
