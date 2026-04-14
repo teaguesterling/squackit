@@ -1,48 +1,91 @@
 # Tools Reference
 
-squackit registers fledgling's SQL macros as MCP tools automatically. Each tool
-accepts the macro's parameters and returns results as formatted text with
-token-aware truncation.
+squackit exposes tools through two sources:
 
-## Code tools
+- **Pluckit tools** — CSS selector queries over ASTs (`view`, `find`, `find_names`, `complexity`)
+- **Fledgling macros** — SQL-backed tools for file I/O, git, docs, and diagnostics
 
-### find_definitions
+Pluckit tools take priority when both provide a capability — for example,
+pluckit's `find` replaces fledgling's `find_definitions`, `code_structure`,
+and `complexity_hotspots`.
 
-Find function, class, and module definitions by AST analysis. Use
-`name_pattern` with SQL LIKE wildcards (`%`).
+Each tool accepts parameters (required as positional args, optional as
+`--flags`) and returns markdown by default or JSON with `--json`.
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `file_pattern` | string | inferred | Glob pattern for files to search |
-| `name_pattern` | string | `%` | SQL LIKE pattern to filter by name |
+## Pluckit tools
 
-### find_in_ast
+Pluckit tools use [CSS-like selectors](https://github.com/teaguesterling/pluckit)
+over ASTs. Selectors include `.fn` (functions), `.class`, `.call`, `#name`
+(by name), `[attr]` (by attribute), and combinators like `>`, `+`, `~`.
 
-Search code by semantic category: calls, imports, definitions, loops,
-conditionals, strings, comments.
+### view
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `file_pattern` | string | inferred | Glob pattern for files to search |
-| `kind` | string | required | Semantic category to search |
-| `name` | string | `%` | Name pattern to filter |
-
-### code_structure
-
-Structural overview with complexity metrics. A good first step for unfamiliar code.
+View source code matching selectors. Returns rendered markdown with file
+headings and source blocks.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `file_pattern` | string | inferred | Glob pattern for files to analyze |
+| `source` | string | required | Glob pattern for files |
+| `selector` | string | required | CSS selector |
 
-### complexity_hotspots
+```bash
+squackit tool view "src/**/*.py" ".fn#main"
+squackit tool view "**/*.py" ".class#AuthService .fn"
+```
 
-Most complex functions in the codebase, ranked by cyclomatic complexity.
+### find
+
+Find AST nodes matching selectors. Returns a table with file paths, names,
+types, and line ranges.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `file_pattern` | string | inferred | Glob pattern |
-| `n` | integer | 20 | Number of results |
+| `source` | string | required | Glob pattern for files |
+| `selector` | string | required | CSS selector |
+
+```bash
+squackit tool find "src/**/*.py" ".fn"
+squackit tool find "**/*.py" ".class > .fn"
+```
+
+### find_names
+
+Find just the names of AST nodes matching selectors. Lighter than `find`
+when you only want names.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `source` | string | required | Glob pattern for files |
+| `selector` | string | required | CSS selector |
+
+```bash
+squackit tool find_names "src/**/*.py" ".class"
+```
+
+### complexity
+
+Find AST nodes ranked by complexity (descendant count).
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `source` | string | required | Glob pattern for files |
+| `selector` | string | required | CSS selector |
+
+```bash
+squackit tool complexity "src/**/*.py" ".fn"
+```
+
+### Chain queries (squackit pluck)
+
+For multi-step queries (navigation, filtering, batch operations), use
+`squackit pluck` which exposes pluckit's full chain grammar:
+
+```bash
+squackit pluck "**/*.py" find .class children .fn count
+squackit pluck "**/*.py" find .fn containing "cache" names
+```
+
+## File tools
 
 ### read_source
 
@@ -63,7 +106,7 @@ Read lines centered around a specific line number.
 |-----------|------|---------|-------------|
 | `file_path` | string | required | Path to the file |
 | `center_line` | integer | required | Line to center on |
-| `context_lines` | integer | 10 | Lines of context above/below |
+| `ctx` | integer | 10 | Lines of context above/below |
 
 ### list_files
 
@@ -71,13 +114,11 @@ Find files by glob pattern.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `file_pattern` | string | inferred | Glob pattern |
+| `pattern` | string | required | Glob pattern |
 
 ### project_overview
 
-File counts by language for the project.
-
-*No parameters.*
+File counts by language for the project. *No parameters.*
 
 ## Documentation tools
 
@@ -97,7 +138,7 @@ Read a specific markdown section by ID.
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `file_path` | string | required | Markdown file path |
-| `section_id` | integer | required | Section ID from doc_outline |
+| `target_id` | integer | required | Section ID from doc_outline |
 
 ## Git tools
 
@@ -108,6 +149,7 @@ Git commit history.
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `n` | integer | 20 | Number of commits |
+| `repo` | string | cwd | Repo path |
 
 ### file_changes
 
@@ -115,8 +157,9 @@ Files changed between two git revisions.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `from_rev` | string | inferred | Start revision |
-| `to_rev` | string | `HEAD` | End revision |
+| `from_rev` | string | required | Start revision |
+| `to_rev` | string | required | End revision |
+| `repo` | string | cwd | Repo path |
 
 ### file_diff
 
@@ -124,7 +167,7 @@ Line-level unified diff between revisions.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `file_path` | string | required | File to diff |
+| `file` | string | required | File to diff |
 | `from_rev` | string | inferred | Start revision |
 | `to_rev` | string | `HEAD` | End revision |
 
@@ -134,8 +177,8 @@ File content at a specific git revision.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `file_path` | string | required | File path |
-| `rev` | string | `HEAD` | Git revision |
+| `file` | string | required | File path |
+| `rev` | string | required | Git revision |
 
 ### branch_list
 
@@ -155,9 +198,9 @@ Semantic diff: added/removed/modified definitions between revisions.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `file` | string | required | File to diff |
 | `from_rev` | string | inferred | Start revision |
 | `to_rev` | string | `HEAD` | End revision |
-| `file_pattern` | string | inferred | Glob pattern |
 
 ### changed_function_summary
 
@@ -165,35 +208,17 @@ Changed functions ranked by complexity between revisions.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `from_rev` | string | inferred | Start revision |
-| `to_rev` | string | `HEAD` | End revision |
-| `file_pattern` | string | inferred | Glob pattern |
+| `from_rev` | string | required | Start revision |
+| `to_rev` | string | required | End revision |
 
-## Conversation tools
+## Conversation tools (MCP only)
 
-### sessions
+These are registered on the MCP server but not exposed via CLI.
 
-Claude Code conversation sessions. *No parameters.*
-
-### messages
-
-Flattened conversation messages.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `session_id` | string | none | Filter by session |
-
-### tool_calls
-
-Tool usage from conversations. *No parameters.*
-
-### search_messages
-
-Full-text search across conversation content.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `query` | string | required | Search text |
+- `sessions` — Claude Code conversation sessions
+- `messages` — Flattened conversation messages
+- `tool_calls` — Tool usage from conversations
+- `search_messages` — Full-text search across conversation content
 
 ## Diagnostics
 
@@ -205,9 +230,11 @@ Fledgling skill guide. No args for outline, section ID for details.
 
 Runtime diagnostics: version, profile, modules, extensions.
 
-## Compound workflow tools
+## Compound workflow tools (MCP only)
 
-These compose multiple tools into a single-call briefing.
+These compose multiple tools into a single-call briefing. Exposed through
+the MCP server; use the CLI tools individually if you want to run them
+one at a time.
 
 ### explore
 

@@ -11,7 +11,8 @@ squackit infers project settings at startup by analyzing the codebase:
 | `main_branch` | Git HEAD reference | `main` |
 
 These defaults are used whenever a tool parameter is omitted. For example,
-`find_definitions()` with no `file_pattern` uses the inferred `code_pattern`.
+a tool that takes `file_pattern` will use the inferred `code_pattern` when
+none is passed.
 
 ## Config file
 
@@ -52,8 +53,7 @@ Cache policies vary by tool:
 
 | Tool category | TTL | Invalidation |
 |---------------|-----|-------------|
-| `project_overview`, `explore` | Session lifetime | Never (run once) |
-| `find_definitions`, `code_structure` | 5 minutes | Time-based |
+| `project_overview`, `doc_outline` | Session lifetime | Never |
 | `read_source`, `read_context` | 5 minutes | File mtime change |
 | `doc_outline` | Session lifetime | Never |
 | `recent_changes` | 30 seconds | Time-based |
@@ -69,7 +69,7 @@ Every tool has configurable output limits:
 | Tool type | Default limit | Parameter |
 |-----------|---------------|-----------|
 | Content tools (`read_source`, `file_diff`) | 200 lines | `max_lines` |
-| Discovery tools (`find_definitions`, `list_files`) | 50 rows | `max_results` |
+| Discovery tools (`list_files`, `doc_outline`) | 50-100 rows | `max_results` |
 | Git tools (`file_changes`, `recent_changes`) | 20-25 rows | `max_results` |
 
 Truncated output shows head + tail with a hint:
@@ -85,8 +85,8 @@ Use lines='N-M' to see a range, or match='keyword' to filter.
 ```
 
 **Automatic bypass:** providing a narrowing parameter (`lines`, `match`,
-`name_pattern`) disables truncation. The agent is already being specific,
-so the cap gets out of the way.
+`search`) disables truncation. The agent is already being specific, so the
+cap gets out of the way.
 
 ## Environment variables
 
@@ -102,7 +102,7 @@ When using squackit programmatically:
 from squackit.server import create_server
 
 mcp = create_server(
-    name="fledgling",       # MCP server name
+    name="squackit",         # MCP server name
     root="/path/to/project", # Project root (default: cwd)
     init=None,               # Init file: None=auto, False=skip, path=explicit
     modules=None,            # SQL modules to load (default: all for profile)

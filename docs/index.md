@@ -12,15 +12,24 @@ in fledgling's neutral SQL core.
 
 ## What it does
 
-When an AI agent connects to squackit's MCP server, it gets:
+squackit wears two hats: an MCP server for AI agents, and a CLI for humans.
 
-- **25+ tools** for reading code, searching definitions, browsing docs, inspecting git history, and running diagnostics — all powered by fledgling's DuckDB macros
+**For agents via MCP:**
+
+- **20+ tools** for reading code, searching definitions (CSS selectors via pluckit), browsing docs, inspecting git history, and running diagnostics
 - **4 compound workflows** (`explore`, `investigate`, `review`, `search`) that compose multiple tools into single-call briefings
 - **3 prompt templates** that pre-load live project data into exploration, debugging, and review workflows
 - **5 always-on resources** exposing project overview, diagnostics, docs, git status, and session history
-- **Smart defaults** that infer your project's language, doc layout, and main branch so tools work without configuration
-- **Token-aware output** with configurable truncation, head+tail display, and automatic bypass when the agent narrows its query
-- **Session caching** with per-tool TTL policies and mtime-based invalidation for content tools
+- **Smart defaults** that infer your project's language, doc layout, and main branch
+- **Token-aware output** with configurable truncation and automatic bypass when the agent narrows its query
+- **Session caching** with per-tool TTL policies and mtime-based invalidation
+
+**For humans via CLI:**
+
+- **`squackit tool <name>`** — run any tool from the shell with structured (`--json`) or human-readable output
+- **`squackit pluck ...`** — direct access to pluckit chain queries
+- **`squackit mcp serve`** — start the MCP server
+- Tool names resolve in three conventions (underscore, kebab-case, CamelCase) with shell tab completion
 
 ## Quick install
 
@@ -28,10 +37,18 @@ When an AI agent connects to squackit's MCP server, it gets:
 pip install squackit
 ```
 
-Then start the MCP server:
+Then use the CLI:
 
 ```bash
-squackit
+squackit tool list
+squackit tool view "src/**/*.py" ".fn#main"
+squackit tool project_overview
+```
+
+Or start the MCP server:
+
+```bash
+squackit mcp serve
 ```
 
 Or use it programmatically:
