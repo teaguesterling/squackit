@@ -54,6 +54,32 @@ def complexity_executor(*, source: str, selector: str):
     return rel
 
 
+def pluck_executor(*, argv: str):
+    """Execute a pluckit chain from a whitespace-separated command string.
+
+    Accepts the same grammar as `squackit pluck` on the CLI:
+        "source_pattern [method [arg]]... [terminal]"
+
+    Returns a JSON-serialized chain result: {chain, type, data}.
+
+    Examples:
+        pluck(argv="**/*.py find .fn names")
+        pluck(argv="--plugin AstViewer src/api.py find .fn#handler view")
+        pluck(argv="**/*.py find .fn names reset find .class names")
+    """
+    import shlex
+    import json
+    from pluckit import Chain
+
+    tokens = shlex.split(argv)
+    if not tokens:
+        return json.dumps({"error": "Empty argv"}, indent=2)
+
+    chain = Chain.from_argv(tokens)
+    result = chain.evaluate()
+    return json.dumps(result, indent=2, default=str)
+
+
 # -- Tool definitions --
 
 VIEW_TOOL = ToolPresentation(
@@ -99,4 +125,23 @@ COMPLEXITY_TOOL = ToolPresentation(
     executor=complexity_executor,
 )
 
-PLUCKIT_TOOLS = [VIEW_TOOL, FIND_TOOL, FIND_NAMES_TOOL, COMPLEXITY_TOOL]
+PLUCK_TOOL = ToolPresentation(
+    info=ToolInfo(
+        macro_name="pluck",
+        params=["argv"],
+        description=(
+            "Execute a pluckit chain query. Pass a whitespace-separated "
+            "command: 'source_pattern [method [arg]]... [terminal]'. "
+            "Terminals: names, count, text, materialize, view, complexity. "
+            "Use 'reset' to start a new chain from the source. "
+            "Example: '**/*.py find .fn containing cache names'. "
+            "Use '--plugin AstViewer' prefix for view terminals. "
+            "Returns JSON: {chain, type, data}."
+        ),
+        required=["argv"],
+    ),
+    format_override="text",
+    executor=pluck_executor,
+)
+
+PLUCKIT_TOOLS = [VIEW_TOOL, FIND_TOOL, FIND_NAMES_TOOL, COMPLEXITY_TOOL, PLUCK_TOOL]

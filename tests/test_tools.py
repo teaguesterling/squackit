@@ -8,6 +8,7 @@ from squackit.tools import (
     find_executor,
     find_names_executor,
     complexity_executor,
+    pluck_executor,
 )
 
 
@@ -75,8 +76,8 @@ class TestComplexityExecutor:
 
 class TestPluckitToolsList:
 
-    def test_four_tools_defined(self):
-        assert len(PLUCKIT_TOOLS) == 4
+    def test_five_tools_defined(self):
+        assert len(PLUCKIT_TOOLS) == 5
 
     def test_all_have_executors(self):
         for tp in PLUCKIT_TOOLS:
@@ -84,9 +85,58 @@ class TestPluckitToolsList:
 
     def test_tool_names(self):
         names = {tp.name for tp in PLUCKIT_TOOLS}
-        assert names == {"view", "find", "find_names", "complexity"}
+        assert names == {"view", "find", "find_names", "complexity", "pluck"}
 
-    def test_all_require_source_and_selector(self):
+    def test_selector_tools_require_source_and_selector(self):
         for tp in PLUCKIT_TOOLS:
+            if tp.name == "pluck":
+                continue
             assert "source" in tp.required
             assert "selector" in tp.required
+
+    def test_pluck_requires_argv(self):
+        pluck = next(tp for tp in PLUCKIT_TOOLS if tp.name == "pluck")
+        assert "argv" in pluck.required
+
+
+class TestPluckExecutor:
+
+    def test_returns_json_string(self):
+        import json
+        result = pluck_executor(argv="squackit/cli.py find .fn names")
+        parsed = json.loads(result)
+        assert "chain" in parsed
+        assert "type" in parsed
+        assert "data" in parsed
+
+    def test_find_names(self):
+        import json
+        result = pluck_executor(argv="squackit/cli.py find .fn names")
+        parsed = json.loads(result)
+        assert parsed["type"] == "names"
+        assert isinstance(parsed["data"], list)
+        assert "cli" in parsed["data"]
+
+    def test_count(self):
+        import json
+        result = pluck_executor(argv="squackit/cli.py find .fn count")
+        parsed = json.loads(result)
+        assert parsed["type"] == "count"
+        assert isinstance(parsed["data"], int)
+        assert parsed["data"] > 0
+
+    def test_view_with_plugin(self):
+        import json
+        result = pluck_executor(
+            argv="--plugin AstViewer squackit/cli.py find .fn#cli view"
+        )
+        parsed = json.loads(result)
+        assert parsed["type"] == "view"
+        # data is a dict with blocks
+        assert "blocks" in parsed["data"]
+
+    def test_empty_argv_returns_error(self):
+        import json
+        result = pluck_executor(argv="")
+        parsed = json.loads(result)
+        assert "error" in parsed

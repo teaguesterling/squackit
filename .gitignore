@@ -6,6 +6,8 @@ __pycache__/
 venv/
 dist/
 build/
+site/
 *.egg-info/
 .DS_Store
+.squackit/
 .squawkit/
