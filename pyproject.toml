@@ -1,6 +1,6 @@
 [project]
 name = "squackit"
-version = "0.4.0"
+version = "0.4.1"
 description = "Semi-QUalified Agent Companion Kit — the stateful intelligence + MCP server layer for fledgling-equipped agents."
 readme = "README.md"
 license = "Apache-2.0"
