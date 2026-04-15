@@ -11,3 +11,4 @@ site/
 .DS_Store
 .squackit/
 .squawkit/
+.claude/
