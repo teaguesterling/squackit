@@ -23,27 +23,41 @@ Mutations write to disk. If the user didn't explicitly authorize the specific ch
 
 ### Step 1: Preview without mutations
 
-Always start by querying for what you'd match — without mutation ops:
+Always start by querying for what you'd match — without mutation ops.
+
+**Scope the source pattern to everywhere the name could appear, not just the file with the definition.** Tests, siblings, and other modules may import or call the symbol. A too-narrow source pattern hides future breakage.
 
 ```
-find(source="src/auth.py", selector=".fn#old_name")
-```
+# ✅ Broad enough — covers src + tests
+pluck(argv="**/*.py find .fn#old_name materialize")
 
-Or with pluck:
-
-```
+# ❌ Too narrow — misses callers in tests/
 pluck(argv="src/auth.py find .fn#old_name materialize")
 ```
 
-This tells you:
-- How many nodes match (1 or many?)
-- Their file paths and line ranges
-- Whether the selector over-matches or under-matches
+Also preview the call sites and imports separately:
+
+```
+pluck(argv="**/*.py find .call#old_name count")
+```
+
+And cross-check with grep, because the AST selectors don't match every kind of reference:
+
+```
+grep -rn "old_name" --include="*.py"
+```
+
+Grep will catch:
+- `from foo import old_name` (import statements)
+- `"old_name"` in strings (e.g. in `getattr` calls, decorators, error messages)
+- `# old_name` in comments (usually safe to ignore)
+- Module-qualified refs like `foo.old_name`
 
 **Stop and confirm before proceeding if:**
 - The selector matches more nodes than expected
 - The selector matches zero nodes (the rename would be a no-op that hides a typo)
 - The match spans multiple files and the user only asked about one
+- Grep reveals references the AST query missed — you'll need extra steps to cover them
 
 ### Step 2: Run with the mutation ops but no `allow_mutations`
 
@@ -116,21 +130,42 @@ working_tree_status()
 
 ### Rename a function (v1)
 
-`rename` changes the declaration but does NOT update call sites (as of pluckit v0.9.0). Callers still point to the old name.
+`rename` changes the declaration but does NOT update references elsewhere. For a full rename of a cross-module function, plan for **three kinds of references**:
 
-For a full rename, you need two chains — one for the definition, one for the calls:
+1. **The definition** — `.fn#old_name` matches this
+2. **Call sites** — `.call#old_name` matches these
+3. **Imports** — `from module import old_name` — NOT matched by pluckit's `.fn` or `.call` selectors as of v0.9.0
+
+Plus potentially:
+- **Module-qualified refs** — `module.old_name` (usually matched by `.call`, but not always)
+- **String references** — `"old_name"` in decorators, `getattr`, error messages (never matched)
+
+**Recommended workflow:**
 
 ```
 # Step 1: rename the definition
-pluck(argv="src/**/*.py find .fn#old_name rename new_name",
+pluck(argv="**/*.py find .fn#old_name rename new_name",
       allow_mutations="true")
 
-# Step 2: rename call sites
-pluck(argv="src/**/*.py find .call#old_name rename new_name",
+# Step 2: rename call sites (AST-visible)
+pluck(argv="**/*.py find .call#old_name rename new_name",
       allow_mutations="true")
+
+# Step 3: update imports and string references with Edit
+#   Use grep to find them first:
+#     grep -rn "old_name" --include="*.py"
+#   Then apply targeted Edits per file.
 ```
 
-Test after each step. If the definition rename breaks imports, stop and fix before touching calls.
+Run tests after step 1 to catch import breakage early. If tests fail with `ImportError`, step 3 is mandatory before proceeding.
+
+**When the `.fn` → `.call` rename is enough:**
+- The function is private and local to one file (no imports elsewhere)
+- You've verified with grep that no imports exist
+
+**When you'll need more than three steps:**
+- The function is referenced by a string name (decorators, `getattr`, pytest fixtures) — add a scripted Edit pass for each
+- The function is part of a public API re-exported through `__init__.py` — add the re-export to your plan
 
 ### Replace a function body
 
