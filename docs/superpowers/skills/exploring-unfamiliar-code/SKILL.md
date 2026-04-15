@@ -15,6 +15,8 @@ When you land in an unfamiliar codebase, the temptation is to open files and rea
 
 Squackit's MCP tools must be available. If they're not, this skill doesn't apply — fall back to manual Read/Grep.
 
+**Know which project the server is rooted at.** Squackit's MCP server has a single project root (set when it started). Tools that take a `source` / `file_pattern` / `file_path` parameter accept absolute paths to *other* projects, but the workflow tools (`explore`, `investigate`, `review`, `search`) only operate on the rooted project. If you need to drill into a different project, use the parameterized tools (`view`, `find`, `read_source`, etc.) with explicit absolute paths — and skip Phase 1's `explore()`.
+
 ## The three phases
 
 ### Phase 1: Orient (one tool call)
@@ -37,6 +39,15 @@ Returns:
 
 Skip this phase if you already know the codebase. Don't skip it on first contact.
 
+**Watch for vendored deps in "Key Definitions".** If the project ships a checked-in `.venv/`, `node_modules/`, or `vendor/`, those files dominate the complexity ranking and the real codebase signal gets buried. Look at the `file_path` column — if you see paths under `.venv/`, `site-packages/`, `node_modules/`, those are deps. Either ignore them mentally, or call `list_files` first to see the project's actual layout and scope subsequent tool calls accordingly:
+
+```
+list_files(pattern="src/**/*.py")    # most projects use src/
+list_files(pattern="<project>/*.py") # or top-level package
+```
+
+**Exploring a project the MCP server isn't rooted at?** `explore()` won't work — it scans the server's project. Skip Phase 1 and start with `list_files(pattern="/abs/path/**/*.py")` to learn the layout, then jump to Phase 3 with absolute paths.
+
 ### Phase 2: Investigate (one tool call per symbol)
 
 For each interesting function/symbol from Phase 1:
@@ -52,6 +63,15 @@ Returns:
 - **Calls** — what this depends on
 
 This one tool gives you the definition *and* its neighborhood. Usually enough to decide if this is the right function to focus on.
+
+**`investigate` is scoped to the MCP server's project root.** If you're exploring a different project (absolute paths in Phase 1), `investigate` will return "No definition found" — it doesn't know about the other project. Substitute Phase 2 with manual queries:
+
+```
+# Equivalent of investigate(name="X") for a non-rooted project:
+find(source="/abs/path/**/*.py", selector=".fn#X")          # → definition + line range
+view(source="/abs/path/**/*.py", selector=".fn#X")          # → source body
+# (callers/callees: not currently available without investigate)
+```
 
 **When to repeat vs. pivot:**
 - If "Called by" reveals a higher-level function you hadn't noticed → investigate that one next
