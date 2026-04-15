@@ -146,10 +146,12 @@ VIEW_TOOL = ToolPresentation(
         macro_name="view",
         params=["source", "selector"],
         description="View source code matching CSS selectors. Returns rendered "
-                    "markdown with file headings and source blocks.",
+                    "markdown with file headings and source blocks. "
+                    "Truncated to 20 blocks by default; pass max_results to raise.",
         required=["source", "selector"],
     ),
     format_override="text",
+    max_rows=20,
     executor=view_executor,
 )
 
@@ -158,9 +160,10 @@ FIND_TOOL = ToolPresentation(
         macro_name="find",
         params=["source", "selector"],
         description="Find AST nodes matching CSS selectors. Returns file paths, "
-                    "names, line ranges.",
+                    "names, line ranges. Truncated to 50 rows by default.",
         required=["source", "selector"],
     ),
+    max_rows=50,
     executor=find_executor,
 )
 
@@ -168,9 +171,11 @@ FIND_NAMES_TOOL = ToolPresentation(
     info=ToolInfo(
         macro_name="find_names",
         params=["source", "selector"],
-        description="Find names of AST nodes matching CSS selectors.",
+        description="Find names of AST nodes matching CSS selectors. "
+                    "Truncated to 100 names by default.",
         required=["source", "selector"],
     ),
+    max_rows=100,
     executor=find_names_executor,
 )
 
@@ -178,9 +183,12 @@ COMPLEXITY_TOOL = ToolPresentation(
     info=ToolInfo(
         macro_name="complexity",
         params=["source", "selector"],
-        description="Find AST nodes matching CSS selectors, ranked by complexity.",
+        description="Find AST nodes matching CSS selectors, ranked by complexity. "
+                    "Truncated to 30 rows by default — only the top complexity "
+                    "items are usually interesting.",
         required=["source", "selector"],
     ),
+    max_rows=30,
     executor=complexity_executor,
 )
 

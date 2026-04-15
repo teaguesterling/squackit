@@ -200,7 +200,29 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
     is_text = presentation.format == "text"
     executor = presentation.executor
 
+    # Truncation defaults from presentation
+    if presentation.max_lines is not None:
+        limit_param = "max_lines"
+        default_limit = presentation.max_lines
+    elif presentation.max_rows is not None:
+        limit_param = "max_results"
+        default_limit = presentation.max_rows
+    else:
+        limit_param = None
+        default_limit = 0
+
     async def tool_fn(**kwargs) -> str:
+        # Pop limit param before passing to executor — it's a presentation
+        # concern, not an executor input.
+        max_limit = default_limit
+        if limit_param and limit_param in kwargs:
+            val = kwargs.pop(limit_param)
+            if val is not None:
+                try:
+                    max_limit = int(val)
+                except (TypeError, ValueError):
+                    pass
+
         filtered = {k: v for k, v in kwargs.items() if v is not None}
 
         try:
@@ -211,25 +233,48 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
                 return f"Error: {e}"
             raise
 
-        # View -> markdown
-        if hasattr(result, 'markdown'):
+        # View -> markdown (truncate by blocks if too many)
+        if hasattr(result, 'markdown') and hasattr(result, 'blocks'):
+            blocks = result.blocks
+            if max_limit > 0 and len(blocks) > max_limit:
+                kept = blocks[:max_limit]
+                omitted = len(blocks) - max_limit
+                body = "\n\n".join(b.markdown for b in kept if b.markdown)
+                return body + f"\n\n--- omitted {omitted} of {len(blocks)} blocks ---"
             return result.markdown or "(no results)"
-        # DuckDB relation -> table
+        # DuckDB relation -> table (truncate rows)
         if hasattr(result, 'columns') and hasattr(result, 'fetchall'):
             cols = result.columns
             rows = result.fetchall()
             if not rows:
                 return "(no results)"
+            omission = None
+            if max_limit > 0 and len(rows) > max_limit:
+                omitted = len(rows) - max_limit
+                rows = rows[:max_limit]
+                omission = f"--- omitted {omitted} rows ---"
             if is_text:
                 lines = []
                 for row in rows:
                     parts = [str(v) for v in row if v is not None]
                     lines.append("  ".join(parts))
+                if omission:
+                    lines.append(omission)
                 return "\n".join(lines)
-            return _format_markdown_table(cols, rows)
-        # list -> joined
+            text = _format_markdown_table(cols, rows)
+            if omission:
+                text += "\n" + omission
+            return text
+        # list -> joined (truncate)
         if isinstance(result, list):
-            return "\n".join(str(item) for item in result) if result else "(no results)"
+            if not result:
+                return "(no results)"
+            if max_limit > 0 and len(result) > max_limit:
+                omitted = len(result) - max_limit
+                kept = result[:max_limit]
+                return "\n".join(str(item) for item in kept) + \
+                       f"\n--- omitted {omitted} of {len(result)} items ---"
+            return "\n".join(str(item) for item in result)
         return str(result) if result else "(no results)"
 
     tool_fn.__name__ = tool_name
@@ -251,6 +296,12 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
                 p, inspect.Parameter.KEYWORD_ONLY,
                 default=None, annotation=Optional[str],
             ))
+    if limit_param:
+        annotations[limit_param] = Optional[int]
+        sig_params.append(inspect.Parameter(
+            limit_param, inspect.Parameter.KEYWORD_ONLY,
+            default=None, annotation=Optional[int],
+        ))
     tool_fn.__annotations__ = {**annotations, "return": str}
     tool_fn.__signature__ = inspect.Signature(
         sig_params, return_annotation=str,

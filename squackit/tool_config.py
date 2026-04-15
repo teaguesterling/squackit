@@ -202,10 +202,6 @@ OVERRIDES: dict[str, dict] = {
         "required_override": ["file", "rev"],
         "max_lines": 200,
     },
-    "read_doc_section": {
-        "format_override": "text",
-        "required_override": ["file_path", "target_id"],
-    },
     "help": {
         "format_override": "text",
         "required_override": [],
@@ -220,6 +216,7 @@ OVERRIDES: dict[str, dict] = {
     "code_structure": {
         "description_override": "Structural overview with complexity metrics.",
         "required_override": ["file_pattern"],
+        "max_rows": 100,
         "cache_ttl": 300,
     },
     "list_files": {
@@ -253,10 +250,12 @@ OVERRIDES: dict[str, dict] = {
     "branch_list": {
         "description_override": "List git branches.",
         "required_override": [],
+        "max_rows": 50,
     },
     "tag_list": {
         "description_override": "List git tags.",
         "required_override": [],
+        "max_rows": 50,
     },
     "working_tree_status": {
         "description_override": "Untracked and modified files.",
@@ -266,14 +265,22 @@ OVERRIDES: dict[str, dict] = {
     "structural_diff": {
         "description_override": "Semantic diff: added/removed/modified definitions between revisions.",
         "required_override": ["file"],
+        "max_rows": 50,
     },
     "changed_function_summary": {
         "description_override": "Changed functions ranked by complexity between revisions.",
         "required_override": ["from_rev", "to_rev"],
+        "max_rows": 50,
     },
     "complexity_hotspots": {
         "description_override": "Most complex functions in the codebase.",
         "required_override": ["file_pattern"],
+        "max_rows": 30,
+    },
+    "read_doc_section": {
+        "format_override": "text",
+        "required_override": ["file_path", "target_id"],
+        "max_lines": 200,
     },
 }
 
