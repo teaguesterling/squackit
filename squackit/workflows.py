@@ -317,10 +317,12 @@ def search(con, defaults, query, file_pattern=None):
     )))
 
     # 4. Conversation search (only if conversations module loaded)
+    # Use search_chat (returns content_preview, not full content) instead of
+    # search_messages — the latter can return 100s of KB per single term.
     if _has_module(con, "conversations"):
         sections.append(_section("Conversations", lambda: _table(
-            con, "search_messages",
-            {"search_term": query},
+            con, "search_chat",
+            {"query": query, "lim": 10},
             max_rows=10,
         )))
 
