@@ -58,11 +58,10 @@ class SquackitProvider:
             return False
 
     def resolve(self, tool_spec: Any) -> Callable[..., Any]:
-        from squackit import tools as _tools
         implementations: dict[str, Callable] = {
             "view": _view_tool,
             "find": _find_tool,
-            "find_names": _tools.find_names_executor,
+            "find_names": _find_names_tool,
             "complexity": _complexity_tool,
             "read_source": _read_source_tool,
         }
@@ -91,6 +90,12 @@ def _find_tool(source: str, selector: str) -> list[dict]:
     cols = rel.columns
     rows = rel.fetchall()
     return [dict(zip(cols, row, strict=True)) for row in rows]
+
+
+def _find_names_tool(source: str, selector: str) -> list[str]:
+    """Return names of AST nodes matching selector as a list of strings."""
+    from squackit.tools import find_names_executor
+    return find_names_executor(source=source, selector=selector)
 
 
 def _complexity_tool(source: str, selector: str) -> list[dict]:
@@ -190,22 +195,36 @@ def _make_tool_specs() -> list[Any]:
             name="find_names",
             provider="squackit",
             description=(
-                "Find just the names of AST nodes matching a CSS selector. "
-                "Lighter than 'find' when you only care about names."
+                "Returns names of functions/classes/etc. matching a selector. "
+                "Call this tool DIRECTLY — do not open files, do not define "
+                "helper functions, do not use os/Path. "
+                "Selector syntax: '.fn' for functions, '.class' for classes, "
+                "'.fn#foo' for a function named foo. "
+                "Never pass bare words like 'function' — use the dot-shorthand."
             ),
             args=[
                 ArgSpec(name="source", type="str",
-                        description="Glob pattern for files."),
+                        description="Glob pattern for files, e.g. 'src/**/*.py'."),
                 ArgSpec(name="selector", type="str",
-                        description="CSS selector over AST."),
+                        description="CSS selector: '.fn' for functions, '.class' for classes, '.fn#name' for a specific function."),
             ],
             returns="list[str]",
             grade_w=0, effects_ceiling=0,
             examples=[
                 {
-                    "intent": "list all function names",
+                    "intent": "list all function names in tools.py",
+                    "code": "find_names(source='squackit/tools.py', selector='.fn')",
+                    "tags": ["find_names", "function"],
+                },
+                {
+                    "intent": "list all functions in the package",
                     "code": "find_names(source='src/**/*.py', selector='.fn')",
                     "tags": ["find_names", "function"],
+                },
+                {
+                    "intent": "list all classes",
+                    "code": "find_names(source='src/**/*.py', selector='.class')",
+                    "tags": ["find_names", "class"],
                 },
                 {
                     "intent": "list methods of the Handler class",

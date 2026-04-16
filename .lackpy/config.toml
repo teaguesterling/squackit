@@ -1,0 +1,15 @@
+[inference]
+order = ["templates", "rules", "ollama-local"]
+
+[inference.providers.ollama-local]
+plugin = "ollama"
+host = "http://localhost:11435"
+model = "qwen2.5-coder:1.5b"
+
+[kit]
+default = "debug"
+
+[sandbox]
+enabled = false
+timeout_seconds = 120
+memory_mb = 512
