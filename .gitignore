@@ -13,3 +13,5 @@ site/
 .squawkit/
 .claude/
 .kibitzer/
+scripts/example_grid_out/
+.lackpy/
