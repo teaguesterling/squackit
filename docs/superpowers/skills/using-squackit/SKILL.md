@@ -76,7 +76,8 @@ Grep matches text; `find_names` matches AST nodes. Grep will hit `# def foo` in 
 - `changed_function_summary` — changed functions ranked by complexity
 
 ### Git
-- `recent_changes` — commit history
+- `recent_changes` — commit history (no per-file filter; use `file_diff` or `changed_function_summary` for file-scoped history)
+- `file_changes` — files changed between two revisions (not per-file commit log)
 - `file_diff` — line-level unified diff
 - `structural_diff` — semantic diff (added/removed/modified definitions)
 - `file_at_version` — file content at a revision

@@ -97,9 +97,11 @@ pluck(argv="**/*.py find .fn containing 'TODO' names")
 
 ### Navigation chain
 ```
-pluck(argv="src/auth.py find .class#AuthService children names")
+pluck(argv="src/auth.py find .class#AuthService children find .fn names")
 # → names of methods directly inside AuthService
 ```
+
+Note: `children` returns all child AST nodes (docstrings, decorators, assignments, etc.), not just functions. Follow `children` with `find .fn` to isolate methods.
 
 ### Batch queries with `reset`
 ```
