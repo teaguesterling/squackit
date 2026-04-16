@@ -138,6 +138,7 @@ If a chain returns `(no results)` or errors:
 2. **Check the selector** — run `find <sel>` alone first to see if it matches anything
 3. **Use `materialize`** — returns all node metadata, useful for inspecting what you actually have
 4. **Check required plugins** — `view` needs `--plugin AstViewer`, `history` needs `--plugin History`
+5. **`ModuleNotFoundError` or `ImportError`** — the MCP server's pluckit install is stale or broken. This is not a chain syntax issue — stop iterating and report it. The server process needs to be restarted after `pip install --upgrade ast-pluckit`. No chain variation will fix an import error.
 
 ## Anti-patterns
 

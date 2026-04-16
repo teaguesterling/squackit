@@ -29,6 +29,7 @@ Fall back to Grep/Read when:
 - Searching non-code files (logs, data, binaries)
 - The file isn't in a language squackit parses
 - squackit returns `(no results)` or `(no data)`
+- squackit tools fail with `ModuleNotFoundError` or `ImportError` — the MCP server is stale; report the error, fall back to Read/Grep, and note the server needs restarting
 
 ## Anti-patterns
 
