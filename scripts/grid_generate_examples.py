@@ -78,24 +78,39 @@ Tools:
   complexity(source: str, selector: str) -> list[dict]  # ranked by complexity
   read_source(file_path: str, lines: str = None) -> str  # plain file read
 
-CORRECT examples (these ACTUALLY WORK):
+CORRECT examples (use Black-compliant formatting — assign args to variables first):
+
+  # Simple selector — inline is fine
   find_names('src/**/*.py', '.fn')
+
+  # Named lookup
   find_names('src/auth.py', '.fn#validate_token')
-  find_names('src/**/*.py', '.class')
+
+  # Class methods (descendant combinator)
   find_names('src/auth.py', '.class#Auth .fn')
-  find_names('src/**/*.py', '.fn[name^=\\'test_\\']')
-  find(src='src/**/*.py', selector='.fn#main')
+
+  # Attribute selectors — ALWAYS use variables to avoid quote nesting
+  source = "src/**/*.py"
+  selector = ".fn[name^='test_']"
+  result = find_names(source, selector)
+  result
+
+  # Another attribute selector example
+  source = "src/**/*.py"
+  selector = ".fn[name*='validate']"
+  result = find_names(source, selector)
+  result
+
+  # View and complexity
   view('src/api.py', '.class#Handler')
   complexity('src/**/*.py', '.fn')
   read_source('src/main.py', '1-50')
 
 WRONG calls (DO NOT generate any of these — they all fail):
-  find_names(source, '.fn')              # ❌ `source` is a variable; pass a glob STRING
+  find_names('src/**/*.py', '.fn[name^='test_']')  # ❌ quote nesting! Use variables instead
   find_names('src/**/*.py', 'function')  # ❌ 'function' is not a selector — use '.fn'
   find_names('src/**/*.py', 'func')      # ❌ 'func' is not a selector — use '.fn'
-  find_names('src/**/*.py', 'var')       # ❌ no such selector; there is no 'variable' concept
-  find_names('src/**/*.py', 'loop')      # ❌ no such selector
-  find_names('src/**/*.py', 'if')        # ❌ no such selector
+  find_names('src/**/*.py', 'var')       # ❌ no such selector
   find_names('def foo(): pass', '.fn')   # ❌ arg 1 is a glob, not source code
   squackit.find_names(...)               # ❌ no module prefix; call find_names directly
 """,
@@ -114,16 +129,24 @@ Ops:     find, filter, not_, unique, parent, children, siblings,
 Terminals: names, count, text, materialize, view, complexity, attr <name>
 Control:   reset (clear selection), pop (previous selection)
 
-CORRECT examples:
+CORRECT examples (use variables for chains with attribute selectors):
+
   pluck('src/**/*.py find .fn names')
   pluck('src/**/*.py find .fn count')
   pluck('src/auth.py find .class#Auth children find .fn names')
-  pluck('src/**/*.py find .fn[name^=\\'test_\\'] names')
   pluck('src/**/*.py find .fn containing cache names')
   pluck('src/**/*.py find .fn names reset find .class names')
   pluck('--plugin AstViewer src/api.py find .fn#handler view')
 
+  # Attribute selectors — use a variable to avoid quote nesting
+  chain = "src/**/*.py find .fn[name^='test_'] names"
+  pluck(chain)
+
+  chain = "src/**/*.py find .fn[name*='validate'] count"
+  pluck(chain)
+
 WRONG:
+  pluck('src/**/*.py find .fn[name^='test_'] names')  # ❌ quote nesting! Use a variable
   squackit.pluck(...)                        # ❌ no module prefix
   pluck('*.py find names')                   # ❌ missing selector — find needs one
   pluck('src/**/*.py find function names')   # ❌ 'function' is not a selector; use '.fn'
@@ -549,6 +572,24 @@ def validate_examples(examples: list, tool_group: dict) -> dict:
 # ─────────────────────────────────────────────────────────────────────
 
 BASE_FORMAT_NOTE = """\
+# Code style
+
+Use Black-compliant Python formatting. When a tool argument contains
+quotes (especially CSS attribute selectors like [name^='test_']),
+ALWAYS assign it to a variable first to avoid quote-nesting bugs:
+
+  # ✅ CORRECT — no quote nesting
+  source = "src/**/*.py"
+  selector = ".fn[name^='test_']"
+  result = find_names(source, selector)
+  result
+
+  # ❌ WRONG — single quotes nest and break
+  find_names('src/**/*.py', '.fn[name^='test_']')
+
+Simple calls without attribute selectors can stay inline:
+  find_names('src/**/*.py', '.fn')
+
 # Output format (STRICT JSON)
 
 Output ONLY a JSON array (no prose, no markdown fences). Exactly 15
