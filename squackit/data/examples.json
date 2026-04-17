@@ -1,0 +1,126 @@
+{
+  "_meta": {
+    "description": "Curated few-shot examples for lackpy ToolSpec retrieval-augmented prompting.",
+    "source": "Hand-curated from grid_generate_examples.py output + manual additions.",
+    "format": "Each example: {intent, code, tool, tags, notes?}. Anti-patterns have correct_code.",
+    "updated": "2026-04-16"
+  },
+  "examples": [
+    {"intent": "find all function names in a Python file", "code": "find_names('src/auth.py', '.fn')", "tool": "find_names", "tags": ["positive"]},
+    {"intent": "what functions are in the tools module", "code": "find_names('squackit/tools.py', '.fn')", "tool": "find_names", "tags": ["positive"]},
+    {"intent": "list all classes in the package", "code": "find_names('src/**/*.py', '.class')", "tool": "find_names", "tags": ["positive"]},
+    {"intent": "show me methods of the AuthService class", "code": "find_names('src/auth.py', '.class#AuthService .fn')", "tool": "find_names", "tags": ["positive"]},
+    {"intent": "find functions that start with test_", "code": "find_names('tests/**/*.py', \".fn[name^='test_']\")", "tool": "find_names", "tags": ["positive"]},
+    {"intent": "find functions containing 'validate' in the name", "code": "find_names('src/**/*.py', \".fn[name*='validate']\")", "tool": "find_names", "tags": ["positive"]},
+    {"intent": "which functions end with _handler", "code": "find_names('src/**/*.py', \".fn[name$='_handler']\")", "tool": "find_names", "tags": ["positive"]},
+    {"intent": "count how many functions are in cli.py", "code": "n = len(find_names('squackit/cli.py', '.fn'))\nn", "tool": "find_names", "tags": ["positive"]},
+
+    {"intent": "find where validate_token is defined", "code": "find('src/**/*.py', '.fn#validate_token')", "tool": "find", "tags": ["positive"]},
+    {"intent": "find all class definitions with their line numbers", "code": "find('src/**/*.py', '.class')", "tool": "find", "tags": ["positive"]},
+    {"intent": "find the Handler class and its methods", "code": "find('src/api.py', '.class#Handler .fn')", "tool": "find", "tags": ["positive"]},
+    {"intent": "find direct child methods of a class", "code": "find('src/api.py', '.class#Handler > .fn')", "tool": "find", "tags": ["positive"]},
+
+    {"intent": "show me the validate_token function", "code": "view('src/**/*.py', '.fn#validate_token')", "tool": "view", "tags": ["positive"]},
+    {"intent": "show the AuthService class", "code": "view('src/auth.py', '.class#AuthService')", "tool": "view", "tags": ["positive"]},
+    {"intent": "show me all test functions in test_tools.py", "code": "view('tests/test_tools.py', '.fn')", "tool": "view", "tags": ["positive"]},
+
+    {"intent": "what are the most complex functions", "code": "complexity('src/**/*.py', '.fn')", "tool": "complexity", "tags": ["positive"]},
+    {"intent": "rank functions in cli.py by complexity", "code": "complexity('squackit/cli.py', '.fn')", "tool": "complexity", "tags": ["positive"]},
+    {"intent": "find the most complex classes", "code": "complexity('src/**/*.py', '.class')", "tool": "complexity", "tags": ["positive"]},
+
+    {"intent": "read the first 20 lines of main.py", "code": "read_source('main.py', '1-20')", "tool": "read_source", "tags": ["positive"]},
+    {"intent": "read lines 50 through 80 of server.py", "code": "read_source('squackit/server.py', '50-80')", "tool": "read_source", "tags": ["positive"]},
+    {"intent": "read the whole config file", "code": "read_source('pyproject.toml')", "tool": "read_source", "tags": ["positive"]},
+
+    {"intent": "get an overview of this codebase", "code": "explore()", "tool": "explore", "tags": ["positive"]},
+    {"intent": "explore the auth directory", "code": "explore('src/auth/')", "tool": "explore", "tags": ["positive"]},
+    {"intent": "explore the tests folder", "code": "explore('tests/')", "tool": "explore", "tags": ["positive"]},
+
+    {"intent": "tell me about the validate_token function", "code": "investigate('validate_token')", "tool": "investigate", "tags": ["positive"]},
+    {"intent": "deep dive on the create_server function", "code": "investigate('create_server')", "tool": "investigate", "tags": ["positive"]},
+    {"intent": "what does the build_tool_registry function do", "code": "investigate('build_tool_registry')", "tool": "investigate", "tags": ["positive"]},
+
+    {"intent": "review changes since main", "code": "review('main', 'HEAD')", "tool": "review", "tags": ["positive"]},
+    {"intent": "review what changed in the last commit", "code": "review('HEAD~1', 'HEAD')", "tool": "review", "tags": ["positive"]},
+    {"intent": "code review prep for the feature branch", "code": "review('main', 'feature-auth')", "tool": "review", "tags": ["positive"]},
+
+    {"intent": "search for cache-related code and docs", "code": "search('cache invalidation')", "tool": "search", "tags": ["positive"]},
+    {"intent": "search for authentication across the codebase", "code": "search('authentication')", "tool": "search", "tags": ["positive"]},
+    {"intent": "find everything related to mutation safety", "code": "search('mutation')", "tool": "search", "tags": ["positive"]},
+
+    {"intent": "what are the doc sections about", "code": "doc_outline('docs/**/*.md')", "tool": "doc_outline", "tags": ["positive"]},
+    {"intent": "find docs about authentication", "code": "doc_outline('docs/**/*.md', search='authentication')", "tool": "doc_outline", "tags": ["positive"]},
+    {"intent": "show the outline of the quickstart guide", "code": "doc_outline('docs/quickstart.md')", "tool": "doc_outline", "tags": ["positive"]},
+
+    {"intent": "read the installation section from the quickstart", "code": "read_doc_section('docs/quickstart.md', 'installation')", "tool": "read_doc_section", "tags": ["positive"]},
+    {"intent": "read the configuration section", "code": "read_doc_section('docs/configuration.md', 'smart-defaults')", "tool": "read_doc_section", "tags": ["positive"]},
+
+    {"intent": "show recent git commits", "code": "recent_changes(10)", "tool": "recent_changes", "tags": ["positive"]},
+    {"intent": "show last 5 commits", "code": "recent_changes(5)", "tool": "recent_changes", "tags": ["positive"]},
+
+    {"intent": "list git branches", "code": "branch_list()", "tool": "branch_list", "tags": ["positive"]},
+    {"intent": "list git tags", "code": "tag_list()", "tool": "tag_list", "tags": ["positive"]},
+    {"intent": "what files are uncommitted", "code": "working_tree_status()", "tool": "working_tree_status", "tags": ["positive"]},
+
+    {"intent": "what files changed between main and HEAD", "code": "file_changes('main', 'HEAD')", "tool": "file_changes", "tags": ["positive"]},
+    {"intent": "what files changed in the last commit", "code": "file_changes('HEAD~1', 'HEAD')", "tool": "file_changes", "tags": ["positive"]},
+
+    {"intent": "show the diff for auth.py since last commit", "code": "file_diff('src/auth.py', 'HEAD~1', 'HEAD')", "tool": "file_diff", "tags": ["positive"]},
+    {"intent": "diff server.py between main and this branch", "code": "file_diff('squackit/server.py', 'main', 'HEAD')", "tool": "file_diff", "tags": ["positive"]},
+
+    {"intent": "show what auth.py looked like yesterday", "code": "file_at_version('src/auth.py', 'HEAD~5')", "tool": "file_at_version", "tags": ["positive"]},
+
+    {"intent": "what functions were added or removed since main", "code": "structural_diff('src/auth.py', 'main', 'HEAD')", "tool": "structural_diff", "tags": ["positive"]},
+    {"intent": "semantic diff of server.py", "code": "structural_diff('squackit/server.py', 'HEAD~1', 'HEAD')", "tool": "structural_diff", "tags": ["positive"]},
+
+    {"intent": "which functions changed the most since main", "code": "changed_function_summary('main', 'HEAD')", "tool": "changed_function_summary", "tags": ["positive"]},
+
+    {"intent": "find all function names across Python files", "code": "pluck('src/**/*.py find .fn names')", "tool": "pluck", "tags": ["positive"]},
+    {"intent": "count functions in auth.py", "code": "pluck('src/auth.py find .fn count')", "tool": "pluck", "tags": ["positive"]},
+    {"intent": "find methods of the Auth class", "code": "pluck('src/auth.py find .class#Auth children find .fn names')", "tool": "pluck", "tags": ["positive"]},
+    {"intent": "find functions that mention cache", "code": "pluck('src/**/*.py find .fn containing cache names')", "tool": "pluck", "tags": ["positive"]},
+    {"intent": "view the handler function with AstViewer", "code": "pluck('--plugin AstViewer src/api.py find .fn#handler view')", "tool": "pluck", "tags": ["positive"]},
+    {"intent": "count functions then count classes", "code": "pluck('src/**/*.py find .fn names reset find .class names')", "tool": "pluck", "tags": ["positive"]},
+    {"intent": "find functions but exclude test helpers", "code": "pluck('src/**/*.py find .fn not_ .fn#_internal names')", "tool": "pluck", "tags": ["positive"]},
+
+    {"intent": "check jetsam status", "code": "status()", "tool": "status", "tags": ["positive"]},
+    {"intent": "commit with a message", "code": "plan = save('fix: null check')\nplan", "tool": "save", "tags": ["positive"]},
+    {"intent": "confirm the save plan", "code": "confirm(plan_id)", "tool": "confirm", "tags": ["positive"]},
+    {"intent": "show last 5 commits in jetsam", "code": "log(5)", "tool": "log", "tags": ["positive"]},
+    {"intent": "show the diff", "code": "diff()", "tool": "diff", "tags": ["positive"]},
+    {"intent": "list open PRs", "code": "pr_list()", "tool": "pr_list", "tags": ["positive"]},
+    {"intent": "look at PR 42", "code": "pr_view(42)", "tool": "pr_view", "tags": ["positive"]},
+    {"intent": "comment on the PR", "code": "pr_comment(42, 'LGTM')", "tool": "pr_comment", "tags": ["positive"]},
+    {"intent": "start a feature branch", "code": "start('feature-auth')", "tool": "start", "tags": ["positive"]},
+    {"intent": "ship the changes", "code": "ship()", "tool": "ship", "tags": ["positive"]},
+    {"intent": "close issue 15 with a note", "code": "issue_close(15, 'Fixed in PR #42')", "tool": "issue_close", "tags": ["positive"]},
+    {"intent": "sync with remote", "code": "sync()", "tool": "sync", "tags": ["positive"]},
+
+    {"intent": "run the test suite", "code": "run(['pytest', 'tests/'])", "tool": "run", "tags": ["positive"]},
+    {"intent": "check build status", "code": "status()", "tool": "status", "tags": ["positive"]},
+    {"intent": "show errors from the last build", "code": "errors('run_abc123')", "tool": "errors", "tags": ["positive"]},
+    {"intent": "search build output for AssertionError", "code": "output('run_abc123', query='AssertionError')", "tool": "output", "tags": ["positive"]},
+    {"intent": "show build history", "code": "history(20)", "tool": "history", "tags": ["positive"]},
+
+    {"intent": "delegate finding test functions to a small model", "code": "delegate('find all test functions', ['find_names'])", "tool": "delegate", "tags": ["positive"]},
+    {"intent": "generate a program to show the main function", "code": "generate('show the main function', ['view'])", "tool": "generate", "tags": ["positive"]},
+
+    {"intent": "check a proposed Bash tool call", "code": "before_call('Bash', {'command': 'rm -rf /'})", "tool": "before_call", "tags": ["positive"]},
+    {"intent": "record a tool call result", "code": "after_call('Bash', {'command': 'ls'}, 'file1.py\\nfile2.py')", "tool": "after_call", "tags": ["positive"]},
+    {"intent": "get suggestions for Bash usage", "code": "get_suggestions('Bash')", "tool": "get_suggestions", "tags": ["positive"]},
+    {"intent": "get coaching hints for the next prompt", "code": "get_prompt_hints()", "tool": "get_prompt_hints", "tags": ["positive"]},
+    {"intent": "switch Bash to restricted mode", "code": "change_mode('Bash', 'restricted')", "tool": "change_mode", "tags": ["positive"]},
+    {"intent": "report that the model tried to implement instead of orchestrate", "code": "report_generation('IMPLEMENT_NOT_ORCHESTRATE')", "tool": "report_generation", "tags": ["positive"]},
+
+    {"intent": "find all functions", "code": "find_names(source, '.fn')", "tool": "find_names", "tags": ["anti_pattern"], "correct_code": "find_names('src/**/*.py', '.fn')", "notes": "source is not a variable — pass a glob string"},
+    {"intent": "find all functions", "code": "find_names('src/**/*.py', 'function')", "tool": "find_names", "tags": ["anti_pattern"], "correct_code": "find_names('src/**/*.py', '.fn')", "notes": "'function' is not a selector — use .fn"},
+    {"intent": "find all classes", "code": "squackit.find_names('src/**/*.py', '.class')", "tool": "find_names", "tags": ["anti_pattern"], "correct_code": "find_names('src/**/*.py', '.class')", "notes": "no module prefix — call find_names directly"},
+    {"intent": "find functions in this file", "code": "find_names('def foo(): pass', '.fn')", "tool": "find_names", "tags": ["anti_pattern"], "correct_code": "find_names('src/myfile.py', '.fn')", "notes": "first arg is a file glob, not source code"},
+    {"intent": "show all functions", "code": "def get_functions():\n    return find_names('src/**/*.py', '.fn')", "tool": "find_names", "tags": ["anti_pattern"], "correct_code": "result = find_names('src/**/*.py', '.fn')\nresult", "notes": "no def allowed in sandbox — call tools directly"},
+    {"intent": "find functions", "code": "import os\nfor f in os.listdir('src'):\n    print(f)", "tool": "find_names", "tags": ["anti_pattern"], "correct_code": "find_names('src/**/*.py', '.fn')", "notes": "no imports allowed — use find_names directly"},
+    {"intent": "prefix match on function name", "code": "find_names('src/**/*.py', '.fn#test_')", "tool": "find_names", "tags": ["anti_pattern"], "correct_code": "find_names('src/**/*.py', \".fn[name^='test_']\")", "notes": "# is exact match, not prefix — use [name^='...'] for prefix"},
+    {"intent": "show the handler", "code": "view(source=handler)", "tool": "view", "tags": ["anti_pattern"], "correct_code": "view('src/api.py', '.fn#handler')", "notes": "handler is not a variable — pass file glob + selector string"},
+    {"intent": "commit changes", "code": "save('fix').confirm()", "tool": "save", "tags": ["anti_pattern"], "correct_code": "plan = save('fix')\nconfirm(plan['plan_id'])", "notes": "save returns a dict, not a chainable object — get plan_id, then confirm"},
+    {"intent": "run tests", "code": "run('pytest tests/')", "tool": "run", "tags": ["anti_pattern"], "correct_code": "run(['pytest', 'tests/'])", "notes": "command is a list of argv, not a single string"}
+  ]
+}

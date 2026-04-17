@@ -281,8 +281,34 @@ def _make_tool_specs() -> list[Any]:
     ]
 
 
+def _load_curated_examples() -> dict[str, list[dict]]:
+    """Load curated examples from data/examples.json, grouped by tool name."""
+    import json
+    from pathlib import Path
+    data_path = Path(__file__).parent / "data" / "examples.json"
+    if not data_path.exists():
+        return {}
+    data = json.loads(data_path.read_text())
+    by_tool: dict[str, list[dict]] = {}
+    for ex in data.get("examples", []):
+        tool = ex.get("tool", "")
+        entry = {"intent": ex["intent"], "code": ex["code"], "tags": ex.get("tags", [])}
+        if "correct_code" in ex:
+            entry["correct_code"] = ex["correct_code"]
+        if "notes" in ex:
+            entry["notes"] = ex["notes"]
+        by_tool.setdefault(tool, []).append(entry)
+    return by_tool
+
+
 # Lazy — only build if lackpy is available at import time
 try:
     SQUACKIT_TOOLS: list[Any] = _make_tool_specs()
+    # Enrich ToolSpecs with curated examples from data/examples.json
+    _curated = _load_curated_examples()
+    for spec in SQUACKIT_TOOLS:
+        extras = _curated.get(spec.name, [])
+        if extras:
+            spec.examples = extras
 except ImportError:
     SQUACKIT_TOOLS = []
