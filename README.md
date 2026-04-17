@@ -4,14 +4,12 @@
 [![Docs](https://readthedocs.org/projects/squackit/badge/?version=latest)](https://squackit.readthedocs.io/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
-**Semi-QUalified Agent Companion Kit.** The stateful intelligence + MCP server
-layer for [fledgling](https://github.com/teaguesterling/fledgling)-equipped
-agents.
+**Semi-QUalified Agent Companion Kit.** A code intelligence toolkit that
+works two ways: as an MCP server for AI agents, and as a CLI for humans.
 
-squackit wraps fledgling's SQL macros (via
-[pluckit](https://github.com/teaguesterling/pluckit) — `pip install ast-pluckit`) with smart defaults,
-token-aware output, session caching, compound workflows, an MCP server,
-prompt templates, and live resources.
+Built on [pluckit](https://github.com/teaguesterling/pluckit) (CSS selectors
+over ASTs) and [fledgling](https://github.com/teaguesterling/fledgling)
+(SQL macros over DuckDB).
 
 ## Install
 
@@ -19,36 +17,62 @@ prompt templates, and live resources.
 pip install squackit
 ```
 
-## Run
+## CLI usage
 
 ```bash
-squackit
+# Run any tool from the shell
+squackit tool list
+squackit tool view "src/**/*.py" ".fn#main"
+squackit tool find_names "**/*.py" ".class"
+squackit tool complexity "src/**/*.py" ".fn"
+
+# JSON output for scripting
+squackit --json tool find "src/**/*.py" ".fn"
+
+# Pluckit chain queries
+squackit pluck "src/**/*.py" find .fn containing cache names
+squackit pluck "src/api.py" find .class#Handler children find .fn names
+
+# Start the MCP server
+squackit mcp serve
 ```
 
-Starts the FastMCP server on stdio. Connect it to Claude Code, Cursor, or any
-MCP-compatible client.
+Tool names resolve in three conventions: `find_names`, `find-names`, `FindNames`.
+Tab completion is built in (`eval "$(_SQUACKIT_COMPLETE=bash_source squackit)"`).
 
-## What agents get
+## What agents get via MCP
 
-- **25+ tools** — code search, AST analysis, doc browsing, git history, diagnostics
+- **20 tools** — CSS-selector code queries (via pluckit), file I/O, git history,
+  doc navigation, diagnostics
 - **4 compound workflows** — `explore`, `investigate`, `review`, `search`
 - **3 prompt templates** — pre-loaded with live project data
-- **5 resources** — always-on project overview, docs, git status, session log
+- **5 resources** — project overview, docs, git status, session log, diagnostics
+- **`pluck` tool** — full pluckit chain grammar for multi-step AST queries,
+  with mutation safety (blocked by default, opt-in via `allow_mutations=true`)
 - **Smart defaults** — infers language, doc layout, main branch automatically
-- **Token-aware output** — truncation with head+tail hints, automatic bypass
+- **Token-aware output** — configurable truncation with `max_results`/`max_lines`
 
 ## Architecture
 
 ```
-squackit → ast-pluckit → fledgling-python → fledgling (SQL) → DuckDB extensions
+Layer 4   Consumers (Claude Code, agents, IDE extensions)
+              │
+Layer 3b  squackit ─── CLI + MCP server + intelligence
+              │        smart defaults, caching, truncation,
+              │        workflows, pluckit tools, mutation safety
+              │
+Layer 3a  pluckit ──── fluent Python API (CSS selectors over ASTs)
+              │
+Layer 2   fledgling ── SQL macros + Python bundler
+              │
+Layer 0   DuckDB extensions (sitting_duck, markdown, duck_tails, read_lines)
 ```
 
-> **Note:** pluckit is published on PyPI as
-> [`ast-pluckit`](https://pypi.org/project/ast-pluckit/). The Python import
-> name is still `pluckit`.
+Pluckit tools take priority over fledgling equivalents when both provide a
+capability (e.g., pluckit's `find` supersedes fledgling's `find_definitions`).
 
-squackit is the opinionated top layer. It adds session state, MCP protocol,
-and intelligence heuristics on top of the stateless query layers below it.
+> **Note:** pluckit is published on PyPI as
+> [`ast-pluckit`](https://pypi.org/project/ast-pluckit/). The import name is `pluckit`.
 
 ## Documentation
 
