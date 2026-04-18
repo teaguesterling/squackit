@@ -1,10 +1,14 @@
 [inference]
-order = ["templates", "rules", "ollama-local"]
+order = ["templates", "rules", "cascade"]
 
-[inference.providers.ollama-local]
-plugin = "ollama"
+[inference.providers.cascade]
+plugin = "cascade"
 host = "http://localhost:11435"
-model = "qwen2.5-coder:1.5b"
+tiers = [
+    {model = "qwen2.5-coder:3b", max_tokens = 80, timeout = 15},
+    {model = "qwen2.5-coder:7b", max_tokens = 120, timeout = 60},
+    {model = "qwen2.5:7b", max_tokens = 120, timeout = 60},
+]
 
 [kit]
 default = "debug"

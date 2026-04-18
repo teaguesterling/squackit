@@ -42,6 +42,7 @@ except ImportError:
 
 OLLAMA_HOST = "http://localhost:11435"
 MODEL_CODER = "qwen2.5-coder:7b"
+MODEL_CODER_3B = "qwen2.5-coder:3b"
 MODEL_QWEN = "qwen2.5:7b"
 MODEL_GLM = "glm4:9b"
 MODEL_QWEN3 = "qwen3:8b"
@@ -857,6 +858,9 @@ PASSES = {
     "C": {"gen": MODEL_GLM,       "crit": MODEL_QWEN3,     "ref": MODEL_GLM},
     "D": {"gen": MODEL_QWEN3,     "crit": MODEL_GLM,       "ref": MODEL_QWEN3},
     "E": {"gen": MODEL_CODEGEMMA, "crit": MODEL_CODER,     "ref": MODEL_CODEGEMMA},
+    # Optimized passes based on grid results
+    "F": {"gen": MODEL_CODER,     "crit": MODEL_CODER_3B,  "ref": MODEL_CODER},    # best quality
+    "G": {"gen": MODEL_CODER_3B,  "crit": MODEL_CODER,     "ref": MODEL_CODER_3B}, # fastest
 }
 
 
