@@ -718,14 +718,19 @@ def extract_json_array(text: str) -> list | None:
     if start == -1 or end == -1 or start >= end:
         return None
     candidate = text[start : end + 1]
-    try:
-        return json.loads(candidate)
-    except json.JSONDecodeError:
-        fixed = candidate.replace("\\'", "'")
+
+    # Try progressively more aggressive fixes
+    for attempt in [
+        candidate,                                  # raw
+        candidate.replace("\\'", "'"),              # escaped single quotes
+        re.sub(r'"\s+"', '"', candidate),           # qwen3 stray spaces between keys
+        re.sub(r'"\s+"', '"', candidate.replace("\\'", "'")),  # both
+    ]:
         try:
-            return json.loads(fixed)
+            return json.loads(attempt)
         except json.JSONDecodeError:
-            return None
+            continue
+    return None
 
 
 # ─────────────────────────────────────────────────────────────────────
