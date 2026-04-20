@@ -47,6 +47,9 @@ MODEL_QWEN = "qwen2.5:7b"
 MODEL_GLM = "glm4:9b"
 MODEL_QWEN3 = "qwen3:8b"
 MODEL_CODEGEMMA = "codegemma:7b"
+MODEL_QWEN35_2B = "qwen3.5:2b"
+MODEL_QWEN35_4B = "qwen3.5:4b"
+MODEL_QWEN35_9B = "qwen3.5:9b"
 OUT_DIR = Path(__file__).parent / "example_grid_out"
 OUT_DIR.mkdir(exist_ok=True)
 
@@ -713,6 +716,16 @@ def query(model: str, prompt: str, temperature: float = 0.3, max_tokens: int = 6
     return body["response"]
 
 
+def _scrub_json(candidate: str) -> str:
+    """Progressively fix common small-model JSON corruption."""
+    c = candidate
+    c = c.replace("\\'", "'")                     # invalid JSON escape \'
+    c = re.sub(r'"\s+"', '"', c)                  # qwen3 stray whitespace: " "key -> "key
+    c = re.sub(r'","(\w+)":', r'"\1":', c)        # stray ","key": -> "key":
+    c = re.sub(r'""(\w)', r'"\1', c)              # doubled quote: ""key -> "key
+    return c
+
+
 def extract_json_array(text: str) -> list | None:
     start = text.find("[")
     end = text.rfind("]")
@@ -720,13 +733,7 @@ def extract_json_array(text: str) -> list | None:
         return None
     candidate = text[start : end + 1]
 
-    # Try progressively more aggressive fixes
-    for attempt in [
-        candidate,                                  # raw
-        candidate.replace("\\'", "'"),              # escaped single quotes
-        re.sub(r'"\s+"', '"', candidate),           # qwen3 stray spaces between keys
-        re.sub(r'"\s+"', '"', candidate.replace("\\'", "'")),  # both
-    ]:
+    for attempt in [candidate, _scrub_json(candidate)]:
         try:
             return json.loads(attempt)
         except json.JSONDecodeError:
@@ -861,6 +868,7 @@ PASSES = {
     # Optimized passes based on grid results
     "F": {"gen": MODEL_CODER,     "crit": MODEL_CODER_3B,  "ref": MODEL_CODER},    # best quality
     "G": {"gen": MODEL_CODER_3B,  "crit": MODEL_CODER,     "ref": MODEL_CODER_3B}, # fastest
+    "H": {"gen": MODEL_CODER_3B,  "crit": MODEL_CODER,     "ref": MODEL_CODER},    # 3b gen, 7b crit+ref
 }
 
 
@@ -878,12 +886,15 @@ def check_models_available(required: set[str]) -> tuple[bool, set[str]]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--pass", dest="pass_label",
-                    choices=list(PASSES.keys()) + ["all"], default="all")
+    ap.add_argument("--pass", dest="pass_labels", nargs="+",
+                    choices=list(PASSES.keys()) + ["all"], default=["all"])
     ap.add_argument("--skip-missing", action="store_true")
     args = ap.parse_args()
 
-    passes = list(PASSES.keys()) if args.pass_label == "all" else [args.pass_label]
+    if "all" in args.pass_labels:
+        passes = list(PASSES.keys())
+    else:
+        passes = args.pass_labels
 
     needed = {PASSES[p][role] for p in passes for role in ("gen", "crit", "ref")}
     ok, missing = check_models_available(needed)

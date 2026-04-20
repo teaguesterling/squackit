@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "description": "Curated few-shot examples for lackpy ToolSpec retrieval-augmented prompting.",
-    "source": "Hand-curated from grid_generate_examples.py output + manual additions.",
-    "format": "Each example: {intent, code, tool, tags, notes?}. Anti-patterns have correct_code.",
-    "updated": "2026-04-16"
+    "total": 711,
+    "curated": 93,
+    "harvested": 618,
+    "passes": "all"
   },
   "examples": [
     {
@@ -978,6 +978,5819 @@
       ],
       "correct_code": "run(['pytest', 'tests/'])",
       "notes": "command is a list of argv, not a single string"
+    },
+    {
+      "intent": "Get a list of registered commands",
+      "code": "commands()",
+      "tool": "commands",
+      "tags": [
+        "find",
+        "commands"
+      ]
+    },
+    {
+      "intent": "Get an event by reference",
+      "code": "event('evt_xyz')",
+      "tool": "event",
+      "tags": [
+        "event"
+      ]
+    },
+    {
+      "intent": "Get context of a run",
+      "code": "context('run_abc123')",
+      "tool": "context",
+      "tags": [
+        "context"
+      ]
+    },
+    {
+      "intent": "Register a new command",
+      "code": "register_command('my_test', ['pytest', 'tests/'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "Get history of recent runs",
+      "code": "history(limit=5)",
+      "tool": "history",
+      "tags": [
+        "history"
+      ]
+    },
+    {
+      "intent": "Run a previously registered command",
+      "code": "run(['my_test'])",
+      "tool": "run",
+      "tags": [
+        "run"
+      ]
+    },
+    {
+      "intent": "Get events from a specific run",
+      "code": "events('run_abc123')",
+      "tool": "events",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "intent": "Get output of a specific run without a query",
+      "code": "output('run_abc123')",
+      "tool": "output",
+      "tags": [
+        "output"
+      ]
+    },
+    {
+      "intent": "Get context of a previously registered command",
+      "code": "context('my_test')",
+      "tool": "context",
+      "tags": [
+        "context"
+      ]
+    },
+    {
+      "intent": "Run a different pytest command with options",
+      "code": "run(['pytest', 'tests/', '--verbose'])",
+      "tool": "run",
+      "tags": [
+        "git",
+        "run"
+      ]
+    },
+    {
+      "intent": "Create a new plan for fixing null checks",
+      "code": "plan = save('fix: null check')",
+      "tool": "save",
+      "tags": [
+        "save"
+      ]
+    },
+    {
+      "intent": "Finish the current mutation plan",
+      "code": "finish()",
+      "tool": "finish",
+      "tags": [
+        "finish"
+      ]
+    },
+    {
+      "intent": "Close issue number 42 with a comment",
+      "code": "issue_close(42, 'Fixed in v1.0')",
+      "tool": "issue_close",
+      "tags": [
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Comment on PR number 42",
+      "code": "pr_comment(42, 'Looks good to me')",
+      "tool": "pr_comment",
+      "tags": [
+        "pr_comment"
+      ]
+    },
+    {
+      "intent": "Compare changes against the previous commit",
+      "code": "diff('HEAD^')",
+      "tool": "diff",
+      "tags": [
+        "git",
+        "diff"
+      ]
+    },
+    {
+      "intent": "Confirm the creation of the mutation plan",
+      "code": "confirm(plan['plan_id'])",
+      "correct_code": "confirm('plan_id')",
+      "tool": "confirm",
+      "tags": [
+        "anti_pattern",
+        "confirm"
+      ]
+    },
+    {
+      "intent": "Show the main function",
+      "code": "delegate('show the main function', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all classes",
+      "code": "generate('list all classes', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "class",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "List all functions",
+      "code": "generate('list all functions', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find variables",
+      "code": "delegate('find variables', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Show class definitions",
+      "code": "generate('show class definitions', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "class",
+        "view",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all methods",
+      "code": "delegate('find all methods', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all imports",
+      "code": "generate('list all imports', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all decorators",
+      "code": "delegate('find all decorators', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Show docstrings",
+      "code": "generate('show docstrings', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "view",
+        "doc",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all exceptions",
+      "code": "delegate('find all exceptions', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all constants",
+      "code": "generate('list all constants', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all global variables",
+      "code": "delegate('find all global variables', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Read the 'quickstart' section from a specific document",
+      "code": "read_doc_section('docs/api.md', 'quickstart')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Chain queries to get section content from multiple documents",
+      "code": "sections = [read_doc_section('docs/api.md', 'quickstart'), read_doc_section('docs/installation.md', 'installation')]",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Chain queries with a search term in the outline",
+      "code": "outline = doc_outline('docs/**/*.md', search='installation'); section = read_doc_section(outline[0]['path'], 'installation')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Chain queries with an exact search term",
+      "code": "outline = doc_outline('docs/**/*.md', search='authentication'); section = read_doc_section(outline[0]['path'], 'authentication')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Chain queries with multiple sections from one document",
+      "code": "sections = [read_doc_section('docs/api.md', 'quickstart'), read_doc_section('docs/api.md', 'usage')]",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Chain queries with a non-existent section and correct version",
+      "code": "sections = [read_doc_section('docs/api.md', 'non-existent-section'), read_doc_section('docs/api.md', 'quickstart')]",
+      "correct_code": "sections = [read_doc_section('docs/api.md', 'quickstart')] if not sections else sections",
+      "tool": "read_doc_section",
+      "tags": [
+        "anti_pattern",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Chain queries with an incorrect search term and correct version",
+      "code": "outline = doc_outline('docs/**/*.md', search='auth'); section = read_doc_section(outline[0]['path'], 'authentication') if outline else None",
+      "correct_code": "outline = doc_outline('docs/**/*.md', search='authentication'); section = read_doc_section(outline[0]['path'], 'authentication') if outline else None",
+      "tool": "doc_outline",
+      "tags": [
+        "anti_pattern",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Chain queries with incorrect target_id format and correct version",
+      "code": "section = read_doc_section('docs/api.md', 'Quick Start') if False else read_doc_section('docs/api.md', 'quickstart')",
+      "correct_code": "section = read_doc_section('docs/api.md', 'quickstart')",
+      "tool": "read_doc_section",
+      "tags": [
+        "anti_pattern",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Chain queries with a search term in the outline",
+      "code": "outline = doc_outline('docs/**/*.md', search='installation'); section = read_doc_section(outline[0]['path'], 'installation') if outline else None",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Get file content at a specific revision",
+      "code": "file_at_version('README.md', 'v1.0')",
+      "correct_code": "file_at_version('README.md', 'v1.0')",
+      "tool": "file_at_version",
+      "tags": [
+        "anti_pattern",
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "Compare structural changes between two revisions",
+      "code": "structural_diff('src/auth.py', 'HEAD~1', 'HEAD')",
+      "tool": "structural_diff",
+      "tags": [
+        "git",
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "Summarize changed functions between two revisions",
+      "code": "changed_function_summary('main', 'feature-branch')",
+      "tool": "changed_function_summary",
+      "tags": [
+        "function",
+        "git",
+        "changed_function_summary"
+      ]
+    },
+    {
+      "intent": "Compare changes between two revisions using a different branch",
+      "code": "file_changes('develop', 'HEAD')",
+      "tool": "file_changes",
+      "tags": [
+        "git",
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "Diff specific file between two revisions using a different branch",
+      "code": "file_diff('src/utils.py', 'feature-branch', 'HEAD')",
+      "tool": "file_diff",
+      "tags": [
+        "git",
+        "file_diff"
+      ]
+    },
+    {
+      "intent": "Get file content at a specific commit hash",
+      "code": "file_at_version('src/config.py', 'abc123def456')",
+      "tool": "file_at_version",
+      "tags": [
+        "git",
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "Compare structural changes between two revisions using a different branch",
+      "code": "structural_diff('develop', 'feature-branch')",
+      "tool": "structural_diff",
+      "tags": [
+        "git",
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "Summarize changed functions between two revisions using a different branch",
+      "code": "changed_function_summary('main', 'release-v2')",
+      "tool": "changed_function_summary",
+      "tags": [
+        "function",
+        "git",
+        "changed_function_summary"
+      ]
+    },
+    {
+      "intent": "Compare changes between two revisions using a different branch and specific file",
+      "code": "file_changes('feature-branch', 'HEAD', 'src/main.py')",
+      "tool": "file_changes",
+      "tags": [
+        "git",
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "Get file content at a specific revision",
+      "code": "file_at_version('README.md', 'abc123def456')",
+      "tool": "file_at_version",
+      "tags": [
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "View the source code of a specific class in a file",
+      "code": "view('src/api.py', '.class#Handler')",
+      "tool": "view",
+      "tags": [
+        "class",
+        "view"
+      ]
+    },
+    {
+      "intent": "Read a specific range of lines from a file",
+      "code": "read_source('src/main.py', '1-50')",
+      "tool": "read_source",
+      "tags": [
+        "read_source"
+      ]
+    },
+    {
+      "intent": "Find a specific function by name in a file",
+      "code": "find('src/auth.py', '.fn#validate_token')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function calls within a specific class",
+      "code": "find('src/auth.py', '.class#Auth .call')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find a specific function by name in multiple files",
+      "code": "find_names('src/**/*.py', '.fn#main')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find a specific class by name in multiple files",
+      "code": "find('src/**/*.py', '.class#User')",
+      "tool": "find",
+      "tags": [
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find a specific function by name in a file with a range of lines",
+      "code": "find('src/auth.py', '.fn#validate_token')[0]['source'][:50]",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find a specific class by name in a file with a range of lines",
+      "code": "view('src/api.py', '.class#Handler')[:100]",
+      "tool": "view",
+      "tags": [
+        "class",
+        "find",
+        "view"
+      ]
+    },
+    {
+      "intent": "Find a specific function by name in a file and view its complexity",
+      "code": "complexity('src/auth.py', '.fn#validate_token')[0]['complexity']",
+      "tool": "complexity",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "complexity"
+      ]
+    },
+    {
+      "intent": "Review with invalid revisions (error case)",
+      "code": "review('main', 'HEAD')",
+      "correct_code": "review('main', 'HEAD~1')",
+      "tool": "review",
+      "tags": [
+        "anti_pattern",
+        "review"
+      ]
+    },
+    {
+      "intent": "Refactor a piece of code to improve its readability",
+      "code": "run(['black', 'src/'])",
+      "tool": "run",
+      "tags": [
+        "run"
+      ]
+    },
+    {
+      "intent": "Prepare for code review by running tests and linting",
+      "code": "run(['pytest', 'tests/'], ['black', '--check', 'src/'])",
+      "tool": "run",
+      "tags": [
+        "view",
+        "review",
+        "run"
+      ]
+    },
+    {
+      "intent": "Analyze the complexity of a Python script",
+      "code": "run(['pylint', '--metrics=complexity', 'src/main.py'])",
+      "tool": "run",
+      "tags": [
+        "complexity",
+        "run"
+      ]
+    },
+    {
+      "intent": "Navigate documentation by searching for a term",
+      "code": "run(['grep', '-r', 'API reference', '.'])",
+      "tool": "run",
+      "tags": [
+        "find",
+        "doc",
+        "run"
+      ]
+    },
+    {
+      "intent": "Debug a build issue by examining logs",
+      "code": "output('build_12345', query='error')",
+      "tool": "output",
+      "tags": [
+        "output"
+      ]
+    },
+    {
+      "intent": "Register a new command for future use",
+      "code": "register_command('lint', ['black', '--check', 'src/'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "Run a previously registered command",
+      "code": "run(['lint'])",
+      "tool": "run",
+      "tags": [
+        "run"
+      ]
+    },
+    {
+      "intent": "Get details about a specific error from a run",
+      "code": "errors('run_abc123')[0]",
+      "tool": "errors",
+      "tags": [
+        "errors"
+      ]
+    },
+    {
+      "intent": "Get events related to a specific run",
+      "code": "events('run_abc123')[:5]",
+      "tool": "events",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "intent": "Get context of a specific run event",
+      "code": "context('evt_xyz')",
+      "tool": "context",
+      "tags": [
+        "context"
+      ]
+    },
+    {
+      "intent": "Run a command and capture its output",
+      "code": "output(run(['echo', 'Hello, world!']))",
+      "tool": "run",
+      "tags": [
+        "run"
+      ]
+    },
+    {
+      "intent": "Incorrectly use the wrong tool for an operation",
+      "code": "blq.run(['ls', '-l'])",
+      "correct_code": "run(['ls', '-l'])",
+      "tool": "run",
+      "tags": [
+        "anti_pattern",
+        "run"
+      ]
+    },
+    {
+      "intent": "Analyze code complexity",
+      "code": "log(10)",
+      "tool": "log",
+      "tags": [
+        "complexity",
+        "log"
+      ]
+    },
+    {
+      "intent": "Review git history",
+      "code": "diff('HEAD~2')",
+      "tool": "diff",
+      "tags": [
+        "view",
+        "review",
+        "diff"
+      ]
+    },
+    {
+      "intent": "Comment on a pull request",
+      "code": "pr_comment(42, 'LGTM!')",
+      "tool": "pr_comment",
+      "tags": [
+        "pr_comment"
+      ]
+    },
+    {
+      "intent": "Start a new branch",
+      "code": "start('feature-new-feature')",
+      "tool": "start",
+      "tags": [
+        "git",
+        "start"
+      ]
+    },
+    {
+      "intent": "Close an issue",
+      "code": "issue_close(123, 'Issue resolved')",
+      "tool": "issue_close",
+      "tags": [
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Refactor the code to improve readability",
+      "code": "delegate('refactor', ['optimize_code'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Prepare for a code review",
+      "code": "delegate('prepare for code review', ['format_code', 'lint_code'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "review",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Analyze the complexity of a function",
+      "code": "delegate('analyze complexity', ['complexity_analysis'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "complexity",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "View the git history for a file",
+      "code": "delegate('view git history', ['git_log'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Navigate through documentation",
+      "code": "delegate('navigate docs', ['doc_search'])",
+      "tool": "delegate",
+      "tags": [
+        "doc",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Debug a build issue",
+      "code": "delegate('debug build', ['build_debug'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Refactor to use functional programming style",
+      "code": "delegate('refactor to functional', ['functional_refactor'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Prepare for a performance review",
+      "code": "delegate('prepare for performance review', ['profile_code'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "review",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Analyze the security vulnerabilities in a project",
+      "code": "delegate('analyze security', ['security_analysis'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Navigate through a complex documentation set",
+      "code": "delegate('navigate complex docs', ['doc_search'])",
+      "tool": "delegate",
+      "tags": [
+        "complexity",
+        "doc",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Debug a specific error message",
+      "code": "delegate('debug error', ['error_debug'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all classes in a Python file",
+      "code": "delegate('list all classes', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Refactor a function by renaming it in source code",
+      "code": "read_source('src/main.py', '1-50')",
+      "correct_code": "find_names('src/main.py', '.fn#old_name')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Refactor code by moving a function to a new file",
+      "code": "read_source('src/main.py', '1-50')",
+      "correct_code": "find_names('src/main.py', '.fn#function_to_move')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Explore with an undefined path",
+      "code": "explore(src)",
+      "correct_code": "explore('src/')",
+      "tool": "explore",
+      "tags": [
+        "anti_pattern",
+        "explore"
+      ]
+    },
+    {
+      "intent": "Investigate with special characters in the function name",
+      "code": "investigate('handle@user')",
+      "correct_code": "investigate('handle_user')",
+      "tool": "investigate",
+      "tags": [
+        "anti_pattern",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Review code changes with incorrect case sensitivity",
+      "code": "review('main', 'HEAD')",
+      "correct_code": "review('Main', 'HEAD')",
+      "tool": "review",
+      "tags": [
+        "anti_pattern",
+        "review"
+      ]
+    },
+    {
+      "intent": "summarize the text",
+      "code": "delegate('summarize text')",
+      "correct_code": "delegate('summarize text', ['summarize'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "translate the code",
+      "code": "generate('translate python to java')",
+      "correct_code": "generate('translate the code', ['translate'])",
+      "tool": "generate",
+      "tags": [
+        "anti_pattern",
+        "generate"
+      ]
+    },
+    {
+      "intent": "summarize the text",
+      "code": "delegate('summarize the text', ['summarize'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "translate the code",
+      "code": "generate('translate python to java', ['translate'])",
+      "tool": "generate",
+      "tags": [
+        "generate"
+      ]
+    },
+    {
+      "intent": "Read a specific section of a documentation file",
+      "code": "doc_outline('docs/api.md', 'auth')",
+      "correct_code": "doc_outline('docs/api.md', search='auth')",
+      "tool": "doc_outline",
+      "tags": [
+        "anti_pattern",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Read the installation section of a documentation file",
+      "code": "read_doc_section('docs/installation.md', 'installation')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Read the CSS selectors section from a documentation file",
+      "code": "read_doc_section('docs/css.md', 'css-selectors')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Read the quickstart section from a documentation file",
+      "code": "read_doc_section('docs/quickstart.md', 'quickstart')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Get the outline of all markdown files in a directory with search term",
+      "code": "doc_outline('docs/**/*.md', search='api')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "find the main function in a Python file",
+      "code": "find(src='src/main.py', selector='.fn#main')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "incorrectly pass a variable as the source parameter to find_names",
+      "code": "source = 'src/**/*.py'\nfind_names(source, '.fn')",
+      "correct_code": "find_names('src/**/*.py', '.fn')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Log the last 3 entries from the log",
+      "code": "log(3)",
+      "tool": "log",
+      "tags": [
+        "log"
+      ]
+    },
+    {
+      "intent": "Comment on PR number 42 with a message",
+      "code": "pr_comment(42, 'Fixes null check issue')",
+      "tool": "pr_comment",
+      "tags": [
+        "pr_comment"
+      ]
+    },
+    {
+      "intent": "Close issue number 10 with a comment",
+      "code": "issue_close(10, 'Issue resolved')",
+      "tool": "issue_close",
+      "tags": [
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Log an excessive number of entries (WRONG)",
+      "code": "log(100)",
+      "correct_code": "log(20)",
+      "tool": "log",
+      "tags": [
+        "anti_pattern",
+        "log"
+      ]
+    },
+    {
+      "intent": "Confirm a previously saved plan",
+      "code": "confirm('plan')['plan_id']",
+      "tool": "confirm",
+      "tags": [
+        "confirm"
+      ]
+    },
+    {
+      "intent": "Find the 'validate_token' function in a specific file",
+      "code": "find_names('src/auth.py', '.fn#validate_token')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find the 'Handler' class in a specific file",
+      "code": "find('src/api.py', '.class#Handler')",
+      "tool": "find",
+      "tags": [
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find the 'main' function in a specific file using natural language",
+      "code": "find(src='src/**/*.py', selector='.fn#main')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "list all files in the root directory",
+      "code": "explore('/')",
+      "tool": "explore",
+      "tags": [
+        "find",
+        "explore"
+      ]
+    },
+    {
+      "intent": "investigate a specific function",
+      "code": "investigate('calculate_area')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "compare changes between two revisions",
+      "code": "review('v1.0', 'HEAD')",
+      "tool": "review",
+      "tags": [
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "search for a specific term in the codebase",
+      "code": "search('user authentication')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "list all files in a specific directory",
+      "code": "explore('src/components/')",
+      "tool": "explore",
+      "tags": [
+        "find",
+        "explore"
+      ]
+    },
+    {
+      "intent": "investigate a function with a complex name",
+      "code": "investigate('validate_user_credentials')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "complexity",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "compare changes between two revisions with no arguments",
+      "code": "review()",
+      "tool": "review",
+      "tags": [
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "search for a specific term in the codebase without quotes",
+      "code": "search('database connection')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "list all files in a nested directory",
+      "code": "explore('src/views/user/')",
+      "tool": "explore",
+      "tags": [
+        "find",
+        "explore"
+      ]
+    },
+    {
+      "intent": "investigate a function with spaces in its name",
+      "code": "investigate('generate report')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "compare changes between two revisions with named arguments",
+      "code": "review(from_rev='v1.0', to_rev='HEAD')",
+      "tool": "review",
+      "tags": [
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "search for a specific term in the codebase with special characters",
+      "code": "search('API endpoint')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "list all files in a directory with spaces in its name",
+      "code": "explore('src/assets/images/')",
+      "tool": "explore",
+      "tags": [
+        "find",
+        "explore"
+      ]
+    },
+    {
+      "intent": "investigate a function with special characters in its name",
+      "code": "investigate('validate_user_input')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "compare changes between two revisions with a single revision specified",
+      "code": "review('v1.0')",
+      "tool": "review",
+      "tags": [
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "list all files in a simpler nested directory",
+      "code": "explore('src/views/')",
+      "tool": "explore",
+      "tags": [
+        "find",
+        "explore"
+      ]
+    },
+    {
+      "intent": "Register a new command",
+      "code": "register_command('mycommand', ['echo', 'Hello, World!'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "View the last two logs",
+      "code": "log(2)",
+      "tool": "log",
+      "tags": [
+        "view",
+        "log"
+      ]
+    },
+    {
+      "intent": "Close an issue with a comment",
+      "code": "issue_close(1, 'Fixed in v2.0')",
+      "tool": "issue_close",
+      "tags": [
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Comment on a specific pull request",
+      "code": "pr_comment(42, 'Great work!')",
+      "tool": "pr_comment",
+      "tags": [
+        "pr_comment"
+      ]
+    },
+    {
+      "intent": "View the difference between two revisions",
+      "code": "diff('rev1')",
+      "tool": "diff",
+      "tags": [
+        "view",
+        "git",
+        "diff"
+      ]
+    },
+    {
+      "intent": "View the difference between two revisions",
+      "code": "diff(rev='rev1')",
+      "tool": "diff",
+      "tags": [
+        "view",
+        "git",
+        "diff"
+      ]
+    },
+    {
+      "intent": "Find all functions in a Python file",
+      "code": "delegate('find all functions', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Count the number of lines in a file",
+      "code": "generate('count lines', ['find_lines'])",
+      "tool": "generate",
+      "tags": [
+        "count",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all variables in a Python script",
+      "code": "delegate('find all variables', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all modules in a given directory",
+      "code": "generate('list all modules', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all comments in a Python file",
+      "code": "delegate('find all comments', ['find_comments'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Count the number of characters in a file",
+      "code": "generate('count characters', ['find_characters'])",
+      "tool": "generate",
+      "tags": [
+        "count",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all strings in a Python script",
+      "code": "delegate('find all strings', ['find_strings'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all files in a given directory",
+      "code": "generate('list all files', ['find_files'])",
+      "tool": "generate",
+      "tags": [
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all imports in a Python file",
+      "code": "delegate('find all imports', ['find_imports'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Count the number of blank lines in a file",
+      "code": "generate('count blank lines', ['find_blank_lines'])",
+      "tool": "generate",
+      "tags": [
+        "count",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all docstrings in a Python script",
+      "code": "delegate('find all docstrings', ['find_docstrings'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "doc",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Count the number of words in a file",
+      "code": "generate('count words', ['find_words'])",
+      "tool": "generate",
+      "tags": [
+        "count",
+        "generate"
+      ]
+    },
+    {
+      "intent": "List all classes and functions in a given file",
+      "code": "generate('list all classes and functions', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all variables, classes, and functions in a Python script",
+      "code": "delegate('find all variables, classes, and functions', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all files and modules in a given directory",
+      "code": "generate('list all files and modules', ['find_files_and_modules'])",
+      "tool": "generate",
+      "tags": [
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all strings, variables, and functions in a Python script",
+      "code": "delegate('find all strings, variables, and functions', ['find_strings_and_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Find all imports, variables, and functions in a Python file",
+      "code": "delegate('find all imports, variables, and functions', ['find_imports_and_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Find all docstrings, variables, and functions in a Python script",
+      "code": "delegate('find all docstrings, variables, and functions', ['find_docstrings_and_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "doc",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Read the 'installation' section of 'setup.md'",
+      "code": "read_doc_section('docs/setup.md', 'installation')",
+      "tool": "read_doc_section",
+      "tags": [
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Read the 'css-selectors' section of 'guide.md'",
+      "code": "read_doc_section('docs/guide.md', 'css-selectors')",
+      "tool": "read_doc_section",
+      "tags": [
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in a Python file",
+      "code": "find_names('src/auth.py', '.class')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find the 'Handler' class within a Python file",
+      "code": "find_names('src/api.py', '.class#Handler')",
+      "tool": "find_names",
+      "tags": [
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Retrieve the output of a previous command execution",
+      "code": "output('run_abc123', query='Error')",
+      "tool": "output",
+      "tags": [
+        "output"
+      ]
+    },
+    {
+      "intent": "Run a command and then get its output",
+      "code": "output('run_def456', query='Success')",
+      "tool": "output",
+      "tags": [
+        "output"
+      ]
+    },
+    {
+      "intent": "Run a command, check its status, and then get its events",
+      "code": "status(), events('run_abc123')",
+      "tool": "status",
+      "tags": [
+        "status"
+      ]
+    },
+    {
+      "intent": "Run a command and register it with a custom name",
+      "code": "register_command('my_custom_name', ['python', 'script.py'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "Run multiple commands and get their output in sequence",
+      "code": "output('run_abc123', query='Error'), output('run_def456', query='Success')",
+      "tool": "output",
+      "tags": [
+        "output"
+      ]
+    },
+    {
+      "intent": "find tests",
+      "code": "delegate('find tests', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find test cases",
+      "code": "delegate('find test cases', ['find_tests'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Find all Python files in the src directory",
+      "code": "pluck('src/**/*.py names')",
+      "tool": "pluck",
+      "tags": [
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Count the number of Python files in the src directory",
+      "code": "pluck('src/**/*.py count')",
+      "tool": "pluck",
+      "tags": [
+        "count",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find the class named 'Auth' within .py files, then list its child function definitions",
+      "code": "pluck('src/**/*.py find .class#Auth children find .fn names')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions within .py files, then count them",
+      "code": "pluck('src/**/*.py find .fn names count')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "count",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find class definitions within .py files and view their content",
+      "code": "pluck('--plugin AstViewer src/**/*.py find .class view')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "view",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find class definitions within .py files and print their names, but using an incorrect path pattern",
+      "code": "pluck('src/**.py find .class names')",
+      "correct_code": "pluck('src/**/*.py find .class names')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find function definitions within .py files and print their names, but using an incorrect tool call format (missing plugin)",
+      "code": "pluck('src/**/*.py find .fn names')",
+      "correct_code": "pluck('--plugin AstViewer src/**/*.py find .fn names')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Read the installation guide from the documentation",
+      "code": "read_doc_section('docs/guide.md', 'installation')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in src/api.py",
+      "code": "find('src/api.py', '.fn')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "View the class definition of Auth in src/auth.py",
+      "code": "view('src/auth.py', '.class#Auth')",
+      "tool": "view",
+      "tags": [
+        "function",
+        "class",
+        "view"
+      ]
+    },
+    {
+      "intent": "Find all function calls in src/main.py that start with 'call_'",
+      "code": "find('src/main.py', '.call[name^=\"call_\"]')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in src/**/*.py that end with 'Handler'",
+      "code": "find('src/**/*.py', '.class[name$=\"Handler\"]')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions that are directly inside a class definition in src/**/*.py",
+      "code": "find('src/**/*.py', '.class > .fn')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in src/api.py that are named 'handle_request'",
+      "code": "find('src/api.py', '.fn#handle_request')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in src/**/*.py that start with 'Auth'",
+      "code": "find('src/**/*.py', '.class[name^=\"Auth\"]')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function calls in src/main.py that are inside a class definition named 'Handler'",
+      "code": "find('src/main.py', '.class#Handler > .call')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in src/**/*.py that contain 'validate'",
+      "code": "find('src/**/*.py', '.fn[name*=\"validate\"]')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in src/api.py that are named 'main'",
+      "code": "find('src/api.py', '.fn#main')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in src/**/*.py that are inside a class definition named 'Handler'",
+      "code": "find('src/**/*.py', '.class#Handler > .fn')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in src/main.py that are named 'process_request'",
+      "code": "find('src/main.py', '.fn#process_request')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in src/**/*.py that end with 'Manager'",
+      "code": "find('src/**/*.py', '.class[name$=\"Manager\"]')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in src/api.py that start with 'get'",
+      "code": "find('src/api.py', '.fn[name^=\"get_\"]')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in src/**/*.py that are named 'login'",
+      "code": "find('src/**/*.py', '.fn#login')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Investigate multiple functions",
+      "code": "investigate('validate_token', 'authenticate')",
+      "correct_code": "investigate('validate_token'), investigate('authenticate')",
+      "tool": "investigate",
+      "tags": [
+        "anti_pattern",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in Python files and their child functions",
+      "code": "pluck('src/**/*.py find .class names parent find .fn names')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Reset selection and then find all class definitions in Python files",
+      "code": "pluck('src/**/*.py find .class names reset find .fn names')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Materialize and view a specific Python file, then analyze its complexity",
+      "code": "pluck('--plugin AstViewer src/api.py find .fn#handler view complexity')",
+      "tool": "pluck",
+      "tags": [
+        "view",
+        "complexity",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files and their attributes",
+      "code": "pluck('src/**/*.py find .fn attr name attr doc materialize')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files and their text content",
+      "code": "pluck('src/**/*.py find .fn text')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files and their line numbers",
+      "code": "pluck('src/**/*.py find .fn at_line')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files and their previous siblings",
+      "code": "pluck('src/**/*.py find .fn prev')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files and their next siblings",
+      "code": "pluck('src/**/*.py find .fn next')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files and their containing classes",
+      "code": "pluck('src/**/*.py find .fn containing class names')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files and their ancestors",
+      "code": "pluck('src/**/*.py find .fn ancestor')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files and their views",
+      "code": "pluck('src/**/*.py find .fn view')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Identify all function definitions with 'test_' prefix in Python files",
+      "code": "pluck('src/**/*.py, find .fn[name^=\"test_\"] names')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions containing 'cache' keyword and display their names",
+      "code": "pluck('src/**/*.py find .fn containing \"cache\" names')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions that start with 'test_'",
+      "code": "find_names('src/**/*.py', '.fn[name^=\"test_\"]')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in auth.py that have a method named 'validate_token'",
+      "code": "find_names('src/auth.py', '.class#Auth .fn#validate_token')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all call expressions that are direct children of a function named 'main'",
+      "code": "find('src/main.py', '.fn#main > .call')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in the project that start with 'Auth'",
+      "code": "find_names('src/**/*.py', '.class[name^=\"Auth\"]')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in auth.py that contain 'validate'",
+      "code": "find_names('src/auth.py', '.fn[name*=\"validate\"]')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the project that have a complexity greater than 5",
+      "code": "complexity('src/**/*.py', '.fn[complexity>5]')",
+      "tool": "complexity",
+      "tags": [
+        "function",
+        "find",
+        "complexity"
+      ]
+    },
+    {
+      "intent": "Find all class definitions that are direct children of the module named 'main'",
+      "code": "find('src/main.py', '.module#main > .class')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions that are direct children of the class named 'Auth'",
+      "code": "find('src/auth.py', '.class#Auth .fn')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions that are direct children of the module named 'api'",
+      "code": "find('src/api.py', '.module#api > .fn')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions that are direct children of the module named 'main'",
+      "code": "find('src/main.py', '.module#main > .fn')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Explore a specific folder in the source code",
+      "code": "explore('src/utils/')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "Investigate a function named parse_config",
+      "code": "investigate('parse_config')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Search for all mentions of logging in the project",
+      "code": "search('logging')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "Investigate a function named handle_request",
+      "code": "investigate('handle_request')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Review code changes from the initial commit to the current HEAD",
+      "code": "review('initial', 'HEAD')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Search for all occurrences of error handling in the codebase",
+      "code": "search('error handling')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "Explore a subdirectory of the tests folder",
+      "code": "explore('tests/unit/')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "Investigate a function named process_data",
+      "code": "investigate('process_data')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Search for 'auth' in the documentation and return the outline",
+      "code": "doc_outline('docs/api.md', 'auth')",
+      "correct_code": "doc_outline('docs/**/*.md', search='auth')",
+      "tool": "doc_outline",
+      "tags": [
+        "anti_pattern",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Get the documentation outline for all markdown files under docs directory and search for 'installation'",
+      "code": "doc_outline('docs/**/*.md', installation)",
+      "correct_code": "doc_outline('docs/**/*.md', search='installation')",
+      "tool": "doc_outline",
+      "tags": [
+        "anti_pattern",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "get recent changes",
+      "code": "recent_changes('last 10')",
+      "tool": "recent_changes",
+      "tags": [
+        "anti_pattern",
+        "recent_changes"
+      ]
+    },
+    {
+      "intent": "get file changes between two revisions",
+      "code": "file_changes('main', 'HEAD~1')",
+      "correct_code": "file_changes('main', 'HEAD~1', 'HEAD')",
+      "tool": "file_changes",
+      "tags": [
+        "anti_pattern",
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "get file changes between two revisions",
+      "code": "file_changes('main', 'HEAD~1')",
+      "tool": "file_changes",
+      "tags": [
+        "anti_pattern",
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "get file diff between two revisions",
+      "code": "file_diff('src/auth.py', 'HEAD')",
+      "tool": "file_diff",
+      "tags": [
+        "anti_pattern",
+        "file_diff"
+      ]
+    },
+    {
+      "intent": "get structural diff between two revisions",
+      "code": "structural_diff('src/auth.py', 'HEAD~1')",
+      "tool": "structural_diff",
+      "tags": [
+        "anti_pattern",
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in 'src/**/*.py'",
+      "code": "find_names('src/**/*.py', '.call')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in 'src/main.py'",
+      "code": "find_names('src/**/*.py', '[name^=\"test_\"]')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in 'src/auth.py'",
+      "code": "find_names('src/**/*.py', '[name^=\"Auth\"]')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in 'src/**/*.py'",
+      "code": "find('src/**/*.py', '.fn')",
+      "tool": "find",
+      "tags": [
+        "anti_pattern",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in 'src/auth.py'",
+      "code": "view('src/**/*.py', '.class#Auth')",
+      "tool": "view",
+      "tags": [
+        "anti_pattern",
+        "view"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in 'src/**/*.py'",
+      "code": "complexity('src/**/*.py', '.call')",
+      "tool": "complexity",
+      "tags": [
+        "anti_pattern",
+        "complexity"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in 'src/auth.py'",
+      "code": "read_source('src/**/*.py', '1-50')",
+      "tool": "read_source",
+      "tags": [
+        "anti_pattern",
+        "read_source"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in 'src/**/*.py'",
+      "code": "find_names('src/**/*.py', '.class#Auth .fn')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in 'src/main.py'",
+      "code": "find_names('src/main.py', '.fn#main')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in the auth module",
+      "code": "find_names('src/auth.py', '.class#Auth')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all test functions in main.py",
+      "code": "find_names('src/main.py', '[name^=\"test_\"]')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Register a command with a name and arguments",
+      "code": "register_command(name='my_test', command=['pytest', 'tests/'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "Pass an integer as the limit to history",
+      "code": "history(10)",
+      "tool": "history",
+      "tags": [
+        "history"
+      ]
+    },
+    {
+      "intent": "generate a report",
+      "code": "generate('generate a report', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "generate"
+      ]
+    },
+    {
+      "intent": "display the configuration",
+      "code": "delegate('display the configuration', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "view the settings",
+      "code": "delegate('view the settings', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "generate logs",
+      "code": "generate('generate logs', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "generate"
+      ]
+    },
+    {
+      "intent": "find all functions",
+      "code": "generate('find all functions', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "view the main module",
+      "code": "delegate('view the main module', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "generate documentation",
+      "code": "generate('generate documentation', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "doc",
+        "generate"
+      ]
+    },
+    {
+      "intent": "find all tests",
+      "code": "generate('find all tests', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "anti_pattern",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Count the number of class definitions in auth.py file",
+      "code": "pluck('src/auth.py find .class names count')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "count",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in auth.py file and their complexity",
+      "code": "pluck('src/auth.py find .class names complexity')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "complexity",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in Python files under src directory and get their text content",
+      "code": "pluck('src/**/*.py find .fn names text')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in Python files under src directory and get their materialized view",
+      "code": "pluck('src/**/*.py find .class names materialize')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "view",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in Python files under src directory and get their attribute 'name'",
+      "code": "pluck('src/**/*.py find .class names attr name')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in Python files under src directory and get their attribute 'name'",
+      "code": "pluck('src/**/*.py find .class attr name names')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Read the 'installation' section from api.md file in docs directory",
+      "code": "read_doc_section('docs/api.md', 'installation')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Get an outline of markdown files in the docs directory searching for 'setup'",
+      "code": "doc_outline('docs/**/*.md', search='setup')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Get an outline of markdown files in the docs directory searching for 'configuration'",
+      "code": "doc_outline('docs/**/*.md', search='configuration')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Read the 'usage' section from api.md file in docs directory",
+      "code": "read_doc_section('docs/api.md', 'usage')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Read the 'examples' section from api.md file in docs directory",
+      "code": "read_doc_section('docs/api.md', 'examples')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Get an outline of markdown files in the docs directory searching for 'permissions'",
+      "code": "doc_outline('docs/**/*.md', search='permissions')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Read the 'getting-started' section from api.md file in docs directory",
+      "code": "read_doc_section('docs/api.md', 'getting-started')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Get a list of recent changes with 2 entries",
+      "code": "recent_changes(2)",
+      "tool": "recent_changes",
+      "tags": [
+        "find",
+        "git",
+        "recent_changes"
+      ]
+    },
+    {
+      "intent": "Find class definition and its associated functions in src/auth.py",
+      "code": "find_names('src/auth.py', '.class#Auth .fn')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "investigate a function by name",
+      "code": "investigate('process_request')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "review changes from 'main' to the current HEAD",
+      "code": "review('main', None)",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "search for a term in the codebase",
+      "code": "search('logging configuration')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "explore a different directory",
+      "code": "explore('api/')",
+      "tool": "explore",
+      "tags": [
+        "git",
+        "explore"
+      ]
+    },
+    {
+      "intent": "review changes from 'develop' to the current HEAD",
+      "code": "review('develop', 'HEAD')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "search for a term in the codebase",
+      "code": "search('rate limiting')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "investigate a function by name",
+      "code": "investigate('authenticate_user')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "review changes from 'master' to the current HEAD",
+      "code": "review('master', 'HEAD')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "review changes from 'main' to the current HEAD",
+      "code": "review('main', '')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "show main function",
+      "code": "generate('show main function', ['view'])",
+      "tool": "generate",
+      "tags": [
+        "anti_pattern",
+        "generate"
+      ]
+    },
+    {
+      "intent": "list classes",
+      "code": "delegate('list classes', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "view main function",
+      "code": "generate('view main function', ['view'])",
+      "tool": "generate",
+      "tags": [
+        "anti_pattern",
+        "generate"
+      ]
+    },
+    {
+      "intent": "find all test functions",
+      "code": "delegate('find all test functions', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "show the main function",
+      "code": "generate('show the main function', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "anti_pattern",
+        "generate"
+      ]
+    },
+    {
+      "intent": "list all classes",
+      "code": "delegate('list all classes', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find test functions",
+      "code": "generate('find test functions', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "anti_pattern",
+        "generate"
+      ]
+    },
+    {
+      "intent": "view main function",
+      "code": "delegate('view main function', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list classes",
+      "code": "generate('list classes', ['view'])",
+      "tool": "generate",
+      "tags": [
+        "anti_pattern",
+        "generate"
+      ]
+    },
+    {
+      "intent": "find test functions",
+      "code": "generate('find all test functions', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "anti_pattern",
+        "generate"
+      ]
+    },
+    {
+      "intent": "view main function",
+      "code": "delegate('show the main function', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Find all functions in Python files and materialize them",
+      "code": "pluck('src/**/*.py find .fn materialize')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all functions in Python files and count them without specifying the file path",
+      "code": "pluck('**/*.py find .fn count')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all functions in Python files and then try to use a non-existent op",
+      "code": "pluck('src/**/*.py find .fn nope names')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all functions in Python files and try to use a non-existent selector",
+      "code": "pluck('src/**/*.py find .fn#nonexistent names')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all functions in Python files and try to use an incorrect terminal as an op",
+      "code": "pluck('src/**/*.py find .fn names attr')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all functions in Python files and try to use an incorrect selector as an op",
+      "code": "pluck('src/**/*.py find .fn#handler names')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find all functions in Python files and try to use a terminal as a selector",
+      "code": "pluck('src/**/*.py find .fn#names names')",
+      "tool": "pluck",
+      "tags": [
+        "anti_pattern",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "get the diff for a specific file at a particular revision",
+      "code": "file_at_version('src/auth.py', 'HEAD~1')",
+      "tool": "file_at_version",
+      "tags": [
+        "git",
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "get the diff for a file at a particular revision",
+      "code": "file_at_version('src/auth.py', 'main')",
+      "tool": "file_at_version",
+      "tags": [
+        "git",
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "get the diff for a file at a particular tag",
+      "code": "file_at_version('src/auth.py', 'v1.0')",
+      "tool": "file_at_version",
+      "tags": [
+        "git",
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "get the diff for a specific function in two branches",
+      "code": "structural_diff('src/auth.py', 'main', 'feature-branch')",
+      "tool": "structural_diff",
+      "tags": [
+        "function",
+        "git",
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "View the rendered markdown of a specific function in `src/api.py` that is part of the `Handler` class",
+      "code": "view('src/api.py', '.class#Handler .fn')",
+      "tool": "view",
+      "tags": [
+        "function",
+        "class",
+        "view",
+        "doc"
+      ]
+    },
+    {
+      "intent": "Find all calls to a function named `validate_token` in `src/auth.py`",
+      "code": "find('src/auth.py', '.call#validate_token')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all functions in `src/**/*.py` files that are directly inside a class definition with the name `AuthHandler`",
+      "code": "find('src/**/*.py', '.class#AuthHandler > .fn')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in `src/**/*.py` files that are not named 'main'",
+      "code": "find_names('src/**/*.py', '.fn:not(#main)')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all class definitions in `src/**/*.py` files that are not named 'Auth'",
+      "code": "find_names('src/**/*.py', '.class:not(#Auth)')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in `src/**/*.py` files that are directly inside a class definition and have the name 'handle_request'",
+      "code": "find('src/**/*.py', '.class > .fn#handle_request')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "class",
+        "find"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in `src/**/*.py` files that are not directly inside any class definition",
+      "code": "find_names('src/**/*.py', '.fn:not(.class > .fn)')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all calls to a function named `validate_token` in `src/auth.py` and return their complexity",
+      "code": "complexity('src/auth.py', '.call#validate_token')",
+      "tool": "complexity",
+      "tags": [
+        "function",
+        "find",
+        "complexity"
+      ]
+    },
+    {
+      "intent": "Explore a path that does not exist.",
+      "code": "explore('nonexistent_path')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "Review changes from 'main' up to a specific commit.",
+      "code": "review('main', 'v1.0')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Search for multiple terms related to authentication.",
+      "code": "search('authentication', 'user')",
+      "tool": "search",
+      "tags": [
+        "anti_pattern",
+        "search"
+      ]
+    },
+    {
+      "intent": "Investigate a function called 'login'.",
+      "code": "investigate('login')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Review changes from one specific commit up to another.",
+      "code": "review('v1.0', 'v2.0')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Search for a term related to session management.",
+      "code": "search('session management')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "Investigate a function called 'generate_token'.",
+      "code": "investigate('generate_token')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Search for multiple terms related to authentication.",
+      "code": "search(query='authentication AND user')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "find all function definitions",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \".fn\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find a specific class definition",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \".class#Auth\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find a function by name using prefix match",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \".fn[name^='test_']\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find a function by name using substring match",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \".fn[name*='x']\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find a function by name using suffix match",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \".fn[name$='x']\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find a function definition using exact name match",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/auth.py\", \".fn#validate_token\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "retrieve source code of a class",
+      "code": "{\"tool\": \"view\", \"args\": [\"src/api.py\", \".class#Handler\"]}",
+      "tool": "view",
+      "tags": [
+        "class",
+        "view"
+      ]
+    },
+    {
+      "intent": "find all functions and sort by complexity",
+      "code": "{\"tool\": \"complexity\", \"args\": [\"src/**/*.py\", \".fn\"]}",
+      "tool": "complexity",
+      "tags": [
+        "function",
+        "find",
+        "complexity"
+      ]
+    },
+    {
+      "intent": "find a specific function definition using chaining",
+      "code": "{\"tool\": \"find\", \"args\": [\"src/**/*.py\", \".fn#main\"]}",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "find all class definitions and their functions",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \".class > .fn\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find a class definition and its functions using inheritance",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \".class#Auth .fn\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "read a specific portion of the source file",
+      "code": "{\"tool\": \"read_source\", \"args\": [\"src/main.py\", \"1-50\"]}",
+      "tool": "read_source",
+      "tags": [
+        "read_source"
+      ]
+    },
+    {
+      "intent": "find a class definition using incorrect selector syntax",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \"class#Auth\"]}",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find a function by incorrect name match using prefix",
+      "code": "{\"tool\": \"find_names\", \"args\": [\"src/**/*.py\", \".fn[name^='test']\"]}",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "try to use a tool method without module prefix",
+      "code": "squackit.find_names(...)",
+      "correct_code": "find_names(...)",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find all test functions",
+      "code": "{\"delegate\": [\"find_names\"]}",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "show the main function",
+      "code": "{\"delegate\": [\"view\"]}",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list all classes",
+      "code": "{\"generate\": [\"find_names\"]}",
+      "tool": "generate",
+      "tags": [
+        "class",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "list functions and classes from module",
+      "code": "delegate(['view', 'find_names'], 'module_name')",
+      "correct_code": "{\"delegate\": [\"view\", \"find_names\"]}",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find all function names across multiple Python files",
+      "code": "{\"tool\": \"squackit\", \"function\": \"find_names\", \"args\": [\"src/**/*.py\", \".fn\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find all function names in a specific file that match a particular pattern",
+      "code": "{\"tool\": \"squackit\", \"function\": \"find_names\", \"args\": [\"src/auth.py\", \".fn#validate_token\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find all class definitions across multiple Python files",
+      "code": "{\"tool\": \"squackit\", \"function\": \"find_names\", \"args\": [\"src/**/*.py\", \".class\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find all functions inside a specific class in a file",
+      "code": "{\"tool\": \"squackit\", \"function\": \"find_names\", \"args\": [\"src/auth.py\", \".class#Auth .fn\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find all function names in files starting with 'test_'",
+      "code": "{\"tool\": \"squackit\", \"function\": \"find_names\", \"args\": [\"src/**/*.py\", \".fn[name^='test_']\"]}",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "find all main function definitions across multiple Python files",
+      "code": "{\"tool\": \"squackit\", \"function\": \"find\", \"args\": [\"src/**/*.py\", \".fn#main\"]}",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "view the markdown representation of a class in a file",
+      "code": "{\"tool\": \"squackit\", \"function\": \"view\", \"args\": [\"src/api.py\", \".class#Handler\"]}",
+      "tool": "view",
+      "tags": [
+        "class",
+        "view",
+        "doc"
+      ]
+    },
+    {
+      "intent": "get complexity scores of functions across multiple Python files",
+      "code": "{\"tool\": \"squackit\", \"function\": \"complexity\", \"args\": [\"src/**/*.py\", \".fn\"]}",
+      "tool": "complexity",
+      "tags": [
+        "function",
+        "complexity"
+      ]
+    },
+    {
+      "intent": "read a specific range of lines from a file",
+      "code": "{\"tool\": \"squackit\", \"function\": \"read_source\", \"args\": [\"src/main.py\", \"1-50\"]}",
+      "tool": "read_source",
+      "tags": [
+        "read_source"
+      ]
+    },
+    {
+      "intent": "list child elements of all classes in the 'auth.py' file",
+      "code": "{\"tool\": \"pluck\", \"args\": [\"src/auth.py find .class children\"]}",
+      "tool": "pluck",
+      "tags": [
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "list all elements that are children of a specific class in Python files",
+      "code": "{\"tool\": \"pluck\", \"args\": [\"src/**/*.py find .class#Auth children\"]}",
+      "tool": "pluck",
+      "tags": [
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "list all elements that are ancestors of a specific class in Python files",
+      "code": "{\"tool\": \"pluck\", \"args\": [\"src/**/*.py find .class#Auth ancestor\"]}",
+      "tool": "pluck",
+      "tags": [
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "list all elements that are at a specific line number in Python files",
+      "code": "{\"tool\": \"pluck\", \"args\": [\"src/**/*.py find . at_line <line_number> names\"]}",
+      "tool": "pluck",
+      "tags": [
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "list all elements that are within a specific range of lines in Python files",
+      "code": "{\"tool\": \"pluck\", \"args\": [\"src/**/*.py find . at_lines <start_line>:<end_line> names\"]}",
+      "tool": "pluck",
+      "tags": [
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "reset selection and then list all class names in Python files",
+      "code": "{\"tool\": \"pluck\", \"args\": [\"src/**/*.py find .fn names reset src/**/*.py find .class names\"]}",
+      "tool": "pluck",
+      "tags": [
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Read a specific range of lines from a file",
+      "code": "{\"read_source\": \"src/main.py\", \"lines\": \"1-50\"}",
+      "tool": "read_source",
+      "tags": [
+        "read_source"
+      ]
+    },
+    {
+      "intent": "Read a specific range of lines from a file",
+      "code": "{\n  \"read_source\": \"src/main.py\",\n  \"lines\": \"1-50\"\n}",
+      "tool": "read_source",
+      "tags": [
+        "read_source"
+      ]
+    },
+    {
+      "intent": "Find all functions in main.py",
+      "code": "find_names('src/main.py', '.fn')",
+      "correct_code": "find_names('src/main.py', '.fn')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Get context for ref 'ref_123'",
+      "code": "context('ref_123')",
+      "tool": "context",
+      "tags": [
+        "context"
+      ]
+    },
+    {
+      "intent": "Register command 'build' with ['make', 'build']",
+      "code": "register_command('build', ['make', 'build'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "Run pytest on tests/",
+      "code": "run(['pytest','tests/'])",
+      "tool": "run",
+      "tags": [
+        "run"
+      ]
+    },
+    {
+      "intent": "Get output for run_ref with query",
+      "code": "output('run_abc123','AssertionError')",
+      "tool": "output",
+      "tags": [
+        "output"
+      ]
+    },
+    {
+      "intent": "Register command 'build' with ['make', 'build']",
+      "code": "register_command('build',['make','build'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "Comment on PR #123",
+      "code": "pr_comment(123)",
+      "correct_code": "pr_comment(123, 'body')",
+      "tool": "pr_comment",
+      "tags": [
+        "anti_pattern",
+        "pr_comment"
+      ]
+    },
+    {
+      "intent": "Close issue #45",
+      "code": "issue_close(45)",
+      "correct_code": "issue_close(45, 'closed')",
+      "tool": "issue_close",
+      "tags": [
+        "anti_pattern",
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Count functions in the API module",
+      "code": "pluck('src/api.py find .fn count')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "count",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Show function names with complexity metric",
+      "code": "pluck('src/**/*.py find .fn complexity')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "view",
+        "complexity",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Retrieve the 'css-selectors' section from the tutorial document",
+      "code": "read_doc_section('docs/tutorial.md', 'css-selectors')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Get the outline of markdown files in the 'user_guide' subdirectory",
+      "code": "doc_outline('docs/user_guide/**/*.md')",
+      "tool": "doc_outline",
+      "tags": [
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Attempt to use a non-slug target_id with read_doc_section",
+      "code": "read_doc_section('docs/api.md', 'Introduction')",
+      "correct_code": "read_doc_section('docs/api.md', 'introduction')",
+      "tool": "read_doc_section",
+      "tags": [
+        "anti_pattern",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Retrieve the 'getting-started' section from the guide document",
+      "code": "read_doc_section('docs/guide.md', 'getting-started')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Get the outline of all markdown files in the 'reference' directory",
+      "code": "doc_outline('docs/reference/**/*.md')",
+      "tool": "doc_outline",
+      "tags": [
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Attempt to use a non-slug target_id with read_doc_section",
+      "code": "read_doc_section('docs/api.md', 'Overview')",
+      "correct_code": "read_doc_section('docs/api.md', 'overview')",
+      "tool": "read_doc_section",
+      "tags": [
+        "anti_pattern",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Get file content with wrong parameter",
+      "code": "file_at_version('README.md', 'HEAD')",
+      "correct_code": "file_at_version('README.md', 'HEAD')",
+      "tool": "file_at_version",
+      "tags": [
+        "anti_pattern",
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "Show structural diff with missing parameters",
+      "code": "structural_diff('setup.py', 'HEAD~1')",
+      "correct_code": "structural_diff('setup.py', 'HEAD~1', 'HEAD')",
+      "tool": "structural_diff",
+      "tags": [
+        "anti_pattern",
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "Register a new command",
+      "code": "register_command('test', ['python', 'script.py'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "View command history",
+      "code": "history(limit=20)",
+      "tool": "history",
+      "tags": [
+        "view",
+        "history"
+      ]
+    },
+    {
+      "intent": "Save a commit message",
+      "code": "save('fix: null check')",
+      "tool": "save",
+      "tags": [
+        "git",
+        "save"
+      ]
+    },
+    {
+      "intent": "Comment on PR without body",
+      "code": "pr_comment(42)",
+      "correct_code": "pr_comment(42, 'body text')",
+      "tool": "pr_comment",
+      "tags": [
+        "anti_pattern",
+        "pr_comment"
+      ]
+    },
+    {
+      "intent": "Close issue without number",
+      "code": "issue_close()",
+      "correct_code": "issue_close(123, 'comment')",
+      "tool": "issue_close",
+      "tags": [
+        "anti_pattern",
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Confirm without plan_id",
+      "code": "confirm()",
+      "correct_code": "confirm('plan123')",
+      "tool": "confirm",
+      "tags": [
+        "anti_pattern",
+        "confirm"
+      ]
+    },
+    {
+      "intent": "Read CSS selectors section",
+      "code": "read_doc_section('docs/tutorials.md', 'css-selectors')",
+      "tool": "read_doc_section",
+      "tags": [
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Search for performance tips",
+      "code": "doc_outline('docs/**/*.md', search='performance')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Read getting started guide",
+      "code": "read_doc_section('docs/guides.md', 'getting-started')",
+      "tool": "read_doc_section",
+      "tags": [
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Find functions ending with 'Helper'",
+      "code": "find_names('src/**/*.py', '.fn[name$=\"Helper\"]')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find calls to the validate_token function",
+      "code": "find_names('src/**/*.py', '.call[name$=\"validate_token\"]')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "explore the documentation directory",
+      "code": "explore('docs/')",
+      "tool": "explore",
+      "tags": [
+        "doc",
+        "explore"
+      ]
+    },
+    {
+      "intent": "compare dev and main branches",
+      "code": "review('dev', 'main')",
+      "tool": "review",
+      "tags": [
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "examine error handling",
+      "code": "investigate('handle_error')",
+      "tool": "investigate",
+      "tags": [
+        "investigate"
+      ]
+    },
+    {
+      "intent": "compare feature-branch with origin/main",
+      "code": "review('feature-branch', 'origin/main')",
+      "tool": "review",
+      "tags": [
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "find API rate limiting code",
+      "code": "search(['API', 'rate', 'limiting'])",
+      "correct_code": "search('API rate limiting')",
+      "tool": "search",
+      "tags": [
+        "anti_pattern",
+        "search"
+      ]
+    },
+    {
+      "intent": "Lackpy delegate",
+      "code": "lackpy.delegate(...)",
+      "correct_code": "delegate(...)",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Improper tool call",
+      "code": "explore(src)",
+      "correct_code": "explore('src')",
+      "tool": "explore",
+      "tags": [
+        "anti_pattern",
+        "explore"
+      ]
+    },
+    {
+      "intent": "Explore with an invalid argument type",
+      "code": "explore(123)",
+      "tool": "explore",
+      "tags": [
+        "negative",
+        "explore"
+      ]
+    },
+    {
+      "intent": "Investigate with an invalid argument type",
+      "code": "investigate(123)",
+      "tool": "investigate",
+      "tags": [
+        "negative",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Review with an invalid argument type",
+      "code": "review(123)",
+      "tool": "review",
+      "tags": [
+        "negative",
+        "view",
+        "review"
+      ]
+    },
+    {
+      "intent": "Search with an invalid argument type",
+      "code": "search(123)",
+      "tool": "search",
+      "tags": [
+        "negative",
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "Explore with an unknown path",
+      "code": "explore('unknown/path')",
+      "tool": "explore",
+      "tags": [
+        "negative",
+        "explore"
+      ]
+    },
+    {
+      "intent": "Investigate with an unknown function name",
+      "code": "investigate('unknown_function')",
+      "tool": "investigate",
+      "tags": [
+        "negative",
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Review with invalid revision range",
+      "code": "review('main', 'invalid_revision')",
+      "tool": "review",
+      "tags": [
+        "negative",
+        "view",
+        "review"
+      ]
+    },
+    {
+      "intent": "build debugging",
+      "code": "explore('build/')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "complexity analysis",
+      "code": "review('main', 'HEAD', complexity=True)",
+      "tool": "review",
+      "tags": [
+        "complexity",
+        "review"
+      ]
+    },
+    {
+      "intent": "git history",
+      "code": "review('main', 'HEAD', history=True)",
+      "tool": "review",
+      "tags": [
+        "review"
+      ]
+    },
+    {
+      "intent": "refactoring",
+      "code": "review('main', 'HEAD', refactoring=True)",
+      "tool": "review",
+      "tags": [
+        "review"
+      ]
+    },
+    {
+      "intent": "code review prep",
+      "code": "review('main', 'HEAD', prep=True)",
+      "tool": "review",
+      "tags": [
+        "view",
+        "review"
+      ]
+    },
+    {
+      "intent": "build debugging",
+      "code": "review('main', 'HEAD', debug=True)",
+      "tool": "review",
+      "tags": [
+        "review"
+      ]
+    },
+    {
+      "intent": "Find the function named 'main'",
+      "code": "find('src/**/*.py', 'main')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "View the class named 'Handler'",
+      "code": "view('src/api.py', 'Handler')",
+      "tool": "view",
+      "tags": [
+        "class",
+        "view"
+      ]
+    },
+    {
+      "intent": "Find the function named 'main'",
+      "code": "find('src/**/*.py', '.fn#main')",
+      "tool": "find",
+      "tags": [
+        "function",
+        "find"
+      ]
+    },
+    {
+      "intent": "Read a specific section of a Markdown document with wrong argument",
+      "code": "read_doc_section('docs/api.md', '#authentication')",
+      "correct_code": "read_doc_section('docs/api.md', 'authentication')",
+      "tool": "read_doc_section",
+      "tags": [
+        "anti_pattern",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "explore a non-existent directory",
+      "code": "explore('nonexistent_dir')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "search with an empty query",
+      "code": "search('')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "explore with an invalid path",
+      "code": "explore('invalid_path')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "Register a new command",
+      "code": "register_command('custom_test', ['pytest', '-v', 'tests/'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "Run a non-existent command",
+      "code": "run('invalid_command')",
+      "correct_code": "run(['invalid_command'])",
+      "tool": "run",
+      "tags": [
+        "anti_pattern",
+        "run"
+      ]
+    },
+    {
+      "intent": "Confirm the saved plan and apply changes",
+      "code": "confirm(plan['plan_id'])",
+      "correct_code": "plan = save('fix: null check')\nconfirm(plan['plan_id'])",
+      "tool": "confirm",
+      "tags": [
+        "anti_pattern",
+        "confirm"
+      ]
+    },
+    {
+      "intent": "Close an issue with a comment",
+      "code": "issue_close(10, 'Issue resolved in latest commit')",
+      "tool": "issue_close",
+      "tags": [
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Find tests using CSS selector",
+      "code": "source = \"src/**/*.py\"\nselector = \".fn[name^='test_']\"\ndelegate('find functions matching selector', [source, selector])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Find tests and show results",
+      "code": "result = delegate('find all test functions', ['find_names'])\ndelegate('show the output', [result['program']])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Explore a directory and search for specific terms.",
+      "code": "source = 'src/auth/'\nsearch(source, '.fn')\nsearch(source, '.class')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "Preparing for a code review",
+      "code": "run(['flake8', 'src/', '--statistics'])",
+      "tool": "run",
+      "tags": [
+        "view",
+        "review",
+        "run"
+      ]
+    },
+    {
+      "intent": "Analyzing code complexity",
+      "code": "run(['pylint', 'src/', '--metrics=complexity'])",
+      "tool": "run",
+      "tags": [
+        "complexity",
+        "run"
+      ]
+    },
+    {
+      "intent": "Navigating documentation",
+      "code": "context('README.md')",
+      "tool": "context",
+      "tags": [
+        "doc",
+        "context"
+      ]
+    },
+    {
+      "intent": "Debugging a build process",
+      "code": "events('build_12345')",
+      "tool": "events",
+      "tags": [
+        "events"
+      ]
+    },
+    {
+      "intent": "request branch start for feature work",
+      "code": "branch_name = 'feature-auth'\nstart(branch_name)",
+      "tool": "start",
+      "tags": [
+        "git",
+        "start"
+      ]
+    },
+    {
+      "intent": "Refactor a Python script to improve readability",
+      "code": "delegate('refactor', ['format_code'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Prepare for a code review by highlighting potential issues",
+      "code": "delegate('prepare code review', ['lint', 'format_code'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "review",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Analyze the complexity of a Python script",
+      "code": "delegate('complexity analysis', ['count_lines', 'find_complex_functions'])",
+      "tool": "delegate",
+      "tags": [
+        "complexity",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Review the git history of a project to understand changes over time",
+      "code": "delegate('git history', ['view_history'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "git",
+        "review",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Navigate through documentation using keywords",
+      "code": "delegate('doc navigation', ['find_keyword'])",
+      "tool": "delegate",
+      "tags": [
+        "doc",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Debug a build issue by identifying the root cause",
+      "code": "delegate('build debugging', ['run_tests', 'check_logs'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Refactor a JavaScript file to improve readability",
+      "code": "delegate('refactor', ['format_code'])",
+      "correct_code": "delegate('refactor js', ['format_code'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Prepare for a code review by highlighting potential issues in JavaScript",
+      "code": "delegate('prepare code review', ['lint', 'format_code'])",
+      "correct_code": "delegate('prepare js code review', ['lint', 'format_code'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Analyze the complexity of a JavaScript script",
+      "code": "delegate('complexity analysis', ['count_lines', 'find_complex_functions'])",
+      "correct_code": "delegate('analyze js complexity', ['count_lines', 'find_complex_functions'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Review the git history of a JavaScript project to understand changes over time",
+      "code": "delegate('git history', ['view_history'])",
+      "correct_code": "delegate('review js git history', ['view_history'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Navigate through JavaScript documentation using keywords",
+      "code": "delegate('doc navigation', ['find_keyword'])",
+      "correct_code": "delegate('navigate js docs', ['find_keyword'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Debug a JavaScript build issue by identifying the root cause",
+      "code": "delegate('build debugging', ['run_tests', 'check_logs'])",
+      "correct_code": "delegate('debug js build', ['run_tests', 'check_logs'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Navigating documentation sections",
+      "code": "file_pattern = 'docs/**/*.md'\ndoc_outline(file_pattern, search='installation')",
+      "tool": "doc_outline",
+      "tags": [
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Reading a specific section of a document",
+      "code": "file_path = 'docs/api.md'\ntarget_id = 'quickstart'\nread_doc_section(file_path, target_id)",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Navigating documentation with search",
+      "code": "file_pattern = 'docs/**/*.md'\ndoc_outline(file_pattern, search='authentication')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Incorrect tool for documentation navigation",
+      "code": "file_pattern = 'docs/**/*.md'\ndoc_outline(file_pattern, search='installation')",
+      "correct_code": "file_pattern = 'docs/**/*.md'\ndoc_outline(file_pattern)",
+      "tool": "doc_outline",
+      "tags": [
+        "anti_pattern",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Refactoring a function to improve readability",
+      "code": "changed_function_summary('main', 'refactor-branch')",
+      "tool": "changed_function_summary",
+      "tags": [
+        "function",
+        "changed_function_summary"
+      ]
+    },
+    {
+      "intent": "Analyzing code complexity for a new feature branch",
+      "code": "structural_diff('src/new_feature.py', 'main', 'feature-branch')",
+      "tool": "structural_diff",
+      "tags": [
+        "complexity",
+        "git",
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "Debugging a build issue by comparing the build logs",
+      "code": "file_diff('build.log', 'HEAD~1', 'HEAD')",
+      "tool": "file_diff",
+      "tags": [
+        "file_diff"
+      ]
+    },
+    {
+      "intent": "Comparing file contents between two revisions",
+      "code": "file_at_version('src/main.py', 'HEAD~1')",
+      "tool": "file_at_version",
+      "tags": [
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "Finding changes in the structure of a specific file",
+      "code": "file_changes('src/auth.py', 'main', 'feature-branch')",
+      "tool": "file_changes",
+      "tags": [
+        "find",
+        "git",
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "Reviewing the diff for a specific file between two revisions",
+      "code": "file_diff('src/main.py', 'HEAD~1', 'HEAD')",
+      "tool": "file_diff",
+      "tags": [
+        "view",
+        "git",
+        "review",
+        "file_diff"
+      ]
+    },
+    {
+      "intent": "Investigate a function with an attribute selector",
+      "code": "source = \"src/**/*.py\"\nselector = \".fn[name^='test_']\"\ninvestigate(selector)",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Search for a term in the codebase using an attribute selector",
+      "code": "source = \"src/**/*.py\"\nsearch(query=\"authentication\")",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "Explore a specific file type",
+      "code": "explore('src/**/*.py')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "Investigate a function without an attribute selector",
+      "code": "investigate('calculate_discount')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Explore a specific file",
+      "code": "explore('src/main.py')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "Investigate a function with an attribute selector in a specific directory",
+      "code": "source = \"src/auth/**/*.py\"\nselector = \".fn[name^='test_']\"\ninvestigate(source, selector)",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Review changes from a specific revision to another using an attribute selector",
+      "code": "source = \"src/**/*.py\"\nreview(from_rev=\"v1.0\", to_rev=\"v2.0\")",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Search for a term in the codebase using an attribute selector in a specific directory",
+      "code": "source = \"src/auth/**/*.py\"\nsearch(query=\"authentication\")",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "Show the main function",
+      "code": "source = 'src/main.py'\ndelegate('show the main function', kit=[source])",
+      "correct_code": "source = 'src/main.py'\ndelegate('show the main function', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Find all test functions in Python files",
+      "code": "source = 'src/**/*.py'\ndelegate('find tests', kit=[source])",
+      "correct_code": "source = 'src/**/*.py'\ndelegate('find all test functions in python files', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Show the main function from a specific file",
+      "code": "source = 'src/main.py'\ndelegate('show the main function', kit=[source])",
+      "correct_code": "source = 'src/main.py'\ndelegate('show the main function from a specific file', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all classes in Python files",
+      "code": "source = 'src/**/*.py'\ndelegate('list classes', kit=[source])",
+      "correct_code": "source = 'src/**/*.py'\ndelegate('list all classes in python files', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Review changes from a specific commit to HEAD",
+      "code": "from_rev = 'abc123'\nresult = review(from_rev, 'HEAD')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Search for a specific term in the codebase",
+      "code": "query = 'cache invalidation'\nresult = search(query)",
+      "tool": "search",
+      "tags": [
+        "find",
+        "explore",
+        "search"
+      ]
+    },
+    {
+      "intent": "Review changes from one branch to another",
+      "code": "from_rev = 'feature-branch'\nto_rev = 'main'\nresult = review(from_rev, to_rev)",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Review changes from a specific commit to HEAD",
+      "code": "review('abc123', 'HEAD')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Review changes from one branch to another",
+      "code": "review('feature-branch', 'main')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Incorrectly use an incorrect tool argument shape",
+      "code": "pr_comment(42, 'Nice work!')",
+      "correct_code": "pr_comment(42, body='Nice work!')",
+      "tool": "pr_comment",
+      "tags": [
+        "anti_pattern",
+        "pr_comment"
+      ]
+    },
+    {
+      "intent": "List all classes",
+      "code": "source = 'src/**/*.py'\ndelegate('list all classes', [source, '.class'])",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all interfaces in the project",
+      "code": "source = 'src/**/*.py'\ndelegate('list all classes', [source, '.class[interface]'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Generate a list of variables",
+      "code": "generate('list all variables', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all function names in Python files",
+      "code": "source = 'src/**/*.py'; selector = '.fn'; pluck(source + ' find ' + selector + ' names')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Count the number of functions in Python files",
+      "code": "source = 'src/**/*.py'; selector = '.fn'; pluck(source + ' find ' + selector + ' count')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "count",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Reset selection and then list names of classes in Python files",
+      "code": "source = 'src/**/*.py'; pluck(source + ' find .fn names reset find .class names')",
+      "tool": "pluck",
+      "tags": [
+        "class",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "View the source code of a function named 'handler'",
+      "code": "source = '--plugin AstViewer'; selector = 'src/api.py find .fn#handler'; pluck(source + ' ' + selector + ' view')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "view",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "Find and list names of functions without attribute selectors (correct example)",
+      "code": "pluck('src/**/*.py find .fn') + pluck('src/**/*.py find .fn', 'names')",
+      "tool": "pluck",
+      "tags": [
+        "function",
+        "find",
+        "pluck"
+      ]
+    },
+    {
+      "intent": "read a section without attribute selector",
+      "code": "read_doc_section('docs/index.md', '.section')",
+      "tool": "read_doc_section",
+      "tags": [
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "list markdown files in a subdirectory",
+      "code": "doc_outline('docs/subdir/**/*.md')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "read the 'usage' section from a specific file",
+      "code": "read_doc_section('docs/tutorial.md', 'usage')",
+      "tool": "read_doc_section",
+      "tags": [
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Get a diff for a file with nested quotes (negative example)",
+      "code": "file_diff('src/auth.py', 'HEAD~1', 'HEAD')",
+      "correct_code": "source = 'src/auth.py'; from_rev = 'HEAD~1'; to_rev = 'HEAD'; file_diff(source, from_rev, to_rev)",
+      "tool": "file_diff",
+      "tags": [
+        "anti_pattern",
+        "file_diff"
+      ]
+    },
+    {
+      "intent": "Find a specific function by name",
+      "code": "source = 'src/auth.py'; selector = '.fn#validate_token'; find_names(source, selector)",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Incorrect argument type for find_names",
+      "code": "find_names('def foo(): pass', '.fn')",
+      "correct_code": "source = 'src/**/*.py'; find_names(source, '.fn')",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "investigate a function name using variable",
+      "code": "investigate(validate_token)",
+      "correct_code": "func_name = 'validate_token'\ninvestigate(func_name)",
+      "tool": "investigate",
+      "tags": [
+        "anti_pattern",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "explore a directory using variable",
+      "code": "explore(src)",
+      "correct_code": "path = 'src/auth/'\nexplore(path)",
+      "tool": "explore",
+      "tags": [
+        "anti_pattern",
+        "explore"
+      ]
+    },
+    {
+      "intent": "search for a query using variable",
+      "code": "search(query=authentication)",
+      "correct_code": "query = 'cache invalidation'\nsearch(query)",
+      "tool": "search",
+      "tags": [
+        "anti_pattern",
+        "search"
+      ]
+    },
+    {
+      "intent": "Register a new command with a name and arguments",
+      "code": "register_command('my_script', ['python', 'script.py'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "Close an issue with a comment",
+      "code": "issue_close(1, 'Fixed')",
+      "tool": "issue_close",
+      "tags": [
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Compare changes between the current branch and the main branch",
+      "code": "diff('main')",
+      "correct_code": "diff(rev='main')",
+      "tool": "diff",
+      "tags": [
+        "anti_pattern",
+        "diff"
+      ]
+    },
+    {
+      "intent": "Create a new plan with a detailed message",
+      "code": "plan = save('refactor: update user authentication flow to improve security')",
+      "tool": "save",
+      "tags": [
+        "save"
+      ]
+    },
+    {
+      "intent": "Show the main function of a Python script",
+      "code": "script_path = 'main.py'\ndelegate('show the main function', [script_path])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "List all classes in a Python project",
+      "code": "source = 'src/**/*.py'\ndelegate('list all classes', [source])",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Generate a list of all functions",
+      "code": "source = 'src/**/*.py'\ndelegate('generate a list of all functions', [source])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Show the contents of a specific file",
+      "code": "file_path = 'README.md'\ndelegate('show the contents', [file_path])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Find all imports in a Python file",
+      "code": "file_path = 'main.py'\ndelegate('find all imports', [file_path])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Generate a list of all constants in a project",
+      "code": "source = 'src/**/*.py'\ndelegate('generate a list of all constants', [source])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Show the contents of a directory",
+      "code": "directory_path = 'src/'\ndelegate('show the contents', [directory_path])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Generate a list of all modules in a project",
+      "code": "source = 'src/**/*.py'\ndelegate('generate a list of all modules', [source])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Show the contents of a file with a specific extension",
+      "code": "file_path = 'src/data.json'\ndelegate('show the contents', [file_path])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Read the 'installation' section from a CSS documentation file",
+      "code": "read_doc_section('docs/css.md', 'installation')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Read the 'configuration' section from a settings documentation file",
+      "code": "read_doc_section('docs/settings.md', 'configuration')",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Wrong call with incorrect selector syntax",
+      "code": "find_names('def foo(): pass', '.fn')",
+      "correct_code": "source = 'def foo(): pass'\nselector = '.fn'\nresult = find_names(source, selector)\nresult",
+      "tool": "find_names",
+      "tags": [
+        "anti_pattern",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Explore a specific subdirectory for CSS files",
+      "code": "explore('styles/**/*.css')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "Explore a file with quotes in its name",
+      "code": "source = 'src/auth.py'\nexplore(source)",
+      "correct_code": "explore('src/auth.py')",
+      "tool": "explore",
+      "tags": [
+        "anti_pattern",
+        "explore"
+      ]
+    },
+    {
+      "intent": "Review changes between two commits",
+      "code": "review('abc123', 'def456')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Explore a directory with quotes in its name",
+      "code": "source = 'src/subdir/'\nexplore(source)",
+      "correct_code": "explore('src/subdir/')",
+      "tool": "explore",
+      "tags": [
+        "anti_pattern",
+        "explore"
+      ]
+    },
+    {
+      "intent": "Review changes between two branches",
+      "code": "review('develop', 'main')",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Search for a specific term with hyphens in it",
+      "code": "search('user-management')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "list all classes in a specific directory",
+      "code": "source = 'src/**/*.py'; delegate('list all classes', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "show the main function in a specific file",
+      "code": "file = 'src/main.py'; delegate('show the main function', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find all test functions in a specific directory",
+      "code": "source = 'tests/**/*.py'; delegate('find all test functions', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list all classes in a specific file",
+      "code": "file = 'src/utils.py'; delegate('list all classes', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "show the main function in a specific directory",
+      "code": "directory = 'src'; delegate('show the main function', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find all test functions in a specific file",
+      "code": "file = 'tests/unit.py'; delegate('find all test functions', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Retrieve the outline of all markdown files in the 'docs' directory and search for 'css'",
+      "code": "doc_outline('docs/**/*.md', search='css')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Retrieve the outline of all markdown files in the 'docs' directory and search for 'security'",
+      "code": "doc_outline('docs/**/*.md', search='security')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Retrieve the outline of all markdown files in the 'docs' directory and search for 'debugging'",
+      "code": "doc_outline('docs/**/*.md', search='debugging')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Retrieve the outline of all markdown files in the 'docs' directory and search for 'deployment'",
+      "code": "doc_outline('docs/**/*.md', search='deployment')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "search for files containing the term 'validate_token'",
+      "code": "search('validate_token')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "show all classes",
+      "code": "generate('show all classes', ['view'])",
+      "tool": "generate",
+      "tags": [
+        "class",
+        "view",
+        "generate"
+      ]
+    },
+    {
+      "intent": "list all functions",
+      "code": "delegate('list all functions', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find all classes",
+      "code": "delegate('find all classes', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "show all functions",
+      "code": "generate('show all functions', ['view'])",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "view",
+        "generate"
+      ]
+    },
+    {
+      "intent": "Find all functions that match the pattern `.fn[name^='test_']` in Python files",
+      "code": "find_names('src/**/*.py', '.fn[name^=\\'test_\\']')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "explore Python files in directory using glob pattern",
+      "code": "source = 'src/**/*.py'; explore(source)",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "search for non-existent query in text",
+      "code": "search('nonexistent_query')",
+      "tool": "search",
+      "tags": [
+        "anti_pattern",
+        "search"
+      ]
+    },
+    {
+      "intent": "find all HTML files under 'www/' with class 'btn-primary'",
+      "code": "explore('www/**/*.html', '.btn-primary')",
+      "tool": "explore",
+      "tags": [
+        "class",
+        "find",
+        "explore"
+      ]
+    },
+    {
+      "intent": "review changes between 'feature-branch' and the latest commit",
+      "code": "review('feature-branch', None)",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "search for all files containing the string 'error'",
+      "code": "search('error')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "find all JavaScript files under 'scripts/' with class 'alert-success'",
+      "code": "explore('scripts/**/*.js', '.alert-success')",
+      "tool": "explore",
+      "tags": [
+        "class",
+        "find",
+        "explore"
+      ]
+    },
+    {
+      "intent": "review changes between 'release-1.0' and the previous commit",
+      "code": "review('release-1.0', None)",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "find all CSS files under 'styles/' with class 'icon'",
+      "code": "explore('styles/**/*.css', '.icon')",
+      "tool": "explore",
+      "tags": [
+        "class",
+        "find",
+        "explore"
+      ]
+    },
+    {
+      "intent": "review changes between 'feature-branch' and the latest commit",
+      "code": "review(from_rev='feature-branch', to_rev=None)",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "investigate the function named 'process_user_data'",
+      "code": "investigate('process_user_data')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "investigate the function named 'handle_user_input'",
+      "code": "investigate('handle_user_input')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "search for all files containing the string 'debug'",
+      "code": "search('debug')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "investigate the function named 'send_notification'",
+      "code": "investigate('send_notification')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "close an issue with a comment",
+      "code": "issue_close(123, 'This is resolved.')",
+      "tool": "issue_close",
+      "tags": [
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "navigate to 'css-selectors' section of 'docs/api.md'",
+      "code": "doc_outline('docs/**/*.md', search='css-selectors')",
+      "tool": "doc_outline",
+      "tags": [
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "view functions",
+      "code": "lackpy.delegate('view functions', ['view'])",
+      "correct_code": "delegate('show functions', ['view'])",
+      "tool": "delegate",
+      "tags": [
+        "anti_pattern",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "Find all Markdown files under 'src/' directory",
+      "code": "doc_outline('src/**/*.md')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Read the content of the section with title 'CSS Selectors' in 'docs/css-selectors.md'",
+      "code": "read_doc_section('docs/css-selectors.md', 'CSS Selectors')",
+      "tool": "read_doc_section",
+      "tags": [
+        "anti_pattern",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Read the content of the section with hashtag '#CSS-Selectors' in 'docs/css-selectors.md'",
+      "code": "read_doc_section('docs/css-selectors.md', '#CSS-Selectors')",
+      "tool": "read_doc_section",
+      "tags": [
+        "anti_pattern",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "Search for 'quickstart' within all Markdown files under 'docs/' directory",
+      "code": "doc_outline('docs/**/*.md', search='quickstart')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "Show recent changes in the repository with pagination",
+      "code": "recent_changes(10, offset=20)",
+      "tool": "recent_changes",
+      "tags": [
+        "view",
+        "git",
+        "recent_changes"
+      ]
+    },
+    {
+      "intent": "Show all branches in the repository with a specific filter",
+      "code": "branch_list(filter='feature-branch')",
+      "tool": "branch_list",
+      "tags": [
+        "view",
+        "git",
+        "branch_list"
+      ]
+    },
+    {
+      "intent": "Show the current working tree status with detailed information",
+      "code": "working_tree_status(detailed=True)",
+      "tool": "working_tree_status",
+      "tags": [
+        "view",
+        "working_tree_status"
+      ]
+    },
+    {
+      "intent": "List file changes between two revisions with a specific range",
+      "code": "file_changes('main', 'HEAD~5')",
+      "tool": "file_changes",
+      "tags": [
+        "find",
+        "git",
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "Show the difference between two versions of a file with a specific path",
+      "code": "file_diff('src/auth.py', 'HEAD~1', 'HEAD', path='app.py')",
+      "tool": "file_diff",
+      "tags": [
+        "view",
+        "git",
+        "file_diff"
+      ]
+    },
+    {
+      "intent": "Review changes in the last commit to HEAD",
+      "code": "review(None, None)",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Review changes between the current branch and its base",
+      "code": "review('HEAD', None)",
+      "tool": "review",
+      "tags": [
+        "view",
+        "git",
+        "review"
+      ]
+    },
+    {
+      "intent": "Search for specific patterns in all files",
+      "code": "search('[^a-z]error[^a-z]')",
+      "tool": "search",
+      "tags": [
+        "find",
+        "search"
+      ]
+    },
+    {
+      "intent": "Explore a directory with multiple files",
+      "code": "explore('src/data/')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "find the main function in a specific file",
+      "code": "delegate('show the main function', ['view'], 'path/to/file.py')",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list all functions in a specific directory",
+      "code": "generate('list all functions', ['find_names'], 'src/**/*.py')",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "find tests in a specific file",
+      "code": "delegate('find tests', ['find_names'], 'tests/test_module.py')",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list all classes in a specific directory",
+      "code": "generate('list all classes', ['find_names'], 'src/**/*.py')",
+      "tool": "generate",
+      "tags": [
+        "class",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "show the main function in a specific file and list all functions in another directory",
+      "code": "delegate('show the main function', ['view'], 'path/to/file.py') + generate('list all functions', ['find_names'], 'src/**/*.py')",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find tests in a specific directory and show the main function in another file",
+      "code": "delegate('show the main function', ['view'], 'path/to/file.py') + delegate('find tests', ['find_names'], 'tests/test_module.py')",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list all functions in a specific directory and list all classes in another directory",
+      "code": "generate('list all functions', ['find_names'], 'src/**/*.py') + generate('list all classes', ['find_names'], 'lib/**/*.py')",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "show the main function in a specific file and find tests in another directory",
+      "code": "delegate('show the main function', ['view'], 'path/to/file.py') + delegate('find tests', ['find_names'], 'tests/**/*.py')",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list all functions in a specific directory and show the main function in another file",
+      "code": "generate('list all functions', ['find_names'], 'src/**/*.py') + delegate('show the main function', ['view'], 'path/to/file.py')",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find tests in a specific directory and list all classes in another directory",
+      "code": "delegate('find tests', ['find_names'], 'tests/**/*.py') + generate('list all classes', ['find_names'], 'lib/**/*.py')",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find all test function names",
+      "code": "delegate('find all test function names', ['find_names'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list all class names",
+      "code": "generate('list all class names', ['find_names'])",
+      "tool": "generate",
+      "tags": [
+        "class",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "list all function names in a specific directory",
+      "code": "generate('list all function names', ['find_names'], 'src/**/*.py')",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "list all class names in a specific directory",
+      "code": "generate('list all class names', ['find_names'], 'src/**/*.py')",
+      "tool": "generate",
+      "tags": [
+        "class",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "show the main function in a specific file and list all function names in another directory",
+      "code": "delegate('show the main function', ['view'], 'path/to/file.py') + generate('list all function names', ['find_names'], 'src/**/*.py')",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "list all function names in a specific directory and list all class names in another directory",
+      "code": "generate('list all function names', ['find_names'], 'src/**/*.py') + generate('list all class names', ['find_names'], 'lib/**/*.py')",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "list all function names in a specific directory and show the main function in another file",
+      "code": "generate('list all function names', ['find_names'], 'src/**/*.py') + delegate('show the main function', ['view'], 'path/to/file.py')",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "find",
+        "view",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find test names in a specific directory and list all class names in another directory",
+      "code": "delegate('find tests', ['find_names'], 'tests/**/*.py') + generate('list all class names', ['find_names'], 'lib/**/*.py')",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "find",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "read the 'installation' section of a specific Markdown file",
+      "code": "file_path = 'docs/api.md'; target_id = 'installation'; read_doc_section(file_path, target_id)",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "read the 'quickstart' section of a specific Markdown file",
+      "code": "file_path = 'docs/api.md'; target_id = 'quickstart'; read_doc_section(file_path, target_id)",
+      "tool": "read_doc_section",
+      "tags": [
+        "doc",
+        "read_doc_section"
+      ]
+    },
+    {
+      "intent": "list all Markdown files containing 'authentication' and 'css-selectors'",
+      "code": "doc_outline('docs/**/*.md', search='authentication css-selectors')",
+      "tool": "doc_outline",
+      "tags": [
+        "find",
+        "doc",
+        "doc_outline"
+      ]
+    },
+    {
+      "intent": "list all call expressions in a specific file",
+      "code": "find_names('src/api.py', '.call')",
+      "tool": "find_names",
+      "tags": [
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "list all class methods that are directly inside a specific class",
+      "code": "find_names('src/auth.py', '.class#Auth > .fn')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "class",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "list all functions that are direct descendants of a specific file",
+      "code": "find_names('src/api.py', '.class#Handler .fn')",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Refactor a Python file to improve its readability",
+      "code": "run(['autopep8', '--in-place', 'src/main.py'])",
+      "tool": "run",
+      "tags": [
+        "run"
+      ]
+    },
+    {
+      "intent": "Prepare for a code review by running pylint on all Python files in the project",
+      "code": "run(['pylint', 'src/**/*.py'])",
+      "tool": "run",
+      "tags": [
+        "view",
+        "review",
+        "run"
+      ]
+    },
+    {
+      "intent": "Analyze the complexity of a Python function using cloc",
+      "code": "run(['cloc', 'src/main.py'])",
+      "tool": "run",
+      "tags": [
+        "function",
+        "complexity",
+        "run"
+      ]
+    },
+    {
+      "intent": "Review the git history for changes made by a specific user in the last month",
+      "code": "history(limit=60, query='author:username date:>1 month ago')",
+      "tool": "history",
+      "tags": [
+        "view",
+        "git",
+        "review",
+        "history"
+      ]
+    },
+    {
+      "intent": "Navigate to the documentation for a specific module in the codebase",
+      "code": "context('src/main.py')",
+      "tool": "context",
+      "tags": [
+        "doc",
+        "explore",
+        "context"
+      ]
+    },
+    {
+      "intent": "Refactor a JavaScript file to use ES6+ syntax",
+      "code": "run(['babel', 'src/main.js'])",
+      "tool": "run",
+      "tags": [
+        "run"
+      ]
+    },
+    {
+      "intent": "Prepare for a code review by running flake8 on all Python files in the project",
+      "code": "run(['flake8', 'src/**/*.py'])",
+      "tool": "run",
+      "tags": [
+        "view",
+        "review",
+        "run"
+      ]
+    },
+    {
+      "intent": "Analyze the complexity of a JavaScript function using jscpd",
+      "code": "run(['jscpd', 'src/main.js'])",
+      "tool": "run",
+      "tags": [
+        "function",
+        "complexity",
+        "run"
+      ]
+    },
+    {
+      "intent": "Review the git history for changes made by a specific user in the last week",
+      "code": "history(limit=7, query='author:username date:>1 week ago')",
+      "tool": "history",
+      "tags": [
+        "view",
+        "git",
+        "review",
+        "history"
+      ]
+    },
+    {
+      "intent": "refactor the code to improve readability",
+      "code": "delegate('refactor the code', ['format_code'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "prepare for a code review by showing all local changes",
+      "code": "delegate('show local changes', ['git_diff'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "git",
+        "review",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "analyze the complexity of a function",
+      "code": "generate('complexity analysis', ['analyze_code'])",
+      "tool": "generate",
+      "tags": [
+        "function",
+        "complexity",
+        "generate"
+      ]
+    },
+    {
+      "intent": "navigate through the git history to find commits related to a feature",
+      "code": "delegate('find commits related to feature', ['git_log'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "git",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "debug a build error by examining the git history",
+      "code": "delegate('examine build errors', ['git_diff'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "find all files with a specific extension in the project",
+      "code": "generate('list files', ['find_files'])",
+      "tool": "generate",
+      "tags": [
+        "find",
+        "generate"
+      ]
+    },
+    {
+      "intent": "navigate through the git history to find commits related to a bug fix",
+      "code": "delegate('find commits related to bug fix', ['git_log'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "git",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "prepare for a code review by showing all new files added to the project",
+      "code": "delegate('show new files', ['git_diff'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "review",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "navigate through the git history to find commits related to a feature enhancement",
+      "code": "delegate('find commits related to feature enhancement', ['git_log'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "git",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "refactor the code to improve maintainability",
+      "code": "delegate('improve maintainability', ['refactor_code'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "refactor the code to improve readability in functions related to user interface",
+      "code": "delegate('improve readability in user interface', ['format_code'])",
+      "tool": "delegate",
+      "tags": [
+        "function",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "navigate through the git history to find commits related to feature 'new authentication system'",
+      "code": "delegate('find commits related to new authentication system', ['git_log'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "git",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "debug a build error by examining the git history related to 'missing dependency'",
+      "code": "delegate('examine build errors related to missing dependency', ['git_diff'])",
+      "tool": "delegate",
+      "tags": [
+        "delegate"
+      ]
+    },
+    {
+      "intent": "navigate through the git history to find commits related to bug fix 'memory leak'",
+      "code": "delegate('find commits related to memory leak', ['git_log'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "git",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "prepare for a code review by showing all new files added to the project related to 'new feature'",
+      "code": "delegate('show new files related to new feature', ['git_diff'])",
+      "tool": "delegate",
+      "tags": [
+        "view",
+        "review",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "navigate through the git history to find commits related to feature enhancement 'performance improvement'",
+      "code": "delegate('find commits related to performance improvement', ['git_log'])",
+      "tool": "delegate",
+      "tags": [
+        "find",
+        "git",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "refactor the code to improve maintainability in classes related to database operations",
+      "code": "delegate('improve maintainability in database operations', ['refactor_code'])",
+      "tool": "delegate",
+      "tags": [
+        "class",
+        "delegate"
+      ]
+    },
+    {
+      "intent": "compare two revisions of a file",
+      "code": "structural_diff(file='src/auth.py', from_rev='HEAD~1', to_rev='HEAD')",
+      "tool": "structural_diff",
+      "tags": [
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "Get complexity ranking of function definitions in a specific file",
+      "code": "complexity('src/auth.py', '.fn')",
+      "tool": "complexity",
+      "tags": [
+        "function",
+        "complexity"
+      ]
+    },
+    {
+      "intent": "register_command('my_cmd', ['echo', 'hello'])",
+      "code": "register_command('my_cmd', ['echo', 'hello'])",
+      "tool": "register_command",
+      "tags": [
+        "register_command"
+      ]
+    },
+    {
+      "intent": "errors()",
+      "code": "errors()",
+      "tool": "errors",
+      "tags": [
+        "errors"
+      ]
+    },
+    {
+      "intent": "Close an issue with number 123 and add a comment 'Fix completed'",
+      "code": "issue_close(123, comment='Fix completed')",
+      "tool": "issue_close",
+      "tags": [
+        "issue_close"
+      ]
+    },
+    {
+      "intent": "Get a diff between revisions 'abc123' and 'def456'",
+      "code": "diff(rev='def456')",
+      "tool": "diff",
+      "tags": [
+        "function",
+        "git",
+        "diff"
+      ]
+    },
+    {
+      "intent": "Comment on pull request number 789 with 'This PR is ready for review'",
+      "code": "pr_comment(789, body='This PR is ready for review')",
+      "tool": "pr_comment",
+      "tags": [
+        "view",
+        "review",
+        "pr_comment"
+      ]
+    },
+    {
+      "intent": "Create a new branch from the current state",
+      "code": "start('.')",
+      "tool": "start",
+      "tags": [
+        "git",
+        "start"
+      ]
+    },
+    {
+      "intent": "Confirm the execution of the saved plan with ID 'abc123'",
+      "code": "confirm('abc123')",
+      "tool": "confirm",
+      "tags": [
+        "confirm"
+      ]
+    },
+    {
+      "intent": "Get a diff between revisions 'abc123' and 'def456'",
+      "code": "diff(base='abc123', rev='def456')",
+      "tool": "diff",
+      "tags": [
+        "function",
+        "git",
+        "diff"
+      ]
+    },
+    {
+      "intent": "list recent changes with a specific tag",
+      "code": "recent_changes(10, tags='bugfix')",
+      "tool": "recent_changes",
+      "tags": [
+        "find",
+        "git",
+        "recent_changes"
+      ]
+    },
+    {
+      "intent": "get file content at a specific revision",
+      "code": "file_at_version('src/main.py', 'HEAD~2')",
+      "tool": "file_at_version",
+      "tags": [
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "compare structural changes between two revisions",
+      "code": "structural_diff('src/utils.py', 'HEAD~3', 'HEAD')",
+      "tool": "structural_diff",
+      "tags": [
+        "git",
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "compare changes between a specific branch and HEAD",
+      "code": "file_changes('feature-branch', 'HEAD')",
+      "tool": "file_changes",
+      "tags": [
+        "git",
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "view file diff between a specific branch and HEAD",
+      "code": "file_diff('src/models.py', 'feature-branch~1', 'HEAD')",
+      "tool": "file_diff",
+      "tags": [
+        "view",
+        "git",
+        "file_diff"
+      ]
+    },
+    {
+      "intent": "summarize changed functions between a specific branch and HEAD",
+      "code": "changed_function_summary('feature-branch', 'main')",
+      "tool": "changed_function_summary",
+      "tags": [
+        "function",
+        "git",
+        "changed_function_summary"
+      ]
+    },
+    {
+      "intent": "list recent changes with a specific author",
+      "code": "recent_changes(10, author='John Doe')",
+      "tool": "recent_changes",
+      "tags": [
+        "find",
+        "git",
+        "recent_changes"
+      ]
+    },
+    {
+      "intent": "compare structural changes between a specific file and two revisions",
+      "code": "structural_diff('src/config.py', 'HEAD~4', 'HEAD~3')",
+      "tool": "structural_diff",
+      "tags": [
+        "git",
+        "structural_diff"
+      ]
+    },
+    {
+      "intent": "find all classes named 'User' in the codebase",
+      "code": "investigate('User')",
+      "tool": "investigate",
+      "tags": [
+        "class",
+        "find",
+        "explore",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "explore all files under 'src/models/' directory",
+      "code": "explore('src/models/')",
+      "tool": "explore",
+      "tags": [
+        "explore"
+      ]
+    },
+    {
+      "intent": "find all functions named 'get_user_details' in the codebase",
+      "code": "investigate('get_user_details')",
+      "tool": "investigate",
+      "tags": [
+        "function",
+        "find",
+        "explore",
+        "investigate"
+      ]
+    },
+    {
+      "intent": "Check if a file has been modified since a specific revision",
+      "code": "file_changes('src/auth.py', 'HEAD~1')",
+      "tool": "file_changes",
+      "tags": [
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "Compare changes to a specific function between two revisions",
+      "code": "changed_function_summary('src/auth.py', 'HEAD~1')",
+      "tool": "changed_function_summary",
+      "tags": [
+        "function",
+        "git",
+        "changed_function_summary"
+      ]
+    },
+    {
+      "intent": "View file content at the latest commit",
+      "code": "file_at_version('src/auth.py')",
+      "tool": "file_at_version",
+      "tags": [
+        "view",
+        "git",
+        "file_at_version"
+      ]
+    },
+    {
+      "intent": "List all files modified in a specific branch",
+      "code": "file_changes('feature-branch')",
+      "tool": "file_changes",
+      "tags": [
+        "find",
+        "git",
+        "file_changes"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the project that are not named 'main'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn:not(#main)'",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the project that are not named 'test'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn:not(#test)'",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the project that are not named 'validate'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn:not(#validate)'",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the project that are not named 'handle'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn:not(#handle)'",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the project that are not named 'process'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn:not(#process)'",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the project that are not named 'execute'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn:not(#execute)'",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the 'api.py' file whose names start with 'test_'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn[name^=\\\"test_\"]'\nresult = find_names(source, selector)\nresult",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the 'api.py' file whose names contain 'validate'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn[name*=\\\"validate\"]'\nresult = find_names(source, selector)\nresult",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
+    },
+    {
+      "intent": "Find all function definitions in the project whose names end with '_test'.",
+      "code": "source = 'src/**/*.py'\nselector = '.fn[name$=\\\"_test\"]'\nresult = find_names(source, selector)\nresult",
+      "tool": "find_names",
+      "tags": [
+        "function",
+        "find",
+        "find_names"
+      ]
     }
   ]
 }
