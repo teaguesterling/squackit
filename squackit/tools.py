@@ -13,10 +13,11 @@ from squackit.tool_config import ToolPresentation
 
 
 def _make_plucker(source: str):
-    """Create a Plucker with AstViewer for tool execution."""
+    """Create a Plucker with AstViewer and Search for tool execution."""
     from pluckit import Plucker
+    from pluckit.pluckins.search import Search
     from pluckit.pluckins.viewer import AstViewer
-    return Plucker(code=source, plugins=[AstViewer])
+    return Plucker(code=source, plugins=[AstViewer, Search])
 
 
 def view_executor(*, source: str, selector: str):

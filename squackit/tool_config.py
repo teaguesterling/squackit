@@ -150,6 +150,7 @@ SKIP: set[str] = {
     "session_summary",
     "model_usage",
     "search_tool_inputs",
+    "search_query",
     "doc_stats",
     "repo_files",
     "module_dependencies",
@@ -281,6 +282,26 @@ OVERRIDES: dict[str, dict] = {
         "format_override": "text",
         "required_override": ["file_path", "target_id"],
         "max_lines": 200,
+    },
+    "search_docs": {
+        "description_override": "BM25 full-text search over markdown documentation sections.",
+        "required_override": ["query"],
+        "max_rows": 20,
+    },
+    "search_code": {
+        "description_override": "BM25 full-text search over code definitions, comments, and strings.",
+        "required_override": ["query"],
+        "max_rows": 20,
+    },
+    "search_content": {
+        "description_override": "BM25 full-text search across all indexed content (docs + code).",
+        "required_override": ["query"],
+        "max_rows": 20,
+    },
+    "find_code_ranked": {
+        "description_override": "Find code by CSS selector, ranked by BM25 relevance to a search query.",
+        "required_override": ["source", "selector", "query"],
+        "max_rows": 30,
     },
 }
 

@@ -95,9 +95,10 @@ class ToolGroup(click.Group):
 def _get_registry():
     """Lazily build the tool registry."""
     from pluckit import Plucker
+    from pluckit.pluckins.search import Search
     from pluckit.pluckins.viewer import AstViewer
     from squackit.tools import PLUCKIT_TOOLS, collect_pluckin_tools
-    p = Plucker(plugins=[AstViewer])
+    p = Plucker(plugins=[AstViewer, Search])
     con = p.connection
     extra = list(PLUCKIT_TOOLS) + collect_pluckin_tools(p)
     return build_tool_registry(con._tools, extra_tools=extra), con

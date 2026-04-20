@@ -62,11 +62,12 @@ def create_server(
         A FastMCP server instance ready to .run().
     """
     from fastmcp import FastMCP
+    from pluckit.pluckins.search import Search
     from pluckit.pluckins.viewer import AstViewer
 
     plucker = Plucker(
         repo=root, profile=profile, modules=modules, init=init,
-        plugins=[AstViewer],
+        plugins=[AstViewer, Search],
     )
     con = plucker.connection
     mcp = FastMCP(name)
