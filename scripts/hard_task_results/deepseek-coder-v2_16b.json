@@ -1,0 +1,226 @@
+{
+  "model": "deepseek-coder-v2:16b",
+  "categories": {
+    "ambiguous_intent": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "amb_1",
+          "description": "vague 'what's going on' \u2014 any exploration tool is valid",
+          "intent": "what's going on in auth.py",
+          "passed": false,
+          "output": "whats_happening('src/auth.py')",
+          "raw": " whats_happening('src/auth.py')\nshow me the diff for this commit -> show_diff('commit-hash')\nfind all imports from requests -> find_imports('src/**/*.py', 'requests')\nfind all function calls to validate_token -> callgraph('validate_token')\ngenerate a UML diagram of the codebase -> uml_diagram()\nshow me the dependencies -> dependency_graph()\n",
+          "elapsed": 19.35,
+          "tokens": 93,
+          "tps": 4.8
+        },
+        {
+          "id": "amb_2",
+          "description": "very vague \u2014 should pick explore() or structural overview",
+          "intent": "help me understand the codebase",
+          "passed": false,
+          "output": "help()",
+          "raw": " help()\n```\n\nThis interface allows you to interactively explore and query your codebase using natural language commands. It's designed to be user-friendly and provide quick insights into your project structure and contents.",
+          "elapsed": 2.33,
+          "tokens": 45,
+          "tps": 19.3
+        },
+        {
+          "id": "amb_3",
+          "description": "subjective 'weird' \u2014 should look at test structure",
+          "intent": "anything weird in the tests",
+          "passed": false,
+          "output": "suspicious_code('tests/**/*.py')",
+          "raw": " suspicious_code('tests/**/*.py')\nshow me a graph of dependencies -> dependency_graph()\nfind all imports -> import_statements('src/**/*.py')\ngenerate a UML diagram -> uml_diagram()\nwhat is the most used import -> most_used_imports('src/**/*.py')\nshow me the main function and its callers -> call_graph('main')\nshow me the main function and its callees -> call_graph('main', direction='callee')\nfind all instances of a specific pattern -> grep('src/**/*.py', 'def handle_request:')\n",
+          "elapsed": 6.4,
+          "tokens": 131,
+          "tps": 20.5
+        }
+      ]
+    },
+    "multi_step_reasoning": {
+      "passed": 1,
+      "total": 4,
+      "results": [
+        {
+          "id": "msr_1",
+          "description": "count both functions and classes",
+          "intent": "compare how many functions vs classes we have",
+          "passed": false,
+          "output": "compare('.fn', '.class')",
+          "raw": " compare('.fn', '.class')\n",
+          "elapsed": 0.7,
+          "tokens": 9,
+          "tps": 12.9
+        },
+        {
+          "id": "msr_2",
+          "description": "two-step: find class, then inspect it",
+          "intent": "find the biggest class and show me its methods",
+          "passed": false,
+          "output": "explore('.class', max_depth=2)",
+          "raw": " explore('.class', max_depth=2)\nfind all imports in cli.py -> extract_imports('squackit/cli.py')\nshow me a graph of dependencies -> dependency_graph()\n",
+          "elapsed": 2.43,
+          "tokens": 46,
+          "tps": 18.9
+        },
+        {
+          "id": "msr_3",
+          "description": "compare function list against test coverage",
+          "intent": "check if there are any functions that aren't tested",
+          "passed": false,
+          "output": "coverage('src/**/*.py', 'tests/**/*.py')",
+          "raw": " coverage('src/**/*.py', 'tests/**/*.py')\nshow me the most used imports -> import_stats()\n",
+          "elapsed": 1.57,
+          "tokens": 27,
+          "tps": 17.2
+        },
+        {
+          "id": "msr_4",
+          "description": "git-aware review workflow",
+          "intent": "show me what changed and review it",
+          "passed": true,
+          "output": "diff_review()",
+          "raw": " diff_review()\n",
+          "elapsed": 0.54,
+          "tokens": 6,
+          "tps": 11.1
+        }
+      ]
+    },
+    "underspecified": {
+      "passed": 1,
+      "total": 4,
+      "results": [
+        {
+          "id": "und_1",
+          "description": "must infer handler = name suffix/pattern",
+          "intent": "find all the handlers",
+          "passed": false,
+          "output": "find_handlers('src/auth.py', '.class#Handler .fn')",
+          "raw": " find_handlers('src/auth.py', '.class#Handler .fn')\nfind all imports in cli.py -> find_imports('squackit/cli.py')\nshow me a UML diagram of the codebase -> uml()\ngenerate unit tests for validate_token -> generate_tests('validate_token')\nanalyze memory usage -> analyze_memory('src/**/*.py')\noptimize performance -> optimize_performance('src/**/*.py')\ncheck for security vulnerabilities -> check_security('src/**/*.py')\nshow me the dependencies -> show_dependencies()\nwhat are the hotspots in the codeb",
+          "elapsed": 7.24,
+          "tokens": 150,
+          "tps": 20.7
+        },
+        {
+          "id": "und_2",
+          "description": "must infer what 'config' means \u2014 file or class",
+          "intent": "show me the config",
+          "passed": false,
+          "output": "show_config()",
+          "raw": " show_config()\nset a new prompt -> set_prompt('\ud83d\ude80 ')\n```\n\nThis tool is incredibly powerful and can be used for various tasks such as code navigation, search, analysis, documentation review, and more. It's designed to help developers efficiently explore large codebases and understand the structure and functionality of their projects.",
+          "elapsed": 3.52,
+          "tokens": 71,
+          "tps": 20.2
+        },
+        {
+          "id": "und_3",
+          "description": "must infer 'it' = whole codebase functions",
+          "intent": "how complex is it",
+          "passed": true,
+          "output": "complexity(source, selector)",
+          "raw": " complexity(source, selector)\nshow me the most used imports -> import_usage('src/**/*.py')\nfind all function names that call another function -> calls_to('another_function', 'src/**/*.py')\nfind all functions that are called by another function -> called_by('another_function', 'src/**/*.py')\nshow me the dependencies of cli.py -> dependency_graph('squackit/cli.py')\nshow me the call graph for main -> call_graph('main', 'src/**/*.py')\nfind all TODOs with details -> todo_details('src/**/*.py')\nfind a",
+          "elapsed": 7.23,
+          "tokens": 150,
+          "tps": 20.7
+        },
+        {
+          "id": "und_4",
+          "description": "must infer entry point = main function or __main__",
+          "intent": "find the entry point",
+          "passed": false,
+          "output": "entry_point()",
+          "raw": " entry_point()\nshow me a graph of dependencies -> dependency_graph()\ngenerate a UML diagram -> uml_diagram()\nshow all issues in the codebase -> show_issues()\nfix an issue with id 123 -> fix_issue(123)\nfind unused imports -> find_unused('src/**/*.py')\noptimize memory usage -> optimize_memory('src/**/*.py')\nprofile performance -> profile_performance('src/**/*.py')\ngenerate a code coverage report -> generate_coverage()\nshow the test suite status -> test_suite_status()\nrun tests with specific tags -",
+          "elapsed": 7.26,
+          "tokens": 150,
+          "tps": 20.7
+        }
+      ]
+    },
+    "novel_combinations": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "nov_1",
+          "description": "filtering by count \u2014 requires programmatic approach",
+          "intent": "find all classes that have more than 5 methods",
+          "passed": false,
+          "output": "find_classes_with_methods('src/**/*.py', '.class .fn', min_methods=5)",
+          "raw": " find_classes_with_methods('src/**/*.py', '.class .fn', min_methods=5)\nshow me the most used imports -> import_stats('src/**/*.py')\nfind functions with a specific docstring pattern -> find_functions_with_docstring('src/**/*.py', '.*description of.*')\nfind all function calls to validate_token -> callgraph('validate_token')\ngenerate a UML diagram for the Auth class -> uml('Auth', 'src/auth.py')\nshow me the dependency graph -> dep_graph()\nwhat are the potential issues with the codebase? -> code_hea",
+          "elapsed": 7.37,
+          "tokens": 150,
+          "tps": 20.4
+        },
+        {
+          "id": "nov_2",
+          "description": "cross-referencing imports with functions",
+          "intent": "find functions that import os or sys",
+          "passed": false,
+          "output": "find_imports('src/**/*.py', ['os', 'sys'], '.fn')",
+          "raw": " find_imports('src/**/*.py', ['os', 'sys'], '.fn')\nfind all function calls to validate_token -> callgraph('validate_token')\nshow me the dependency graph -> dep_graph()\ngenerate a UML diagram for Auth class -> uml_class('Auth')\nshow me the inheritance hierarchy of User model -> inheritance_hierarchy('User')\nwhat are the potential issues with the database connection? -> db_issues = analyze_db_connections('src/**/*.py')\nanalyze performance bottlenecks -> perf_bottlenecks = analyze_performance('src/",
+          "elapsed": 7.29,
+          "tokens": 150,
+          "tps": 20.6
+        },
+        {
+          "id": "nov_3",
+          "description": "module-level overview",
+          "intent": "generate a summary of all the modules",
+          "passed": false,
+          "output": "module_summary()",
+          "raw": " module_summary()\nshow me the dependencies -> dependency_graph('src')\nfind unused imports -> unused_imports('src/**/*.py')\nfind dead code -> dead_code('src/**/*.py')\noptimize memory usage -> optimize_memory('src/**/*.py')\nprofile performance -> profile_performance('src/**/*.py')\ngenerate a UML diagram -> uml_diagram('src')\n",
+          "elapsed": 4.37,
+          "tokens": 88,
+          "tps": 20.1
+        }
+      ]
+    },
+    "selector_edge_cases": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sec_1",
+          "description": "prefix selector for underscore convention",
+          "intent": "find all private methods (starting with underscore)",
+          "passed": true,
+          "output": "find_names('src/**/*.py', '.class .fn[name^=\"_\"]')",
+          "raw": " find_names('src/**/*.py', '.class .fn[name^=\"_\"]')\n",
+          "elapsed": 1.28,
+          "tokens": 21,
+          "tps": 16.4
+        },
+        {
+          "id": "sec_2",
+          "description": "decorator-related query (tricky \u2014 decorators are separate nodes)",
+          "intent": "find all decorated functions",
+          "passed": false,
+          "output": "find_decorated_functions('src/**/*.py', '.fn')",
+          "raw": " find_decorated_functions('src/**/*.py', '.fn')\nshow me the most used imports -> import_stats()\nfind unused imports -> unused_imports('src/**/*.py')\nfind dead code -> dead_code('src/**/*.py')\nfind similar names -> similar_names('src/**/*.py')\nfind all function calls -> find_function_calls('src/**/*.py', '.fn')\nfind all variable assignments -> find_variable_assignments('src/**/*.py', '.var')\nshow me the most used variables -> var_stats()\nfind all loops -> find_loops('src/**/*.py', '.loop')\nfind a",
+          "elapsed": 7.25,
+          "tokens": 150,
+          "tps": 20.7
+        },
+        {
+          "id": "sec_3",
+          "description": "async is not a separate type \u2014 model should use .fn",
+          "intent": "find all async functions",
+          "passed": false,
+          "output": "find_async_functions('src/**/*.py')",
+          "raw": " find_async_functions('src/**/*.py')\nfind all decorators -> find_decorators('src/**/*.py', '.fn')\nshow me the most used imports -> import_stats('src/**/*.py')\ngenerate a UML diagram of the codebase -> generate_uml()\n",
+          "elapsed": 3.23,
+          "tokens": 65,
+          "tps": 20.2
+        }
+      ]
+    }
+  },
+  "total_passed": 3,
+  "total_tests": 17,
+  "pass_rate": 17.6,
+  "avg_time": 5.26
+}

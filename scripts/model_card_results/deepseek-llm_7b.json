@@ -1,0 +1,195 @@
+{
+  "model": "deepseek-llm:7b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list_functions(['cli.py'])",
+          "raw": " list_functions(['cli.py'])",
+          "elapsed": 9.36,
+          "tokens": 9,
+          "tps": 1.0
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache')",
+          "raw": " search('cache')",
+          "elapsed": 1.86,
+          "tokens": 5,
+          "tps": 2.7
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits(n=5)",
+          "raw": " show_commits(n=5)",
+          "elapsed": 2.77,
+          "tokens": 10,
+          "tps": 3.6
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('auth.py', '.method')",
+          "raw": " find_names('auth.py', '.method')",
+          "elapsed": 2.61,
+          "tokens": 12,
+          "tps": 4.6
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.') & filter(lambda x: 'exception' in x and 'handler' in x[-3:])",
+          "raw": " find_names('src/**/*.py', '.') & filter(lambda x: 'exception' in x and 'handler' in x[-3:])",
+          "elapsed": 5.69,
+          "tokens": 33,
+          "tps": 5.8
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.func.py')",
+          "raw": " find_names('src/**/*.py', '.func.py')",
+          "elapsed": 2.62,
+          "tokens": 15,
+          "tps": 5.7
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "count = sum([len(list(filter(lambda x: re.search(r'\\bclass\\b', x), open(file).read()))) for file in os.listdir('src')])\nprint n, count",
+          "raw": " count = sum([len(list(filter(lambda x: re.search(r'\\bclass\\b', x), open(file).read()))) for file in os.listdir('src')])\nprint n, count",
+          "elapsed": 7.82,
+          "tokens": 50,
+          "tps": 6.4
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": false,
+          "output": "source = \"**.py\"\nselector = \".base\"\nresult = find_classes(source, selector)",
+          "raw": " source = \"**.py\"\nselector = \".base\"\nresult = find_classes(source, selector)",
+          "elapsed": 4.71,
+          "tokens": 24,
+          "tps": 5.1
+        }
+      ]
+    },
+    "classification": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "explore('UserService')",
+          "raw": " explore('UserService')",
+          "elapsed": 2.61,
+          "tokens": 6,
+          "tps": 2.3
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/services/**/*.py', '.fn.AuthService')",
+          "raw": " view('src/services/**/*.py', '.fn.AuthService')",
+          "elapsed": 3.57,
+          "tokens": 16,
+          "tps": 4.5
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]",
+          "elapsed": 1.51,
+          "tokens": 6,
+          "tps": 4.0
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": true,
+          "output": "2, int(math.sqrt(n)) + 1):\nif n % i == 0:\nreturn True\nreturn False",
+          "raw": "2, int(math.sqrt(n)) + 1):\n        if n % i == 0:\n            return True\n    return False",
+          "elapsed": 5.08,
+          "tokens": 33,
+          "tps": 6.5
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": false,
+          "output": "\"\"\"Flatten the given list.",
+          "raw": "\n    \"\"\"Flatten the given list.\n    \n    Args:\n        lst (list): The input list to be flattened.\n        \n    Returns:\n        list: A new list with all elements from the original list, including sublists, combined into a single list.\n    \"\"\"\n    flat_list = []\n    for i in lst:\n        if isinsta",
+          "elapsed": 11.89,
+          "tokens": 100,
+          "tps": 8.4
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "40}",
+          "raw": " 40}\n\n# The above dictionaries are in the format of a list of dictionaries. Each dictionary contains two keys: 'name' and 'age'.\n\nprint(Alice) # This will output: {'name': 'Alice', 'age': 30}\nprint(Bob) # This will output: {'name': 'Bob', 'age': 25}\nprint(Charlie) # This will output: {'name': 'Charl",
+          "elapsed": 12.9,
+          "tokens": 100,
+          "tps": 7.7
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"get_main_class\", \"result\": \"\"}",
+          "raw": " \"get_main_class\", \"result\": \"\"}\n",
+          "elapsed": 3.39,
+          "tokens": 14,
+          "tps": 4.1
+        }
+      ]
+    }
+  },
+  "total_passed": 4,
+  "total_tests": 15,
+  "pass_rate": 26.7,
+  "avg_time": 5.23
+}

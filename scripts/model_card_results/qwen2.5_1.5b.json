@@ -1,0 +1,195 @@
+{
+  "model": "qwen2.5:1.5b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list(['test1', 'test2'])",
+          "raw": " list(['test1', 'test2'])\n```\nimport re\nfrom typing import List\n\ndef find_names(path: str, pattern: str) -> List[str]:\n    \"\"\"\n    Find and return a list of file paths that match the given regular expression pattern.\n\n    :param path: The directory path to search for files.\n    :param pattern: The r",
+          "elapsed": 5.48,
+          "tokens": 100,
+          "tps": 18.2
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache') or search('.*\\.cache$')",
+          "raw": " search('cache') or search('.*\\.cache$')\n\n# 1.0.2\n- fix: update to latest version of Python and pip\n\n# 1.0.3\n- feat: add support for new feature X\n- fix: improve performance on large datasets\n\n# 1.0.4\n- bugfix: fix a critical security vulnerability in the codebase\n- docs: update documentation with b",
+          "elapsed": 3.22,
+          "tokens": 100,
+          "tps": 31.1
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits()",
+          "raw": " show_commits()\n\n# List of functions\nfunctions = ['find_names', 'read_source', 'explore', 'show_commits']\n\n# Dictionary to store function names and their corresponding descriptions\nfunction_dict = {\n    'find_names': 'Find all function names',\n    'read_source': 'Read lines 1-20 of a file',\n    'exp",
+          "elapsed": 3.32,
+          "tokens": 100,
+          "tps": 30.1
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('src/auth.py', 'Auth.*') # note: you can also use a glob like '*.py' to match all files",
+          "raw": " find_names('src/auth.py', 'Auth.*') # note: you can also use a glob like '*.py' to match all files\nfind all functions in the src directory and subdirectories that have an argument named \"param\" -> find_names('src/**/*.py', r'.*\\bparam\\b')\nfind all methods of the class with name \"MyClass\" -> find_na",
+          "elapsed": 3.19,
+          "tokens": 100,
+          "tps": 31.3
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\" \nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult\n\n# Expected Output:\n[\n    'tests/test_function.py',\n    'src/function_handler.py'\n]\n\n```python\nimport re\nfrom fnmatch import fnmatch\n\n\ndef find_names(pattern, extension):\n    result = []\n    for ",
+          "elapsed": 3.38,
+          "tokens": 100,
+          "tps": 29.6
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', 'main$', exclude=True)",
+          "raw": " find_names('src/**/*.py', 'main$', exclude=True)\nfind all methods in a specific class -> find_names('src/**/*.py', '^MyClass.*$', include='method')\n\n# Explanation:\n- `find_names` is a hypothetical function that takes two arguments: the directory pattern to search and the file extension filter.\n- Th",
+          "elapsed": 3.26,
+          "tokens": 100,
+          "tps": 30.7
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "c = len(find_classes('src/**/*.py', '.cls'))",
+          "raw": " c = len(find_classes('src/**/*.py', '.cls'))\n\nprint(f'Found {n} functions and {c} classes') # print result\n```\n\n### Explanation:\n- **`find_names`**: This function takes a directory path (`src/**/*.py`) and a file extension filter (`'.fn'`). It returns a list of all filenames in the specified direct",
+          "elapsed": 3.32,
+          "tokens": 100,
+          "tps": 30.1
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".cls[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".cls[name^='Base']\"\nresult = find_names(source, selector)\nresult\n\ndef find_names(source: str, selector: str) -> list:\n    \"\"\"Find all names matching the given selector in the specified source.\"\"\"\n    return [name for name in os.listdir(source) if re.match(selector",
+          "elapsed": 3.4,
+          "tokens": 100,
+          "tps": 29.4
+        }
+      ]
+    },
+    "classification": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "inspect('UserService')",
+          "raw": " inspect('UserService')\n\nThe `inspect` command is used to provide information about a specific object or class. In this context, it's being used with the argument `'UserService'`, which means you're asking for detailed documentation and explanations of the `UserService` class.\n\n### What Does `inspec",
+          "elapsed": 3.34,
+          "tokens": 100,
+          "tps": 30.0
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/auth_service.py', 'AuthService')",
+          "raw": " view('src/auth_service.py', 'AuthService') \nshow me all classes that have a method with name \"get\" -> view_all_classes_with_method('src/**/*.py', 'get')\n\nThe code above is for finding and displaying information about functions, classes, and methods in Python files. It uses regular expressions to ma",
+          "elapsed": 3.32,
+          "tokens": 100,
+          "tps": 30.2
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\nprint(reverse_string(\"hello\"))  # Output: \"olleh\"",
+          "elapsed": 0.86,
+          "tokens": 19,
+          "tps": 22.2
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n ** 0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n ** 0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Example usage\nprint(is_prime(6))   # Output: False\nprint(is_prime(7))   # Output: True\nprint(is_prime(1))   # Output: False\nprint(is_prime(29))  # Output: True",
+          "elapsed": 2.86,
+          "tokens": 84,
+          "tps": 29.4
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": true,
+          "output": "\"\"\"Flatten a nested list.\"\"\"\nif not lst:\nreturn []\nelif isinstance(lst[0], list):\nreturn [item for sublist in lst for item in flatten(sublist)]\nelse:\nreturn [lst[0]] + flatten(lst[1:])",
+          "raw": " \n    \"\"\"Flatten a nested list.\"\"\"\n    if not lst:\n        return []\n    elif isinstance(lst[0], list):\n        return [item for sublist in lst for item in flatten(sublist)]\n    else:\n        return [lst[0]] + flatten(lst[1:])",
+          "elapsed": 1.91,
+          "tokens": 58,
+          "tps": 30.4
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "40}",
+          "raw": " 40}\n\nconst users = [\n    {\"name\": \"Alice\", \"age\": 30},\n    {\"name\": \"Bob\", \"age\": 25},\n    {\"name\": \"Charlie\", \"age\": 40}\n]\n\nconsole.log(users[1].name); // Bob\nconsole.log(users[2].age); // 40\n\n// Output:\n// Bob\n// 40\n\n```javascript\nconst users = [\n    { name: 'Alice',",
+          "elapsed": 3.28,
+          "tokens": 100,
+          "tps": 30.5
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"find_class\", \"selector\": \"main\"} Intent: \"show me the main class\" {\"tool\": \"find_class\", \"selector\": \"main\"}",
+          "raw": " \"find_class\", \"selector\": \"main\"} Intent: \"show me the main class\" {\"tool\": \"find_class\", \"selector\": \"main\"}",
+          "elapsed": 1.43,
+          "tokens": 33,
+          "tps": 23.1
+        }
+      ]
+    }
+  },
+  "total_passed": 6,
+  "total_tests": 15,
+  "pass_rate": 40.0,
+  "avg_time": 3.04
+}

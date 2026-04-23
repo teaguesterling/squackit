@@ -1,0 +1,226 @@
+{
+  "model": "qwen2.5-coder:7b",
+  "categories": {
+    "ambiguous_intent": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "amb_1",
+          "description": "vague 'what's going on' \u2014 any exploration tool is valid",
+          "intent": "what's going on in auth.py",
+          "passed": false,
+          "output": "read_source('squackit/auth.py')",
+          "raw": " read_source('squackit/auth.py')\n\n<|im_start|>'t understand the command. Could you please provide more context or clarify your question?",
+          "elapsed": 17.54,
+          "tokens": 27,
+          "tps": 1.5
+        },
+        {
+          "id": "amb_2",
+          "description": "very vague \u2014 should pick explore() or structural overview",
+          "intent": "help me understand the codebase",
+          "passed": false,
+          "output": "explain_codebase()",
+          "raw": " explain_codebase()\n```",
+          "elapsed": 1.04,
+          "tokens": 6,
+          "tps": 5.8
+        },
+        {
+          "id": "amb_3",
+          "description": "subjective 'weird' \u2014 should look at test structure",
+          "intent": "anything weird in the tests",
+          "passed": false,
+          "output": "review('main', 'HEAD', search='test')",
+          "raw": " review('main', 'HEAD', search='test')\n```python\n# Define a function to find names based on a pattern and selector\ndef find_names(source, selector):\n    # Placeholder for actual implementation\n    return []\n\n# Define a function to view specific parts of source code\ndef view(source, selector):\n    # Placeholder for actual implementation\n    return \"\"\n\n# Define a function to count the number of functions in a file\ndef n(source):\n    # Placeholder for actual implementation\n    return 0\n\n# Define a ",
+          "elapsed": 18.91,
+          "tokens": 150,
+          "tps": 7.9
+        }
+      ]
+    },
+    "multi_step_reasoning": {
+      "passed": 0,
+      "total": 4,
+      "results": [
+        {
+          "id": "msr_1",
+          "description": "count both functions and classes",
+          "intent": "compare how many functions vs classes we have",
+          "passed": false,
+          "output": "compare_counts('src/**/*.py', '.fn', '.class')",
+          "raw": " compare_counts('src/**/*.py', '.fn', '.class')\nshow all files in the codebase -> list_files()\nfind all variables -> find_names('src/**/*.py', '.var')\n```python\n# Define a function to simulate finding names based on a selector\ndef find_names(source, selector):\n    # This is a placeholder for actual implementation\n    return []\n\n# Define a function to simulate viewing a specific function\ndef view(source, selector):\n    # This is a placeholder for actual implementation\n    pass\n\n# Define a functio",
+          "elapsed": 18.98,
+          "tokens": 150,
+          "tps": 7.9
+        },
+        {
+          "id": "msr_2",
+          "description": "two-step: find class, then inspect it",
+          "intent": "find the biggest class and show me its methods",
+          "passed": false,
+          "output": "view('src/**/*.py', '.class .fn')",
+          "raw": " view('src/**/*.py', '.class .fn')\nshow all classes in src/auth.py -> view('src/auth.py', '.class')\nfind all functions that call another function named foo -> find_names('src/**/*.py', '.fn[call=\"foo\"]')\n\n```\nobj['response']\n```",
+          "elapsed": 7.93,
+          "tokens": 61,
+          "tps": 7.7
+        },
+        {
+          "id": "msr_3",
+          "description": "compare function list against test coverage",
+          "intent": "check if there are any functions that aren't tested",
+          "passed": false,
+          "output": "untested_functions('src/**/*.py')",
+          "raw": " untested_functions('src/**/*.py')\n```\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n",
+          "elapsed": 5.99,
+          "tokens": 45,
+          "tps": 7.5
+        },
+        {
+          "id": "msr_4",
+          "description": "git-aware review workflow",
+          "intent": "show me what changed and review it",
+          "passed": false,
+          "output": "review_changes()",
+          "raw": " review_changes()\n```python\n# Define the function to find names based on a selector pattern\ndef find_names(file_pattern, selector):\n    # Placeholder for actual implementation using glob and regex\n    import glob\n    import re\n    results = []\n    for file_path in glob.glob(file_pattern):\n        with open(file_path, 'r') as file:\n            content = file.read()\n            matches = re.findall(selector, content)\n            results.extend(matches)\n    return results\n\n# Define the function to ",
+          "elapsed": 18.95,
+          "tokens": 150,
+          "tps": 7.9
+        }
+      ]
+    },
+    "underspecified": {
+      "passed": 3,
+      "total": 4,
+      "results": [
+        {
+          "id": "und_1",
+          "description": "must infer handler = name suffix/pattern",
+          "intent": "find all the handlers",
+          "passed": true,
+          "output": "find_names('src/handlers.py', '.class#Handler .fn')",
+          "raw": " find_names('src/handlers.py', '.class#Handler .fn')",
+          "elapsed": 2.34,
+          "tokens": 17,
+          "tps": 7.3
+        },
+        {
+          "id": "und_2",
+          "description": "must infer what 'config' means \u2014 file or class",
+          "intent": "show me the config",
+          "passed": false,
+          "output": "show_config()",
+          "raw": " show_config()\n```python\ndef find_names(file_pattern, selector):\n    # Implementation of find_names function\n    pass\n\ndef view(file_pattern, selector):\n    # Implementation of view function\n    pass\n\ndef complexity(file_pattern, selector):\n    # Implementation of complexity function\n    pass\n\ndef read_source(file_path, line_range):\n    # Implementation of read_source function\n    pass\n\ndef explore():\n    # Implementation of explore function\n    pass\n\ndef investigate(function_name):\n    # Implem",
+          "elapsed": 18.87,
+          "tokens": 150,
+          "tps": 7.9
+        },
+        {
+          "id": "und_3",
+          "description": "must infer 'it' = whole codebase functions",
+          "intent": "how complex is it",
+          "passed": true,
+          "output": "complexity('src/auth.py', '.class#Auth .fn')",
+          "raw": " complexity('src/auth.py', '.class#Auth .fn')\nshow me the code for main function in cli.py -> read_source('squackit/cli.py', '.fn#main')",
+          "elapsed": 5.08,
+          "tokens": 39,
+          "tps": 7.7
+        },
+        {
+          "id": "und_4",
+          "description": "must infer entry point = main function or __main__",
+          "intent": "find the entry point",
+          "passed": true,
+          "output": "view('src/**/*.py', '.fn#entry_point')",
+          "raw": " view('src/**/*.py', '.fn#entry_point')",
+          "elapsed": 1.85,
+          "tokens": 13,
+          "tps": 7.0
+        }
+      ]
+    },
+    "novel_combinations": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "nov_1",
+          "description": "filtering by count \u2014 requires programmatic approach",
+          "intent": "find all classes that have more than 5 methods",
+          "passed": false,
+          "output": "large_classes('src/**/*.py', '.class[methods>5]')",
+          "raw": " large_classes('src/**/*.py', '.class[methods>5]')\nshow the most recently changed files -> recent_files(10)\n```\nobj['response']\n```",
+          "elapsed": 4.72,
+          "tokens": 35,
+          "tps": 7.4
+        },
+        {
+          "id": "nov_2",
+          "description": "cross-referencing imports with functions",
+          "intent": "find functions that import os or sys",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = '.fn[import~=\"os|sys\"]'\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = '.fn[import~=\"os|sys\"]'\nresult = find_names(source, selector)\nresult\nfind all classes in src/auth.py -> source = \"src/auth.py\"\nselector = \".class\"\nresult = find_names(source, selector)\nresult\nfind methods of the User class in src/user.py -> source = \"src/user.py\"\nselector = \".class#User .fn\"\nresult = find_names(source, selector)\nresult\nfind all functions that call another function named process_data -> source = \"src/**/*.py\"\nselector = '.fn[call~=\"process_data\"",
+          "elapsed": 18.97,
+          "tokens": 150,
+          "tps": 7.9
+        },
+        {
+          "id": "nov_3",
+          "description": "module-level overview",
+          "intent": "generate a summary of all the modules",
+          "passed": false,
+          "output": "summarize_modules()",
+          "raw": " summarize_modules()\nshow me the structure of the codebase -> show_structure()\n```\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n```",
+          "elapsed": 6.17,
+          "tokens": 47,
+          "tps": 7.6
+        }
+      ]
+    },
+    "selector_edge_cases": {
+      "passed": 3,
+      "total": 3,
+      "results": [
+        {
+          "id": "sec_1",
+          "description": "prefix selector for underscore convention",
+          "intent": "find all private methods (starting with underscore)",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name^='_']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[name^='_']\"\nresult = find_names(source, selector)\nresult\n```\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n```",
+          "elapsed": 6.33,
+          "tokens": 48,
+          "tps": 7.6
+        },
+        {
+          "id": "sec_2",
+          "description": "decorator-related query (tricky \u2014 decorators are separate nodes)",
+          "intent": "find all decorated functions",
+          "passed": true,
+          "output": "find_names('src/**/*.py', '.fn[decorated]')",
+          "raw": " find_names('src/**/*.py', '.fn[decorated]')\nfind all functions that call another function -> find_names('src/**/*.py', '.fn[call]')\nfind all functions that return a value -> find_names('src/**/*.py', '.fn[return]')\nfind all functions that raise an exception -> find_names('src/**/*.py', '.fn[raise]')\nfind all functions that use a loop -> find_names('src/**/*.py', '.fn[loop]')\nfind all functions that use a conditional statement -> find_names('src/**/*.py', '.fn[conditional]')\nfind all functions t",
+          "elapsed": 18.93,
+          "tokens": 150,
+          "tps": 7.9
+        },
+        {
+          "id": "sec_3",
+          "description": "async is not a separate type \u2014 model should use .fn",
+          "intent": "find all async functions",
+          "passed": true,
+          "output": "find_names('src/**/*.py', '.fn[async]')",
+          "raw": " find_names('src/**/*.py', '.fn[async]')\n```\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n",
+          "elapsed": 6.24,
+          "tokens": 49,
+          "tps": 7.9
+        }
+      ]
+    }
+  },
+  "total_passed": 7,
+  "total_tests": 17,
+  "pass_rate": 41.2,
+  "avg_time": 10.52
+}

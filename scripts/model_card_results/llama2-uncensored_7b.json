@@ -1,0 +1,195 @@
+{
+  "model": "llama2-uncensored:7b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "find_names('cli/**/*.py', '.fn')",
+          "raw": " find_names('cli/**/*.py', '.fn')\n\n### Example 2:\nfind all classes and methods of a class -> find_classes('.class', '.fn#method')\nshow me the main function of a class -> view('.class#main')\nlist all functions in cli.py that take an argument -> find_names('cli/**/*.py', '[a-zA-Z][a-zA-Z0-9]*')\n",
+          "elapsed": 19.48,
+          "tokens": 100,
+          "tps": 5.1
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache')",
+          "raw": " search('cache')\nfind all functions that use a specific variable -> find_functions('my_var', 'src/**/*.py')\nfind all functions that take a specific argument -> find_arguments(arg='my_arg', 'src/**/*.py')\nfind all functions that return a specific type -> find_types(type=int, 'src/**/*.py')\nfind all f",
+          "elapsed": 13.21,
+          "tokens": 100,
+          "tps": 7.6
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "history(last=3)",
+          "raw": " history(last=3)\nfind all functions that take a string as input and return a string -> find_functions(['str'], ['return'])\nfind all functions that take a list as input and return a list -> find_functions(['list'], ['return'])\nfind all functions that take a dictionary as input and return a dictionary",
+          "elapsed": 15.53,
+          "tokens": 100,
+          "tps": 6.4
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_methods(Auth)",
+          "raw": " find_methods(Auth)\nfind all functions in the Auth class that start with 'get' -> find_functions(Auth, 'get')\nfind all functions in the Auth class that take a string as input and return a boolean -> find_functions(Auth, 'string', 'bool')\nfind all methods of the User class that take an integer as inp",
+          "elapsed": 13.32,
+          "tokens": 100,
+          "tps": 7.5
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"app/views.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"app/views.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult\nfind all function names in views.py -> find_names('app/**/*.py', '.fn')\nresult = find_names(source, selector)\nresult\nfind functions starting with test_ and ending with _handler -> source = \"tests",
+          "elapsed": 14.57,
+          "tokens": 100,
+          "tps": 6.9
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '!main')",
+          "raw": " find_names('src/**/*.py', '!main')\nfind all methods of a class -> find_names('src/**/*.py', '.class', '.method')\nfind all functions in a module -> find_names('src/module1.py', 'module1.fn')\nfind all functions in a package -> find_names('src/package1/package2/package3/package4/package5/package6/pack",
+          "elapsed": 13.52,
+          "tokens": 100,
+          "tps": 7.4
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "n = len(find_names('*.py', 'class'))",
+          "raw": " n = len(find_names('*.py', 'class'))\ncount methods in the project -> n = len(find_names('*.py', 'method'))\ncount functions in the project -> n = len(find_names('*.py', 'function'))\ncount variables in the project -> n = len(find_names('*.py', 'var'))\ncount constants in the project -> n = len(find_na",
+          "elapsed": 13.92,
+          "tokens": 100,
+          "tps": 7.2
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"src/base/**/*.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/base/**/*.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "elapsed": 6.57,
+          "tokens": 37,
+          "tps": 5.6
+        }
+      ]
+    },
+    "classification": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "describe('UserService')",
+          "raw": " describe('UserService')\nfind all methods in the UserService class -> find_methods('UserService')\ntell me about the get_user method -> investigate('get_user')\nreview changes since main -> review('main', 'HEAD')\ntell me about the validate_token method -> investigate('validate_token')\nfind all functio",
+          "elapsed": 14.2,
+          "tokens": 100,
+          "tps": 7.0
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/auth.py', 'AuthService')",
+          "raw": " view('src/auth.py', 'AuthService')\n\n### Examples of how to use the CLI\nTo find all function names:\n```\nfind_names('src/**/*.py', '.fn')\n```\nTo show me the main function:\n```\nview('src/**/*.py', '.fn#main')\n```\nTo find the most complex functions:\n```\ncomplexity('src/**/*.py', '.fn')\n```",
+          "elapsed": 13.49,
+          "tokens": 100,
+          "tps": 7.4
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n# Example usage\nprint(reverse_string(\"Hello World\"))  # Output: \"dlrow olleH\"\n",
+          "elapsed": 4.64,
+          "tokens": 34,
+          "tps": 7.3
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": true,
+          "output": "2, int(sqrt(n)) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(sqrt(n)) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Python: check if a number is prime or not\ndef is_prime_or_not(n: int) -> bool:\n if is_prime(n):\n return True\n else:\n return False",
+          "elapsed": 10.33,
+          "tokens": 78,
+          "tps": 7.5
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": false,
+          "output": "return [item for sublist in lst for item in sublist]",
+          "raw": "\n return [item for sublist in lst for item in sublist]\n\n# Example usage\nprint(flatten([[1, 2], [3, 4]])) # Output: [1, 2, 3, 4]\n",
+          "elapsed": 7.08,
+          "tokens": 56,
+          "tps": 7.9
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "40}",
+          "raw": " 40}\n```\n\n### Output:\n\n```\n{\n \"name\": \"Alice\",\n \"age\": 30,\n \"children\": [\n {\n \"name\": \"Bob\",\n \"age\": 25\n },\n {\n \"name\": \"Charlie\",\n \"age\": 40\n }\n ]\n}\n```",
+          "elapsed": 10.94,
+          "tokens": 82,
+          "tps": 7.5
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"get_class\", \"selector\": \".main\"}",
+          "raw": " \"get_class\", \"selector\": \".main\"}",
+          "elapsed": 3.18,
+          "tokens": 12,
+          "tps": 3.8
+        }
+      ]
+    }
+  },
+  "total_passed": 6,
+  "total_tests": 15,
+  "pass_rate": 40.0,
+  "avg_time": 11.6
+}

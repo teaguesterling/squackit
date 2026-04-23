@@ -1,0 +1,2701 @@
+{
+  "bm25_only": {
+    "results": [
+      {
+        "id": "qm_1",
+        "intent": "count how many functions are in each python file",
+        "precision": 0.2,
+        "recall": 0.0,
+        "f1": 0.0,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "retrieved": [
+          [
+            "code_structure",
+            1.43
+          ],
+          [
+            "project_overview",
+            1.36
+          ],
+          [
+            "review",
+            0.97
+          ],
+          [
+            "changed_function_summary",
+            0.74
+          ],
+          [
+            "complexity_hotspots",
+            0.74
+          ]
+        ]
+      },
+      {
+        "id": "qm_2",
+        "intent": "show me the most complex functions in the project",
+        "precision": 0.2,
+        "recall": 0.5,
+        "f1": 0.29,
+        "bad_picks": [
+          "changed_function_summary",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "retrieved": [
+          [
+            "complexity_hotspots",
+            1.73
+          ],
+          [
+            "changed_function_summary",
+            1.49
+          ],
+          [
+            "review",
+            1.28
+          ],
+          [
+            "recent_changes",
+            1.19
+          ],
+          [
+            "list_files",
+            1.07
+          ]
+        ]
+      },
+      {
+        "id": "qm_3",
+        "intent": "what changed in the last 5 commits and which functions were affected",
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "retrieved": [
+          [
+            "review",
+            2.55
+          ],
+          [
+            "recent_changes",
+            1.91
+          ],
+          [
+            "changed_function_summary",
+            1.59
+          ],
+          [
+            "file_changes",
+            0.8
+          ],
+          [
+            "complexity_hotspots",
+            0.74
+          ]
+        ]
+      },
+      {
+        "id": "qm_4",
+        "intent": "find all references to 'cache' in the codebase",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "selected": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "retrieved": [
+          [
+            "complexity_hotspots",
+            1.13
+          ],
+          [
+            "explore",
+            0.97
+          ],
+          [
+            "list_files",
+            0.8
+          ],
+          [
+            "find_definitions",
+            0.69
+          ],
+          [
+            "find_names",
+            0.69
+          ]
+        ]
+      },
+      {
+        "id": "qm_5",
+        "intent": "give me an overview of this project",
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.67,
+        "bad_picks": [],
+        "selected": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ],
+        "retrieved": [
+          [
+            "code_structure",
+            1.31
+          ],
+          [
+            "list_files",
+            1.07
+          ],
+          [
+            "project_overview",
+            1.02
+          ]
+        ]
+      },
+      {
+        "id": "qm_6",
+        "intent": "review the changes on this branch compared to main",
+        "precision": 0.75,
+        "recall": 0.67,
+        "f1": 0.71,
+        "bad_picks": [
+          "recent_changes"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "retrieved": [
+          [
+            "review",
+            1.91
+          ],
+          [
+            "changed_function_summary",
+            0.84
+          ],
+          [
+            "file_changes",
+            0.8
+          ],
+          [
+            "recent_changes",
+            0.72
+          ]
+        ]
+      },
+      {
+        "id": "qm_7",
+        "intent": "tell me everything about the validate_token function",
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1": 0.44,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ],
+        "retrieved": [
+          [
+            "changed_function_summary",
+            0.74
+          ],
+          [
+            "complexity_hotspots",
+            0.74
+          ],
+          [
+            "investigate",
+            0.67
+          ],
+          [
+            "review",
+            0.64
+          ],
+          [
+            "find_definitions",
+            0.61
+          ]
+        ]
+      },
+      {
+        "id": "qm_8",
+        "intent": "find classes that don't have an __init__ method",
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "pluck"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ],
+        "retrieved": [
+          [
+            "find_definitions",
+            1.82
+          ],
+          [
+            "pluck",
+            1.31
+          ],
+          [
+            "list_files",
+            0.8
+          ],
+          [
+            "find_names",
+            0.69
+          ],
+          [
+            "find",
+            0.61
+          ]
+        ]
+      },
+      {
+        "id": "qm_9",
+        "intent": "read the README and project documentation",
+        "precision": 0.6,
+        "recall": 0.5,
+        "f1": 0.55,
+        "bad_picks": [
+          "project_overview",
+          "read_context"
+        ],
+        "selected": [
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ],
+        "retrieved": [
+          [
+            "list_files",
+            1.07
+          ],
+          [
+            "project_overview",
+            1.02
+          ],
+          [
+            "read_context",
+            1.02
+          ],
+          [
+            "read_source",
+            0.97
+          ],
+          [
+            "search_docs",
+            0.87
+          ]
+        ]
+      },
+      {
+        "id": "qm_10",
+        "intent": "check if there are any uncommitted changes",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "retrieved": [
+          [
+            "changed_function_summary",
+            0.84
+          ],
+          [
+            "file_changes",
+            0.8
+          ],
+          [
+            "recent_changes",
+            0.72
+          ],
+          [
+            "review",
+            0.72
+          ]
+        ]
+      },
+      {
+        "id": "qm_11",
+        "intent": "find duplicate function names across different files",
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "review"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ],
+        "retrieved": [
+          [
+            "find",
+            1.7
+          ],
+          [
+            "find_names",
+            1.62
+          ],
+          [
+            "find_definitions",
+            1.3
+          ],
+          [
+            "list_files",
+            1.16
+          ],
+          [
+            "review",
+            0.97
+          ]
+        ]
+      },
+      {
+        "id": "qm_12",
+        "intent": "show me the diff for server.py since last week",
+        "precision": 0.67,
+        "recall": 1.0,
+        "f1": 0.8,
+        "bad_picks": [
+          "review"
+        ],
+        "selected": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ],
+        "retrieved": [
+          [
+            "recent_changes",
+            1.19
+          ],
+          [
+            "file_diff",
+            1.07
+          ],
+          [
+            "review",
+            0.97
+          ]
+        ]
+      }
+    ],
+    "good": 7,
+    "total": 12,
+    "avg_f1": 0.48,
+    "avg_precision": 0.47,
+    "avg_recall": 0.56,
+    "avg_time": 0
+  },
+  "bm25+qwen2.5-coder:0.5b": {
+    "model": "qwen2.5-coder:0.5b",
+    "results": [
+      {
+        "id": "qm_1",
+        "intent": "count how many functions are in each python file",
+        "retrieved": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "model_added": [
+          "explore",
+          "investigate",
+          "project_overview",
+          "review",
+          "search_code",
+          "search_docs"
+        ],
+        "raw": " search_code, search_docs, project_overview, explore, investigate, review\n<|im_start|>\n<|im_start|>\n<|im_start|>\n",
+        "elapsed": 3.06,
+        "precision": 0.11,
+        "recall": 0.0,
+        "f1": 0.0,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "explore",
+          "investigate",
+          "project_overview",
+          "review",
+          "search_code",
+          "search_docs"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "explore",
+          "investigate",
+          "project_overview",
+          "review",
+          "search_code",
+          "search_docs"
+        ]
+      },
+      {
+        "id": "qm_2",
+        "intent": "show me the most complex functions in the project",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "doc_outline",
+          "explore",
+          "file_diff",
+          "investigate",
+          "list_files",
+          "project_overview",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "working_tree_status"
+        ],
+        "raw": " read_source, list_files, doc_outline, recent_changes, file_diff, changed_function_summary, working_tree_status, search_code, search_docs, project_overview, explore, investigate, review, search\n<|im_start|>\n<|im_start|>\n<|im_start|>\n",
+        "elapsed": 2.28,
+        "precision": 0.07,
+        "recall": 0.5,
+        "f1": 0.12,
+        "bad_picks": [
+          "changed_function_summary",
+          "doc_outline",
+          "explore",
+          "file_diff",
+          "investigate",
+          "list_files",
+          "project_overview",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "working_tree_status"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_diff",
+          "investigate",
+          "list_files",
+          "project_overview",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "working_tree_status"
+        ]
+      },
+      {
+        "id": "qm_3",
+        "intent": "what changed in the last 5 commits and which functions were affected",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " \n```none\n```\n<|im_start|>\n<|im_start|>\n<|im_start|>\n",
+        "elapsed": 1.93,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_4",
+        "intent": "find all references to 'cache' in the codebase",
+        "retrieved": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "complexity",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ],
+        "raw": " pluck, find_definitions, view, complexity, read_source, read_context, list_files, doc_outline, recent_changes, file_changes, file_diff, changed_function_summary, working_tree_status, search_code, search_docs, project_overview, explore, investigate, review, search.\n\nTo answer this question, I'll nee",
+        "elapsed": 2.87,
+        "precision": 0.14,
+        "recall": 1.0,
+        "f1": 0.24,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "find_names",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "view",
+          "working_tree_status"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "find_names",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ]
+      },
+      {
+        "id": "qm_5",
+        "intent": "give me an overview of this project",
+        "retrieved": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ],
+        "raw": " read_source, view, pluck, find_definitions, code_structure, complexity_hotspots, read_context, list_files, doc_outline, recent_changes, file_changes, file_diff, changed_function_summary, working_tree_status, search_code, search_docs, project_overview, explore, investigate, review, search\n<|im_start",
+        "elapsed": 2.48,
+        "precision": 0.19,
+        "recall": 1.0,
+        "f1": 0.32,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "doc_outline",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "pluck",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ]
+      },
+      {
+        "id": "qm_6",
+        "intent": "review the changes on this branch compared to main",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ],
+        "raw": " view, complexity, pluck, find_definitions, code_structure, complexity_hotspots, read_source, read_context, list_files, doc_outline, recent_changes, file_changes, file_diff, changed_function_summary, working_tree_status, search_code, search_docs, project_overview, explore, investigate, review.",
+        "elapsed": 2.49,
+        "precision": 0.24,
+        "recall": 1.0,
+        "f1": 0.38,
+        "bad_picks": [
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "search_code",
+          "search_docs",
+          "view"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ]
+      },
+      {
+        "id": "qm_7",
+        "intent": "tell me everything about the validate_token function",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "working_tree_status"
+        ],
+        "raw": " search_code, search_docs, project_overview, explore, investigate, review, search, pluck, find_definitions, code_structure, complexity_hotspots, read_source, read_context, list_files, doc_outline, recent_changes, file_changes, file_diff, changed_function_summary, working_tree_status, search_code, se",
+        "elapsed": 2.8,
+        "precision": 0.2,
+        "recall": 0.5,
+        "f1": 0.29,
+        "bad_picks": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "recent_changes",
+          "review",
+          "search",
+          "search_docs",
+          "working_tree_status"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "working_tree_status"
+        ]
+      },
+      {
+        "id": "qm_8",
+        "intent": "find classes that don't have an __init__ method",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "complexity",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find",
+          "find_definitions",
+          "find_names",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ],
+        "raw": " pluck, find_definitions, view, complexity, pluck, find_names, find, read_source, read_context, list_files, doc_outline, recent_changes, file_changes, file_diff, changed_function_summary, working_tree_status, search_code, search_docs, project_overview, explore, investigate, review, search, none.\n\n<|",
+        "elapsed": 2.72,
+        "precision": 0.14,
+        "recall": 1.0,
+        "f1": 0.24,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find",
+          "find_definitions",
+          "find_names",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ]
+      },
+      {
+        "id": "qm_9",
+        "intent": "read the README and project documentation",
+        "retrieved": [
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "find_names",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search_docs",
+          "view"
+        ],
+        "raw": " [list_files, project_overview, read_context, read_source, search_docs, project_overview, explore, investigate, review, search]\nMissing: [find, find_names, view, complexity, pluck, find_definitions, code_structure, complexity_hotspots, read_source, read_context, list_files, doc_outline, recent_chang",
+        "elapsed": 2.72,
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.33,
+        "bad_picks": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "find_names",
+          "investigate",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "recent_changes",
+          "review",
+          "view"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "find_names",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search_docs",
+          "view"
+        ]
+      },
+      {
+        "id": "qm_10",
+        "intent": "check if there are any uncommitted changes",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "explore",
+          "investigate",
+          "project_overview",
+          "review",
+          "search_code",
+          "search_docs"
+        ],
+        "raw": " search_code, search_docs, project_overview, explore, investigate, review\n<|im_start|>\n<|im_start|>\n",
+        "elapsed": 1.82,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "changed_function_summary",
+          "explore",
+          "file_changes",
+          "investigate",
+          "project_overview",
+          "recent_changes",
+          "review",
+          "search_code",
+          "search_docs"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "explore",
+          "file_changes",
+          "investigate",
+          "project_overview",
+          "recent_changes",
+          "review",
+          "search_code",
+          "search_docs"
+        ]
+      },
+      {
+        "id": "qm_11",
+        "intent": "find duplicate function names across different files",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find_definitions",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ],
+        "raw": " \n  view\n  complexity\n  pluck\n  find_definitions\n  code_structure\n  complexity_hotspots\n  read_source\n  read_context\n  list_files\n  doc_outline\n  recent_changes\n  file_changes\n  file_diff\n  changed_function_summary\n  working_tree_status\n  search_code\n  search_docs\n  project_overview\n  explore\n  inve",
+        "elapsed": 2.69,
+        "precision": 0.13,
+        "recall": 1.0,
+        "f1": 0.23,
+        "bad_picks": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "doc_outline",
+          "explore",
+          "file_changes",
+          "file_diff",
+          "find",
+          "find_definitions",
+          "find_names",
+          "investigate",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "recent_changes",
+          "review",
+          "search_code",
+          "search_docs",
+          "view",
+          "working_tree_status"
+        ]
+      },
+      {
+        "id": "qm_12",
+        "intent": "show me the diff for server.py since last week",
+        "retrieved": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " \n  none\n```<|im_start|>\n<|im_start|>\n",
+        "elapsed": 1.61,
+        "precision": 0.67,
+        "recall": 1.0,
+        "f1": 0.8,
+        "bad_picks": [
+          "review"
+        ],
+        "selected": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ]
+      }
+    ],
+    "good": 2,
+    "total": 12,
+    "avg_f1": 0.31,
+    "avg_precision": 0.22,
+    "avg_recall": 0.75,
+    "avg_time": 2.46
+  },
+  "bm25+qwen2.5:1.5b": {
+    "model": "qwen2.5:1.5b",
+    "results": [
+      {
+        "id": "qm_1",
+        "intent": "count how many functions are in each python file",
+        "retrieved": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "model_added": [
+          "code_structure",
+          "complexity_hotspots",
+          "file_diff",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "project_overview",
+          "recent_changes",
+          "search_code",
+          "search_docs"
+        ],
+        "raw": " find_definitions\nfind_names\ncode_structure\ncomplexity_hotspots\nlist_files\nrecent_changes\nfile_diff\nsearch_code\nsearch_docs\nproject_overview\n\nThe user wants to count how many functions are in each Python file. The available tools do not directly provide this functionality. However, the `find` tool c",
+        "elapsed": 8.46,
+        "precision": 0.33,
+        "recall": 0.5,
+        "f1": 0.4,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_diff",
+          "project_overview",
+          "recent_changes",
+          "review",
+          "search_code",
+          "search_docs"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "file_diff",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "project_overview",
+          "recent_changes",
+          "review",
+          "search_code",
+          "search_docs"
+        ]
+      },
+      {
+        "id": "qm_2",
+        "intent": "show me the most complex functions in the project",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "list_files"
+        ],
+        "raw": " list_files\nMissing: complexity_hotspots\nMissing: recent_changes none",
+        "elapsed": 4.64,
+        "precision": 0.2,
+        "recall": 0.5,
+        "f1": 0.29,
+        "bad_picks": [
+          "changed_function_summary",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_3",
+        "intent": "what changed in the last 5 commits and which functions were affected",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "recent_changes"
+        ],
+        "raw": " recent_changes\n\nTo achieve this task of finding what changed in the last 5 commits and which functions were affected, we can use the following steps:\n\n1. **Retrieve Git Commit History**: Use `recent_changes` to get the commit history for the user's repository.\n\n2. **Filter Commits by Time Range**: ",
+        "elapsed": 6.68,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_4",
+        "intent": "find all references to 'cache' in the codebase",
+        "retrieved": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "model_added": [
+          "find_definitions",
+          "find_names"
+        ],
+        "raw": " find_definitions\nfind_names\ncomplexity_hotspots none",
+        "elapsed": 4.55,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "selected": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ]
+      },
+      {
+        "id": "qm_5",
+        "intent": "give me an overview of this project",
+        "retrieved": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ],
+        "model_added": [
+          "explore"
+        ],
+        "raw": " explore\nMissing: investigate\nMissing: review\n\nThe user wants an overview of a project. The available tools can provide structural overviews, file counts, language and definition counts, complexity metrics, function definitions, code snippets, context views, and more. Here's how the requested inform",
+        "elapsed": 6.26,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "bad_picks": [],
+        "selected": [
+          "code_structure",
+          "explore",
+          "list_files",
+          "project_overview"
+        ]
+      },
+      {
+        "id": "qm_6",
+        "intent": "review the changes on this branch compared to main",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "list_files"
+        ],
+        "raw": " list_files\nMissing: explore\nMissing: project_overview\n\nThe user wants to review changes on a branch compared to the main branch. The available tools can help in finding changed files and functions, analyzing complexity, and providing context for code changes. However, they do not directly provide a",
+        "elapsed": 6.43,
+        "precision": 0.6,
+        "recall": 0.67,
+        "f1": 0.63,
+        "bad_picks": [
+          "list_files",
+          "recent_changes"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "list_files",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_7",
+        "intent": "tell me everything about the validate_token function",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ],
+        "model_added": [
+          "find_definitions"
+        ],
+        "raw": " find_definitions\nTo provide a comprehensive answer about the `validate_token` function, I will follow these steps:\n\n1. **Identify the Function**: The user wants to know everything about the `validate_token` function.\n\n2. **Retrieve Information**:\n   - Use `find_definitions` to identify where this f",
+        "elapsed": 6.59,
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1": 0.44,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_8",
+        "intent": "find classes that don't have an __init__ method",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ],
+        "model_added": [
+          "find_names"
+        ],
+        "raw": " find_names\nMissing: view\nMissing: recent_changes\nMissing: file_diff\nMissing: changed_function_summary\nMissing: explore\nMissing: complexity_hotspots\nMissing: project_overview\n\nThe user wants to find classes that don't have an `__init__` method. To achieve this, we can use the `find_names` tool to id",
+        "elapsed": 6.72,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "pluck"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ]
+      },
+      {
+        "id": "qm_9",
+        "intent": "read the README and project documentation",
+        "retrieved": [
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ],
+        "model_added": [
+          "changed_function_summary",
+          "doc_outline",
+          "list_files"
+        ],
+        "raw": " list_files, doc_outline, changed_function_summary\nThe user wants to read the README and project documentation. The available tools do not directly support this task. Therefore, 'list_files' and 'doc_outline' are missing from the set of retrieved tools. Additionally, while 'search_docs' can search o",
+        "elapsed": 6.53,
+        "precision": 0.57,
+        "recall": 1.0,
+        "f1": 0.73,
+        "bad_picks": [
+          "changed_function_summary",
+          "project_overview",
+          "read_context"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "doc_outline",
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ]
+      },
+      {
+        "id": "qm_10",
+        "intent": "check if there are any uncommitted changes",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "recent_changes"
+        ],
+        "raw": " recent_changes\nMissing: file_diff\nMissing: changed_function_summary\nMissing: complexity_hotspots\nMissing: explore\nMissing: project_overview\nMissing: search_docs\nMissing: working_tree_status\nMissing: code_structure\nMissing: find_definitions\nMissing: view\nMissing: read_source\nMissing: list_files\nMiss",
+        "elapsed": 6.42,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_11",
+        "intent": "find duplicate function names across different files",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ],
+        "model_added": [
+          "find_definitions"
+        ],
+        "raw": " find_definitions\nMissing: explore\nMissing: project_overview\n\nThe user wants to find duplicate function names across different files. The available tools do not directly support this task. A custom solution or a combination of these tools would be needed for the requested functionality. \n\nA possible",
+        "elapsed": 6.86,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "review"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_12",
+        "intent": "show me the diff for server.py since last week",
+        "retrieved": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "recent_changes"
+        ],
+        "raw": " recent_changes\nMissing: file_diff none",
+        "elapsed": 4.3,
+        "precision": 0.67,
+        "recall": 1.0,
+        "f1": 0.8,
+        "bad_picks": [
+          "review"
+        ],
+        "selected": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ]
+      }
+    ],
+    "good": 7,
+    "total": 12,
+    "avg_f1": 0.55,
+    "avg_precision": 0.46,
+    "avg_recall": 0.68,
+    "avg_time": 6.2
+  },
+  "bm25+granite3.3:2b": {
+    "model": "granite3.3:2b",
+    "results": [
+      {
+        "id": "qm_1",
+        "intent": "count how many functions are in each python file",
+        "retrieved": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "model_added": [],
+        "raw": "\n- none",
+        "elapsed": 10.75,
+        "precision": 0.2,
+        "recall": 0.0,
+        "f1": 0.0,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_2",
+        "intent": "show me the most complex functions in the project",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none",
+        "elapsed": 8.76,
+        "precision": 0.2,
+        "recall": 0.5,
+        "f1": 0.29,
+        "bad_picks": [
+          "changed_function_summary",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_3",
+        "intent": "what changed in the last 5 commits and which functions were affected",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": "\n- none",
+        "elapsed": 9.34,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_4",
+        "intent": "find all references to 'cache' in the codebase",
+        "retrieved": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "model_added": [],
+        "raw": "\n- none",
+        "elapsed": 9.26,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "selected": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ]
+      },
+      {
+        "id": "qm_5",
+        "intent": "give me an overview of this project",
+        "retrieved": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ],
+        "model_added": [],
+        "raw": "\n- none",
+        "elapsed": 8.02,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.67,
+        "bad_picks": [],
+        "selected": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ]
+      },
+      {
+        "id": "qm_6",
+        "intent": "review the changes on this branch compared to main",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": "\nThe tool \"find_names\" is missing.",
+        "elapsed": 8.83,
+        "precision": 0.75,
+        "recall": 0.67,
+        "f1": 0.71,
+        "bad_picks": [
+          "recent_changes"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_7",
+        "intent": "tell me everything about the validate_token function",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ],
+        "model_added": [
+          "find_definitions"
+        ],
+        "raw": " find_definitions\n\nNow, please provide a detailed explanation of the validate_token function based on the following clues:\n\n1. The function is named validate_token and is located in the authentication.py file.\n2. It takes one parameter, token_value, which is expected to be a string.\n3. The function ",
+        "elapsed": 12.85,
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1": 0.44,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_8",
+        "intent": "find classes that don't have an __init__ method",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ],
+        "model_added": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ],
+        "raw": " find_classes\n\nThe following tools were retrieved for this task:\nfind_definitions\npluck\nlist_files\nfind_names\nfind\n\nThese tools were retrieved for this task:\nfind_definitions\npluck\nlist_files\nfind_names\nfind\n\nThe missing tool is \"find_classes\".",
+        "elapsed": 12.42,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "pluck"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ]
+      },
+      {
+        "id": "qm_9",
+        "intent": "read the README and project documentation",
+        "retrieved": [
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ],
+        "model_added": [
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "find",
+          "find_definitions",
+          "find_names",
+          "pluck",
+          "view"
+        ],
+        "raw": "\n- find\n- find_names\n- view\n- complexity\n- pluck\n- find_definitions\n- code_structure\n- complexity_hotspots",
+        "elapsed": 10.31,
+        "precision": 0.23,
+        "recall": 0.5,
+        "f1": 0.32,
+        "bad_picks": [
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "find",
+          "find_definitions",
+          "find_names",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "view"
+        ],
+        "selected": [
+          "code_structure",
+          "complexity",
+          "complexity_hotspots",
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs",
+          "view"
+        ]
+      },
+      {
+        "id": "qm_10",
+        "intent": "check if there are any uncommitted changes",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none",
+        "elapsed": 8.31,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_11",
+        "intent": "find duplicate function names across different files",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ],
+        "model_added": [],
+        "raw": "\n- none",
+        "elapsed": 8.8,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "review"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_12",
+        "intent": "show me the diff for server.py since last week",
+        "retrieved": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "recent_changes"
+        ],
+        "raw": " recent_changes\n\nThe response should be a single string, with each tool name on a new line.\n\nResponse: none\n\nExplanation: The user's request already utilizes the 'recent_changes' tool effectively through the query \"show me the diff for server.py since last week\". This implies that the system has acc",
+        "elapsed": 12.66,
+        "precision": 0.67,
+        "recall": 1.0,
+        "f1": 0.8,
+        "bad_picks": [
+          "review"
+        ],
+        "selected": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ]
+      }
+    ],
+    "good": 6,
+    "total": 12,
+    "avg_f1": 0.46,
+    "avg_precision": 0.44,
+    "avg_recall": 0.56,
+    "avg_time": 10.03
+  },
+  "bm25+qwen2.5-coder:3b": {
+    "model": "qwen2.5-coder:3b",
+    "results": [
+      {
+        "id": "qm_1",
+        "intent": "count how many functions are in each python file",
+        "retrieved": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none\n",
+        "elapsed": 11.67,
+        "precision": 0.2,
+        "recall": 0.0,
+        "f1": 0.0,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_2",
+        "intent": "show me the most complex functions in the project",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```none\n``` ```",
+        "elapsed": 8.99,
+        "precision": 0.2,
+        "recall": 0.5,
+        "f1": 0.29,
+        "bad_picks": [
+          "changed_function_summary",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_3",
+        "intent": "what changed in the last 5 commits and which functions were affected",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```none\n``` ```",
+        "elapsed": 9.04,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_4",
+        "intent": "find all references to 'cache' in the codebase",
+        "retrieved": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```",
+        "elapsed": 8.88,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "selected": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ]
+      },
+      {
+        "id": "qm_5",
+        "intent": "give me an overview of this project",
+        "retrieved": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ],
+        "model_added": [],
+        "raw": " none\n",
+        "elapsed": 8.03,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.67,
+        "bad_picks": [],
+        "selected": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ]
+      },
+      {
+        "id": "qm_6",
+        "intent": "review the changes on this branch compared to main",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```",
+        "elapsed": 8.48,
+        "precision": 0.75,
+        "recall": 0.67,
+        "f1": 0.71,
+        "bad_picks": [
+          "recent_changes"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_7",
+        "intent": "tell me everything about the validate_token function",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```none\n``` ```",
+        "elapsed": 9.06,
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1": 0.44,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_8",
+        "intent": "find classes that don't have an __init__ method",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```none\n``` ```",
+        "elapsed": 9.16,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "pluck"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ]
+      },
+      {
+        "id": "qm_9",
+        "intent": "read the README and project documentation",
+        "retrieved": [
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ],
+        "model_added": [],
+        "raw": " none\n",
+        "elapsed": 8.59,
+        "precision": 0.6,
+        "recall": 0.5,
+        "f1": 0.55,
+        "bad_picks": [
+          "project_overview",
+          "read_context"
+        ],
+        "selected": [
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ]
+      },
+      {
+        "id": "qm_10",
+        "intent": "check if there are any uncommitted changes",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```",
+        "elapsed": 8.49,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_11",
+        "intent": "find duplicate function names across different files",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```none\n``` ```",
+        "elapsed": 9.13,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "review"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_12",
+        "intent": "show me the diff for server.py since last week",
+        "retrieved": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none\n``` ```none\n``` ```",
+        "elapsed": 8.52,
+        "precision": 0.67,
+        "recall": 1.0,
+        "f1": 0.8,
+        "bad_picks": [
+          "review"
+        ],
+        "selected": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ]
+      }
+    ],
+    "good": 7,
+    "total": 12,
+    "avg_f1": 0.48,
+    "avg_precision": 0.47,
+    "avg_recall": 0.56,
+    "avg_time": 9.0
+  },
+  "bm25+qwen2.5-coder:7b": {
+    "model": "qwen2.5-coder:7b",
+    "results": [
+      {
+        "id": "qm_1",
+        "intent": "count how many functions are in each python file",
+        "retrieved": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "model_added": [],
+        "raw": "  \n```",
+        "elapsed": 24.68,
+        "precision": 0.2,
+        "recall": 0.0,
+        "f1": 0.0,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "code_structure",
+          "complexity_hotspots",
+          "project_overview",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_2",
+        "intent": "show me the most complex functions in the project",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [
+          "complexity_hotspots"
+        ],
+        "raw": " complexity_hotspots\n```\ncomplexity_hotspots\n```",
+        "elapsed": 20.91,
+        "precision": 0.2,
+        "recall": 0.5,
+        "f1": 0.29,
+        "bad_picks": [
+          "changed_function_summary",
+          "list_files",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "list_files",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_3",
+        "intent": "what changed in the last 5 commits and which functions were affected",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": "  \n```\n```",
+        "elapsed": 19.75,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_4",
+        "intent": "find all references to 'cache' in the codebase",
+        "retrieved": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "model_added": [],
+        "raw": "  \n```\n```",
+        "elapsed": 19.67,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ],
+        "selected": [
+          "complexity_hotspots",
+          "explore",
+          "find_definitions",
+          "find_names",
+          "list_files"
+        ]
+      },
+      {
+        "id": "qm_5",
+        "intent": "give me an overview of this project",
+        "retrieved": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ],
+        "model_added": [],
+        "raw": " none",
+        "elapsed": 17.74,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.67,
+        "bad_picks": [],
+        "selected": [
+          "code_structure",
+          "list_files",
+          "project_overview"
+        ]
+      },
+      {
+        "id": "qm_6",
+        "intent": "review the changes on this branch compared to main",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none",
+        "elapsed": 18.49,
+        "precision": 0.75,
+        "recall": 0.67,
+        "f1": 0.71,
+        "bad_picks": [
+          "recent_changes"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_7",
+        "intent": "tell me everything about the validate_token function",
+        "retrieved": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none",
+        "elapsed": 19.24,
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1": 0.44,
+        "bad_picks": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "complexity_hotspots",
+          "find_definitions",
+          "investigate",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_8",
+        "intent": "find classes that don't have an __init__ method",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ],
+        "model_added": [],
+        "raw": " none",
+        "elapsed": 20.47,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "pluck"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "pluck"
+        ]
+      },
+      {
+        "id": "qm_9",
+        "intent": "read the README and project documentation",
+        "retrieved": [
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ],
+        "model_added": [],
+        "raw": "  \n```\n<|im_start|>\n<|im_start|>\n```",
+        "elapsed": 19.7,
+        "precision": 0.6,
+        "recall": 0.5,
+        "f1": 0.55,
+        "bad_picks": [
+          "project_overview",
+          "read_context"
+        ],
+        "selected": [
+          "list_files",
+          "project_overview",
+          "read_context",
+          "read_source",
+          "search_docs"
+        ]
+      },
+      {
+        "id": "qm_10",
+        "intent": "check if there are any uncommitted changes",
+        "retrieved": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": "  \n```\n```",
+        "elapsed": 18.86,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0,
+        "bad_picks": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ],
+        "selected": [
+          "changed_function_summary",
+          "file_changes",
+          "recent_changes",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_11",
+        "intent": "find duplicate function names across different files",
+        "retrieved": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ],
+        "model_added": [],
+        "raw": "  \n```\n```",
+        "elapsed": 19.74,
+        "precision": 0.6,
+        "recall": 1.0,
+        "f1": 0.75,
+        "bad_picks": [
+          "list_files",
+          "review"
+        ],
+        "selected": [
+          "find",
+          "find_definitions",
+          "find_names",
+          "list_files",
+          "review"
+        ]
+      },
+      {
+        "id": "qm_12",
+        "intent": "show me the diff for server.py since last week",
+        "retrieved": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ],
+        "model_added": [],
+        "raw": " none",
+        "elapsed": 18.02,
+        "precision": 0.67,
+        "recall": 1.0,
+        "f1": 0.8,
+        "bad_picks": [
+          "review"
+        ],
+        "selected": [
+          "file_diff",
+          "recent_changes",
+          "review"
+        ]
+      }
+    ],
+    "good": 7,
+    "total": 12,
+    "avg_f1": 0.48,
+    "avg_precision": 0.47,
+    "avg_recall": 0.56,
+    "avg_time": 19.77
+  }
+}

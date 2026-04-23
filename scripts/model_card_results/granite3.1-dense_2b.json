@@ -1,0 +1,195 @@
+{
+  "model": "granite3.1-dense:2b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list_files('src/cli.py')",
+          "raw": " list_files('src/cli.py')\n```",
+          "elapsed": 3.77,
+          "tokens": 13,
+          "tps": 3.4
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache')",
+          "raw": " search('cache')\nlist all files in a directory -> list_files('path/to/directory')\nfind specific files by name -> find_files(['file1.py', 'file2.py'])\nget information about a file or directory -> get_info('path/to/file/or/directory')\ncompare two files for differences -> compare('file1.txt', 'file2.tx",
+          "elapsed": 5.5,
+          "tokens": 100,
+          "tps": 18.2
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_recent_commits()",
+          "raw": " show_recent_commits()\n```",
+          "elapsed": 1.11,
+          "tokens": 9,
+          "tps": 8.1
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('src/auth.py', '.method')",
+          "raw": " find_names('src/auth.py', '.method')\nfind all variables -> find_names('src/**/*.py', '.var')\nfind all constants -> find_names('src/**/*.py', '.const')\nfind all function names in a specific directory -> find_names('path/to/directory', '.fn')\nfind all classes in a specific directory -> find_names('pa",
+          "elapsed": 5.39,
+          "tokens": 100,
+          "tps": 18.6
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": false,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name!^='test_']&name!='_handler'\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[name!^='test_']&name!='_handler'\"\nresult = find_names(source, selector)\nresult\nfind functions containing 'request' -> source = \"tests/**/*.py\"\nselector = \".fn[contains(name,'request')]\"\nresult = find_names(source, selector)\nresult\nfind functions with no name -",
+          "elapsed": 5.83,
+          "tokens": 100,
+          "tps": 17.1
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', 'main.py')",
+          "raw": " find_names('src/**/*.py', 'main.py')\nfind all constants -> find_names('src/**/*.py', '.const')\nfind all variables -> find_names('src/**/*.py', '.var')\nfind all imports -> find_names('src/**/*.py', '.import')\nfind all decorators -> find_names('src/**/*.py', '.decorator')\nfind all types (classes, int",
+          "elapsed": 5.43,
+          "tokens": 100,
+          "tps": 18.4
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 2,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": true,
+          "output": "m = sum([len(find_names(f, '.class')) for f in glob.glob('**/*.py')])",
+          "raw": " m = sum([len(find_names(f, '.class')) for f in glob.glob('**/*.py')])\n\nNow, let's calculate the total number of functions and classes in the project:\n\n1. Find all function names using the command 'find_names('src/**/*.py', '.fn')'.\n2. Count the number of functions by counting the elements in the li",
+          "elapsed": 5.61,
+          "tokens": 100,
+          "tps": 17.8
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"src/**/*\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult\nfind functions starting with test_ -> source = \"tests/**/*.py\"\nselector = \".fn[name^='test_']\"\nresult = find_names(source, selector)\nresult\nfind classes starting with Base -> source = \"src/**/*\"\nselec",
+          "elapsed": 5.72,
+          "tokens": 100,
+          "tps": 17.5
+        }
+      ]
+    },
+    "classification": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "describe('UserService')",
+          "raw": " describe('UserService')\n\n1. The function names found in the specified Python files within the 'src' directory and its subdirectories, with a '.fn' extension, are: [list of function names].\n2. validate_token is a function that checks if a given token is valid according to certain criteria. It likely",
+          "elapsed": 5.82,
+          "tokens": 100,
+          "tps": 17.2
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/auth.py', 'AuthService')",
+          "raw": " view('src/auth.py', 'AuthService')\n\n1. Function names in src/**/*.py files with .fn extension:\n   - find_names('src/**/*.py', '.fn')\n\n2. Main function in src/**/*.py files:\n   - view('src/**/*.py', '.fn#main')\n\n3. Most complex functions in src/**/*.py files:\n   - complexity('src/**/*.py', '.fn')\n\n4",
+          "elapsed": 5.61,
+          "tokens": 100,
+          "tps": 17.8
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n# Test the function\nprint(reverse_string(\"Hello, World!\"))  # Output: !dlroW ,olleH\n```\n\nThis code defines a function `reverse_string` that takes a string as input and returns its reverse. The `[::-1]` slice notation is used to create a new string with the characters in reverse order. The ",
+          "elapsed": 5.29,
+          "tokens": 100,
+          "tps": 18.9
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n**0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Test cases\nprint(is_prime(2))  # True\nprint(is_prime(3))  # True\nprint(is_prime(4))  # False\nprint(is_prime(17))  # True\nprint(is_prime(20))  # False",
+          "elapsed": 5.4,
+          "tokens": 97,
+          "tps": 18.0
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": true,
+          "output": "\"\"\"Flatten a nested list.\"\"\"\nresult = []\nfor item in lst:\nif isinstance(item, list):\nresult.extend(flatten(item))\nelse:\nresult.append(item)\nreturn result",
+          "raw": "\n    \"\"\"Flatten a nested list.\"\"\"\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result\n\n# Example usage:\nnested_list = [1, 2, [3, 4], [5, [6, 7]], 8]\nprint(flatten(nested_list)",
+          "elapsed": 5.2,
+          "tokens": 100,
+          "tps": 19.2
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "40}\n]",
+          "raw": " 40}\n]\n\nThe given data is a list of dictionaries, where each dictionary represents an individual with their name and age. To find the oldest person in this list, we need to iterate through the list and compare the ages of each individual. Here's how you can do it:\n\n```python\ndata = [\n    {\"name\": \"A",
+          "elapsed": 5.63,
+          "tokens": 100,
+          "tps": 17.8
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"get_main_class\", \"selector\": \".class[1]\"}\nIntent: \"list all methods with 'private' prefix\"\n{\"tool\": \"find_methods\", \"selector\": \".method[name^='private_']\"}\nIntent: \"display the version number\"\n{\"too",
+          "raw": " \"get_main_class\", \"selector\": \".class[1]\"}\nIntent: \"list all methods with 'private' prefix\"\n{\"tool\": \"find_methods\", \"selector\": \".method[name^='private_']\"}\nIntent: \"display the version number\"\n{\"tool\": \"get_version\", \"selector\": \".version\"}",
+          "elapsed": 4.61,
+          "tokens": 76,
+          "tps": 16.5
+        }
+      ]
+    }
+  },
+  "total_passed": 6,
+  "total_tests": 15,
+  "pass_rate": 40.0,
+  "avg_time": 5.06
+}

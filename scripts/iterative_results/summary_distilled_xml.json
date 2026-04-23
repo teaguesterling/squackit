@@ -1,0 +1,403 @@
+{
+  "qwen2.5-coder:3b": {
+    "model": "qwen2.5-coder:3b",
+    "results": [
+      {
+        "id": "iter_1",
+        "intent": "count how many functions are in each python file in squackit/, print file and count",
+        "description": "per-file function count (needs find() for file paths)",
+        "model": "qwen2.5-coder:3b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "",
+            "gen_time": 25.22,
+            "exec_success": false,
+            "error": "Empty program generated"
+          }
+        ],
+        "final_success": false,
+        "num_iterations": 1,
+        "total_gen_time": 25.22
+      },
+      {
+        "id": "iter_2",
+        "intent": "find all classes and list their methods",
+        "description": "class method listing",
+        "model": "qwen2.5-coder:3b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "find_names('src/**/*.py', '.class') -> for name in names:\n   methods = find_names(f'./src/{name}.py', f'.fn[name^={name}]')\n   print(name, methods)",
+            "gen_time": 12.26,
+            "exec_success": false,
+            "output": "",
+            "error": "Parse error: invalid syntax (line 1)",
+            "variables": {},
+            "error_category": "arrow_in_code",
+            "hint": "'->' is the prompt separator. Don't include it in code."
+          },
+          {
+            "iteration": 2,
+            "program": "",
+            "gen_time": 18.06,
+            "exec_success": false,
+            "error": "Empty program generated"
+          }
+        ],
+        "final_success": false,
+        "num_iterations": 2,
+        "total_gen_time": 30.32
+      },
+      {
+        "id": "iter_3",
+        "intent": "find the 3 most complex functions in squackit/ and show their names and complexity scores",
+        "description": "top-3 complexity ranking",
+        "model": "qwen2.5-coder:3b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = complexity('squackit/**/*.py', '.fn')\ntop_3 = results[:3]\nfor r in top_3:\n   print(r['name'], r['complexity'])",
+            "gen_time": 16.27,
+            "exec_success": true,
+            "output": "{'results': [{'name': '_register_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 314, 'end_line': 501, 'complexity': 1525, 'signature': 'def _register_tool('}, {'name': 'create_server', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 45, 'end_line': 193, 'complexity': 1350, 'signature': 'def create_server('}, {'name': '_register_executor_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/serv",
+            "error": null,
+            "variables": {
+              "results": "[{'name': '_register_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 314, 'end_line': 501, 'complexity': 1525, 'signature': 'def _register_tool('}, {'nam",
+              "top_3": "[{'name': '_register_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 314, 'end_line': 501, 'complexity': 1525, 'signature': 'def _register_tool('}, {'nam",
+              "r": "{'name': '_register_executor_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 196, 'end_line': 311, 'complexity': 1150, 'signature': 'def _register_execut"
+            }
+          },
+          {
+            "iteration": 2,
+            "program": "",
+            "gen_time": 18.56,
+            "exec_success": false,
+            "error": "Empty program generated"
+          }
+        ],
+        "final_success": false,
+        "num_iterations": 2,
+        "total_gen_time": 34.83
+      },
+      {
+        "id": "iter_4",
+        "intent": "find function names that appear in more than one file (duplicates across modules) in squackit/",
+        "description": "cross-module duplicate detection",
+        "model": "qwen2.5-coder:3b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "find_names('squackit/**/*.py', '.fn') | group_by(lambda x: x) | filter(lambda g: len(g) > 1)\n\nYou are given the following source code:",
+            "gen_time": 17.24,
+            "exec_success": false,
+            "output": "",
+            "error": "Parse error: invalid syntax (line 3)",
+            "variables": {},
+            "error_category": "syntax",
+            "hint": "Python syntax error. Check indentation and statement structure."
+          },
+          {
+            "iteration": 2,
+            "program": "find_names('squackit/**/*.py', '.fn') | group_by(lambda x: x) | filter(lambda g: len(g) > 1)",
+            "gen_time": 18.0,
+            "exec_success": false,
+            "output": "",
+            "error": "name 'group_by' is not defined",
+            "variables": {},
+            "error_category": "unknown_name",
+            "hint": "'group_by' is not a tool. Available: find_names, find, view, complexity, read_source."
+          },
+          {
+            "iteration": 3,
+            "program": "find_names('squackit/**/*.py', '.fn') | group_by(lambda x: x) | filter(lambda g: len(g) > 1)",
+            "gen_time": 18.07,
+            "exec_success": false,
+            "output": "",
+            "error": "name 'group_by' is not defined",
+            "variables": {},
+            "error_category": "unknown_name",
+            "hint": "'group_by' is not a tool. Available: find_names, find, view, complexity, read_source."
+          }
+        ],
+        "final_success": false,
+        "num_iterations": 3,
+        "total_gen_time": 53.31
+      },
+      {
+        "id": "iter_5",
+        "intent": "for each class in squackit/, check if it has an __init__ method",
+        "description": "class init audit",
+        "model": "qwen2.5-coder:3b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = find('squackit/**/*.py', '.class')\nhas_init = False\nfor r in results:\n   file_path = r['file_path']\n   name = r['name']\n   init_method = find_names(file_path, f'.fn[name^=\"__init__\"]')\n   if len(init_method) > 0:\n       has_init = True\n       break\nif has_init:\n   print(\"Some classes have __init__ methods\")\nelse:\n   print(\"No classes have __init__ methods\")",
+            "gen_time": 17.12,
+            "exec_success": true,
+            "output": "{'results': [{'node_id': 47, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'CachedResult', 'qualified_name': [{'semantic_type': 248, 'name': 'CachedResult', 'index': 1}], 'signature_type': 'dataclass', 'parameters': [], 'modifiers': [], 'annotations': None, 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/session.py', 'language': 'python', 'start_line': 19, 'end_line': 33, 'parent_id': 43, 'depth': 2, 'sibling_index': 1, 'children_count': 4, 'descendant_coun",
+            "error": null,
+            "variables": {
+              "results": "[{'node_id': 47, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'CachedResult', 'qualified_name': [{'semantic_type': 248, 'name': 'CachedResult', 'index': 1}], 'signature_type'",
+              "has_init": "True",
+              "r": "{'node_id': 47, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'CachedResult', 'qualified_name': [{'semantic_type': 248, 'name': 'CachedResult', 'index': 1}], 'signature_type':",
+              "file_path": "/mnt/aux-data/teague/Projects/squackit/squackit/session.py",
+              "name": "CachedResult",
+              "init_method": "['__init__']"
+            }
+          }
+        ],
+        "final_success": true,
+        "num_iterations": 1,
+        "total_gen_time": 17.12
+      },
+      {
+        "id": "iter_6",
+        "intent": "find all functions in squackit/ whose names start with _ (private) and group them by file",
+        "description": "private function grouping",
+        "model": "qwen2.5-coder:3b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = find('squackit/**/*.py', '.fn[name^=\\'_\\']')\nby_file = {}\nfor r in results:\n   f = r['file_path']\n   by_file[f] = by_file.get(f, 0) + 1\nfor f, n in sorted(by_file.items(), key=lambda x: -x[1]):\n   print(f, n)",
+            "gen_time": 12.71,
+            "exec_success": true,
+            "output": "{'results': [{'node_id': 232, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_truncate_rows', 'qualified_name': [{'semantic_type': 240, 'name': '_truncate_rows', 'index': 1}], 'signature_type': None, 'parameters': [{'name': 'rows', 'type': ''}, {'name': 'max_rows', 'type': ''}, {'name': 'macro_name', 'type': ''}], 'modifiers': [], 'annotations': None, 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/formatting.py', 'language': 'python', 'start_line': 46, ",
+            "error": null,
+            "variables": {
+              "results": "[{'node_id': 232, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_truncate_rows', 'qualified_name': [{'semantic_type': 240, 'name': '_truncate_rows', 'index': 1}], 'signatu",
+              "by_file": "{'/mnt/aux-data/teague/Projects/squackit/squackit/formatting.py': 2, '/mnt/aux-data/teague/Projects/squackit/squackit/prompts.py': 1, '/mnt/aux-data/teague/Projects/squackit/squackit/session.py': 5, '",
+              "r": "{'node_id': 2775, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_add_workflow_tool', 'qualified_name': [{'semantic_type': 240, 'name': '_add_workflow_tool', 'index': 1}], ",
+              "f": "/mnt/aux-data/teague/Projects/squackit/squackit/prompts.py",
+              "n": "1"
+            }
+          }
+        ],
+        "final_success": true,
+        "num_iterations": 1,
+        "total_gen_time": 12.71
+      }
+    ],
+    "successes": 2,
+    "total": 6,
+    "avg_iterations": 1.7,
+    "avg_time": 28.9
+  },
+  "qwen2.5-coder:7b": {
+    "model": "qwen2.5-coder:7b",
+    "results": [
+      {
+        "id": "iter_1",
+        "intent": "count how many functions are in each python file in squackit/, print file and count",
+        "description": "per-file function count (needs find() for file paths)",
+        "model": "qwen2.5-coder:7b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = find('squackit/**/*.py', '.fn')\nby_file = {}\nfor r in results:\n   f = r['file_path']\n   by_file[f] = by_file.get(f, 0) + 1\nfor f, n in sorted(by_file.items(), key=lambda x: -x[1]):\n   print(f, n)",
+            "gen_time": 19.57,
+            "exec_success": true,
+            "output": "{'results': [{'node_id': 232, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_truncate_rows', 'qualified_name': [{'semantic_type': 240, 'name': '_truncate_rows', 'index': 1}], 'signature_type': None, 'parameters': [{'name': 'rows', 'type': ''}, {'name': 'max_rows', 'type': ''}, {'name': 'macro_name', 'type': ''}], 'modifiers': [], 'annotations': None, 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/formatting.py', 'language': 'python', 'start_line': 46, ",
+            "error": null,
+            "variables": {
+              "results": "[{'node_id': 232, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_truncate_rows', 'qualified_name': [{'semantic_type': 240, 'name': '_truncate_rows', 'index': 1}], 'signatu",
+              "by_file": "{'/mnt/aux-data/teague/Projects/squackit/squackit/formatting.py': 3, '/mnt/aux-data/teague/Projects/squackit/squackit/prompts.py': 5, '/mnt/aux-data/teague/Projects/squackit/squackit/defaults.py': 7, ",
+              "r": "{'node_id': 4154, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': 'main', 'qualified_name': [{'semantic_type': 240, 'name': 'main', 'index': 1}], 'signature_type': None, 'par",
+              "f": "/mnt/aux-data/teague/Projects/squackit/squackit/db.py",
+              "n": "1"
+            }
+          },
+          {
+            "iteration": 2,
+            "program": "results = find('squackit/**/*.py', '.fn')\nby_file = {}\nfor r in results:\n  f = r['file_path']\n  by_file[f] = by_file.get(f, 0) + 1\nfor f, n in sorted(by_file.items(), key=lambda x: -x[1]):\n  print(f, n)\n<error>Program ran but may not fully answer the intent.</error>\n<hint>Check output matches the intent. Ensure all requested information is printed.</hint>",
+            "gen_time": 42.05,
+            "exec_success": false,
+            "output": "",
+            "error": "Parse error: invalid syntax (line 8)",
+            "variables": {},
+            "error_category": "syntax",
+            "hint": "Python syntax error. Check indentation and statement structure."
+          },
+          {
+            "iteration": 3,
+            "program": "results = find('squackit/**/*.py', '.fn') by_file = {} for r in results: f = r['file_path'] by_file[f] = by_file.get(f, 0) + 1 for f, n in sorted(by_file.items(), key=lambda x: -x[1]): print(f, n)\n<|im_start|><|im_start|>",
+            "gen_time": 23.9,
+            "exec_success": false,
+            "output": "",
+            "error": "Parse error: invalid syntax (line 1)",
+            "variables": {},
+            "error_category": "syntax",
+            "hint": "Python syntax error. Check indentation and statement structure."
+          }
+        ],
+        "final_success": false,
+        "num_iterations": 3,
+        "total_gen_time": 85.52
+      },
+      {
+        "id": "iter_2",
+        "intent": "find all classes and list their methods",
+        "description": "class method listing",
+        "model": "qwen2.5-coder:7b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = find('src/**/*.py', '.class')\nfor r in results:\n   print(r['name'])\n   for method in find_names(r['file_path'], f'.class#{r[\"name\"]} .fn'):\n       print(f'  {method}')",
+            "gen_time": 20.46,
+            "exec_success": false,
+            "output": "",
+            "error": "IO Error: Failed to initialize file processing: {\"exception_type\":\"IO\",\"exception_message\":\"read_ast needs at least one file to read\"}",
+            "variables": {},
+            "error_category": "wrong_glob",
+            "hint": "Wrong path: use 'squackit/**/*.py' not 'src/**/*.py'."
+          },
+          {
+            "iteration": 2,
+            "program": "results = find('squackit/**/*.py', '.class')\nfor r in results:\n  print(r['name'])\n  for method in find_names(r['file_path'], f'.class#{r[\"name\"]} .fn'):\n      print(f'  {method}')",
+            "gen_time": 16.16,
+            "exec_success": true,
+            "output": "{'results': [{'node_id': 47, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'CachedResult', 'qualified_name': [{'semantic_type': 248, 'name': 'CachedResult', 'index': 1}], 'signature_type': 'dataclass', 'parameters': [], 'modifiers': [], 'annotations': None, 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/session.py', 'language': 'python', 'start_line': 19, 'end_line': 33, 'parent_id': 43, 'depth': 2, 'sibling_index': 1, 'children_count': 4, 'descendant_coun",
+            "error": null,
+            "variables": {
+              "results": "[{'node_id': 47, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'CachedResult', 'qualified_name': [{'semantic_type': 248, 'name': 'CachedResult', 'index': 1}], 'signature_type'",
+              "r": "{'node_id': 1845, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'LazyToolGroup', 'qualified_name': [{'semantic_type': 248, 'name': 'LazyToolGroup', 'index': 1}], 'signature_ty",
+              "method": "LazyToolGroup"
+            }
+          }
+        ],
+        "final_success": true,
+        "num_iterations": 2,
+        "total_gen_time": 36.62
+      },
+      {
+        "id": "iter_3",
+        "intent": "find the 3 most complex functions in squackit/ and show their names and complexity scores",
+        "description": "top-3 complexity ranking",
+        "model": "qwen2.5-coder:7b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = complexity('squackit/**/*.py', '.fn')\nsorted_results = sorted(results, key=lambda x: x['complexity'], reverse=True)[:3]\nfor r in sorted_results:\n   print(r['name'], r['complexity'])",
+            "gen_time": 20.64,
+            "exec_success": true,
+            "output": "{'results': [{'name': '_register_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 314, 'end_line': 501, 'complexity': 1525, 'signature': 'def _register_tool('}, {'name': 'create_server', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 45, 'end_line': 193, 'complexity': 1350, 'signature': 'def create_server('}, {'name': '_register_executor_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/serv",
+            "error": null,
+            "variables": {
+              "results": "[{'name': '_register_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 314, 'end_line': 501, 'complexity': 1525, 'signature': 'def _register_tool('}, {'nam",
+              "sorted_results": "[{'name': '_register_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 314, 'end_line': 501, 'complexity': 1525, 'signature': 'def _register_tool('}, {'nam",
+              "r": "{'name': '_register_executor_tool', 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/server.py', 'start_line': 196, 'end_line': 311, 'complexity': 1150, 'signature': 'def _register_execut"
+            }
+          },
+          {
+            "iteration": 2,
+            "program": "results = complexity('squackit/**/*.py', '.fn')\nsorted_results = sorted(results, key=lambda x: x['complexity'], reverse=True)[:3]\nfor r in sorted_results:\n  print(r['name'], r['complexity'])\n<error>Program ran but may not fully answer the intent.</error>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\ns",
+            "gen_time": 17.3,
+            "exec_success": false,
+            "output": "",
+            "error": "Parse error: invalid syntax (line 5)",
+            "variables": {},
+            "error_category": "syntax",
+            "hint": "Python syntax error. Check indentation and statement structure."
+          },
+          {
+            "iteration": 3,
+            "program": "results = complexity('squackit/**/*.py', '.fn') sorted_results = sorted(results, key=lambda x: x['complexity'], reverse=True)[:3] for r in sorted_results: print(r['name'], r['complexity'])",
+            "gen_time": 11.43,
+            "exec_success": false,
+            "output": "",
+            "error": "Parse error: invalid syntax (line 1)",
+            "variables": {},
+            "error_category": "syntax",
+            "hint": "Python syntax error. Check indentation and statement structure."
+          }
+        ],
+        "final_success": false,
+        "num_iterations": 3,
+        "total_gen_time": 49.37
+      },
+      {
+        "id": "iter_4",
+        "intent": "find function names that appear in more than one file (duplicates across modules) in squackit/",
+        "description": "cross-module duplicate detection",
+        "model": "qwen2.5-coder:7b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = find('squackit/**/*.py', '.fn')\nnames = [r['name'] for r in results]\nduplicates = {n: names.count(n) for n in set(names)}\nfor name, count in duplicates.items():\n   if count > 1:\n       print(name)",
+            "gen_time": 26.58,
+            "exec_success": true,
+            "output": "{'results': [{'node_id': 232, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_truncate_rows', 'qualified_name': [{'semantic_type': 240, 'name': '_truncate_rows', 'index': 1}], 'signature_type': None, 'parameters': [{'name': 'rows', 'type': ''}, {'name': 'max_rows', 'type': ''}, {'name': 'macro_name', 'type': ''}], 'modifiers': [], 'annotations': None, 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/formatting.py', 'language': 'python', 'start_line': 46, ",
+            "error": null,
+            "variables": {
+              "results": "[{'node_id': 232, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_truncate_rows', 'qualified_name': [{'semantic_type': 240, 'name': '_truncate_rows', 'index': 1}], 'signatu",
+              "names": "['_truncate_rows', '_format_markdown_table', 'format_json', 'age_seconds', 'is_expired', '__init__', '_make_key', '_freeze', 'get', '_files_unchanged', 'put', 'entry_count', '__init__', 'record', 'sum",
+              "duplicates": "{'main': 1, 'pluck': 1, '_register_executor_tool': 1, '_get_registry': 1, 'cli': 1, 'available': 1, 'tool_group': 1, '_truncate_rows': 1, 'params': 1, '_ensure_loaded': 1, '_calls': 1, '_changes': 1, ",
+              "name": "search",
+              "count": "1"
+            }
+          }
+        ],
+        "final_success": true,
+        "num_iterations": 1,
+        "total_gen_time": 26.58
+      },
+      {
+        "id": "iter_5",
+        "intent": "for each class in squackit/, check if it has an __init__ method",
+        "description": "class init audit",
+        "model": "qwen2.5-coder:7b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = find('squackit/**/*.py', '.class')\nfor r in results:\n   file_path = r['file_path']\n   name = r['name']\n   init_method = find_names(file_path, f'.class#{name} .fn#__init__')\n   if init_method:\n       print(f\"{name} has __init__ method\")\n   else:\n       print(f\"{name} does not have __init__ method\")",
+            "gen_time": 33.53,
+            "exec_success": true,
+            "output": "{'results': [{'node_id': 47, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'CachedResult', 'qualified_name': [{'semantic_type': 248, 'name': 'CachedResult', 'index': 1}], 'signature_type': 'dataclass', 'parameters': [], 'modifiers': [], 'annotations': None, 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/session.py', 'language': 'python', 'start_line': 19, 'end_line': 33, 'parent_id': 43, 'depth': 2, 'sibling_index': 1, 'children_count': 4, 'descendant_coun",
+            "error": null,
+            "variables": {
+              "results": "[{'node_id': 47, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'CachedResult', 'qualified_name': [{'semantic_type': 248, 'name': 'CachedResult', 'index': 1}], 'signature_type'",
+              "r": "{'node_id': 1845, 'type': 'class_definition', 'semantic_type': 248, 'flags': 14, 'name': 'LazyToolGroup', 'qualified_name': [{'semantic_type': 248, 'name': 'LazyToolGroup', 'index': 1}], 'signature_ty",
+              "file_path": "/mnt/aux-data/teague/Projects/squackit/squackit/cli.py",
+              "name": "LazyToolGroup",
+              "init_method": "['LazyToolGroup']"
+            }
+          }
+        ],
+        "final_success": true,
+        "num_iterations": 1,
+        "total_gen_time": 33.53
+      },
+      {
+        "id": "iter_6",
+        "intent": "find all functions in squackit/ whose names start with _ (private) and group them by file",
+        "description": "private function grouping",
+        "model": "qwen2.5-coder:7b",
+        "iterations": [
+          {
+            "iteration": 1,
+            "program": "results = find('squackit/**/*.py', '.fn[name^=\"_\"]')\nby_file = {}\nfor r in results:\n   f = r['file_path']\n   if f not in by_file:\n       by_file[f] = []\n   by_file[f].append(r)\nfor f, functions in sorted(by_file.items(), key=lambda x: -len(x[1])):\n   print(f)\n   for fn in functions:\n       print('  ', fn['name'])",
+            "gen_time": 34.71,
+            "exec_success": true,
+            "output": "{'results': [{'node_id': 82, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_escape_braces', 'qualified_name': [{'semantic_type': 240, 'name': '_escape_braces', 'index': 1}], 'signature_type': 'str', 'parameters': [{'name': 'value', 'type': 'str'}], 'modifiers': [], 'annotations': None, 'file_path': '/mnt/aux-data/teague/Projects/squackit/squackit/prompts.py', 'language': 'python', 'start_line': 27, 'end_line': 29, 'parent_id': 0, 'depth': 1, 'sibling_index': 7, 'chil",
+            "error": null,
+            "variables": {
+              "results": "[{'node_id': 82, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_escape_braces', 'qualified_name': [{'semantic_type': 240, 'name': '_escape_braces', 'index': 1}], 'signatur",
+              "by_file": "{'/mnt/aux-data/teague/Projects/squackit/squackit/prompts.py': [{'node_id': 82, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_escape_braces', 'qualified_name': [{'semanti",
+              "r": "{'node_id': 2627, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_register_tool', 'qualified_name': [{'semantic_type': 240, 'name': '_register_tool', 'index': 1}], 'signatu",
+              "f": "/mnt/aux-data/teague/Projects/squackit/squackit/prompts.py",
+              "functions": "[{'node_id': 82, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_escape_braces', 'qualified_name': [{'semantic_type': 240, 'name': '_escape_braces', 'index': 1}], 'signatur",
+              "fn": "{'node_id': 82, 'type': 'function_definition', 'semantic_type': 240, 'flags': 14, 'name': '_escape_braces', 'qualified_name': [{'semantic_type': 240, 'name': '_escape_braces', 'index': 1}], 'signature"
+            }
+          }
+        ],
+        "final_success": true,
+        "num_iterations": 1,
+        "total_gen_time": 34.71
+      }
+    ],
+    "successes": 4,
+    "total": 6,
+    "avg_iterations": 1.8,
+    "avg_time": 44.4
+  }
+}

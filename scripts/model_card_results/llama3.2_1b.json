@@ -1,0 +1,195 @@
+{
+  "model": "llama3.2:1b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list_names('cli.py')",
+          "raw": " list_names('cli.py')\n\nHere is my code so far:\n```python\nimport os\n\ndef get_function_names():\n    # ... (rest of your code)\n\ndef find_names(pattern, extension):\n    for root, dirs, files in os.walk(pattern):\n        for file in files:\n            if file.endswith(extension):\n                yield os",
+          "elapsed": 7.22,
+          "tokens": 100,
+          "tps": 13.8
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache', 'HEAD')",
+          "raw": " search('cache', 'HEAD')\nsearch for a specific file or line -> search('file', 'line', 'HEAD')\nsearch for all functions with a certain name -> search('function', 'name', 'HEAD')\nsearch for all lines of code that contain a certain string -> search('string', 'content', 'HEAD')\nsearch for all changes ma",
+          "elapsed": 4.46,
+          "tokens": 100,
+          "tps": 22.4
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits('master') -> show_commits('main')",
+          "raw": " show_commits('master') -> show_commits('main')\n\n## Step 2: Analyze the provided functions and their usage\nThe `find_all_function_names` function is used to find all function names in a given Python file. The `find_names` function takes two arguments: the path to the source code file (`src/**/*.py`)",
+          "elapsed": 4.42,
+          "tokens": 100,
+          "tps": 22.6
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('src/**/*.py', 'auth.*.method')",
+          "raw": " find_names('src/**/*.py', 'auth.*.method')\n\n# Using a loop to iterate over the results\nfor name in find_names('src/**/*.py', '.fn'):\n    print(name)\n\nfor name in find_names('src/**/*.py', '.class'):\n    print(name)\n\nfor name in find_names('src/**/*.py', 'auth.*.method'):\n    print(name)````\nThis co",
+          "elapsed": 4.39,
+          "tokens": 100,
+          "tps": 22.8
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.fn')",
+          "raw": " find_names('src/**/*.py', '.fn')\nfind function names that are not in the list of known functions -> find_names('src/**/*.py', '.fn') and 'known_functions'\nfind all function names -> find_names('src/**/*.py', '.fn')\nfind names starting with test_ -> source = \"tests/**/*.py\"\nselector = \".fn[name^='te",
+          "elapsed": 4.49,
+          "tokens": 100,
+          "tps": 22.2
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.func')",
+          "raw": " find_names('src/**/*.py', '.func')\nfind all variables -> find_names('src/**/*.py', '.var')\n\nNote that the `find_names` function is assumed to be a custom function that takes two arguments: the directory path and the file name pattern. It returns an array of names found in the specified files.\n\nThe ",
+          "elapsed": 4.29,
+          "tokens": 100,
+          "tps": 23.3
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "count_classes(n)\nprint(f'Number of functions: {n}')\nprint(f'Number of classes: {count_classes(n)}')",
+          "raw": " count_classes(n)\nprint(f'Number of functions: {n}')\nprint(f'Number of classes: {count_classes(n)}') \n\n# Example usage\nfind_names('src/**/*.py', '.fn')\ncount_classes(0)  # n = 0, so print 'Number of classes: 0'\n```python\nimport os\n\ndef find_names(file_path, extension):\n    \"\"\"\n    Find all function ",
+          "elapsed": 4.42,
+          "tokens": 100,
+          "tps": 22.6
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"tests/**/*.py\"\nselector = \".Base\"\nresult = find_classes(source, selector)\nresult",
+          "raw": " source = \"tests/**/*.py\"\nselector = \".Base\"\nresult = find_classes(source, selector)\nresult\nfind all elements that contain the text \"test\" -> source = \"tests/**/*.py\"\nselector = \".fn[name^='test_']\"\nresult = find_elements(source, selector)\nresult\nfind all elements with a class name of Base -> source",
+          "elapsed": 4.53,
+          "tokens": 100,
+          "tps": 22.1
+        }
+      ]
+    },
+    "classification": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "tell('UserService', 'User')",
+          "raw": " tell('UserService', 'User')\n\n## Step 1: Find all function names\nTo start, we need to identify all the function names in the codebase. We can use a Python library like `ast` (Abstract Syntax Trees) or `mypy` (Static Type Checking) to achieve this.\n\n```python\nimport ast\n\ndef find_all_function_names(c",
+          "elapsed": 4.58,
+          "tokens": 100,
+          "tps": 21.8
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": false,
+          "output": "show_names('src/**/*.py', '.class AuthService')",
+          "raw": " show_names('src/**/*.py', '.class AuthService') \nshow me all functions in a specific directory -> find_names('src/**/*.py', '.dir/MyDir')\nshow me all functions that start with 'get' -> find_names('src/**/*.py', '.func get.*') \n\n```python\nimport os\n\ndef complexity(path, fn):\n    # Calculate the numb",
+          "elapsed": 4.5,
+          "tokens": 100,
+          "tps": 22.2
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n# Test the function\nprint(reverse_string(\"Hello World\"))  # Output: \"dlroW olleH\"\n\n# Reverse a list of strings\ndef reverse_list_of_strings(lst: list[str]) -> list[str]:\n    return [s[::-1] for s in lst]\n\n# Test the function\nprint(reverse_list_of_strings([\"Hello\", \"World\"]))  # Output: [\"ol",
+          "elapsed": 4.03,
+          "tokens": 91,
+          "tps": 22.6
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n**0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Example usage:\nprint(is_prime(11))  # Output: True\nprint(is_prime(15))  # Output: False\n```python\ndef is_prime(n: int) -> bool:\n    \"\"\"\n    Checks if a number is prime.\n\n    Args:\n        n (int): The number to c",
+          "elapsed": 4.46,
+          "tokens": 100,
+          "tps": 22.4
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": false,
+          "output": "\"\"\"",
+          "raw": " \n    \"\"\"\n    This function takes a nested list as input and returns a flattened list.\n    \n    Args:\n        lst (list): A nested list containing elements of any type.\n    \n    Returns:\n        list: A flattened list with all sublists as its elements.\n    \"\"\"\n    flat_list = []  # Initialize an emp",
+          "elapsed": 4.27,
+          "tokens": 100,
+          "tps": 23.4
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "35}",
+          "raw": " 35}\n\n# Create a list of dictionaries\npeople = [\n    {\"name\": \"Alice\", \"age\": 30},\n    {\"name\": \"Bob\", \"age\": 25},\n    {\"name\": \"Charlie\", \"age\": 35}\n]\n\n# Print the list of people\nfor person in people:\n    print(person[\"name\"], person[\"age\"])",
+          "elapsed": 3.51,
+          "tokens": 76,
+          "tps": 21.6
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"show_main_class\", \"selector\": \".class_name\"}\nIntent: \"show me the methods of a specific function\"\n{\"tool\": \"show_methods\", \"selector\": \"[name='func_name']\"}",
+          "raw": " \"show_main_class\", \"selector\": \".class_name\"}\nIntent: \"show me the methods of a specific function\"\n{\"tool\": \"show_methods\", \"selector\": \"[name='func_name']\"}\n\n## Step 1: Analyze each intent\nWe need to analyze each intent and determine its purpose. Intent 1 is about finding all test functions, which",
+          "elapsed": 4.64,
+          "tokens": 100,
+          "tps": 21.6
+        }
+      ]
+    }
+  },
+  "total_passed": 3,
+  "total_tests": 15,
+  "pass_rate": 20.0,
+  "avg_time": 4.55
+}

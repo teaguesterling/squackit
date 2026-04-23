@@ -1,0 +1,195 @@
+{
+  "model": "qwen3:0.6b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "view('src/**/*.py', '.fn')",
+          "raw": " view('src/**/*.py', '.fn')\nlist all function names in cli.py -> view('src/**/*.py', '.fn#main')\nlist all function names in cli.py -> view('src/**/*.py', '.fn#main#main')\nlist all function names in cli.py -> view('src/**/*.py', '.fn#main#main#main')\nlist all function names in cli.py -> view('src/**/",
+          "elapsed": 3.78,
+          "tokens": 100,
+          "tps": 26.5
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": false,
+          "output": "cache('cache')",
+          "raw": " cache('cache')\nget the cache -> cache.get()\nget the cache value -> cache.get_value()\nget the cache value -> cache.get_value()\nget the cache value -> cache.get_value()\nget the cache value -> cache.get_value()\nget the cache value -> cache.get_value()\nget the cache value -> cache.get_value()\nget the c",
+          "elapsed": 1.9,
+          "tokens": 100,
+          "tps": 52.5
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "git log",
+          "raw": " git log\nshow diff between files -> git diff\nshow diff between two files -> git diff\nshow diff between two files -> git diff\nshow diff between two files -> git diff\nshow diff between two files -> git diff\nshow diff between two files -> git diff\nshow diff between two files -> git diff\nshow diff betwe",
+          "elapsed": 1.89,
+          "tokens": 100,
+          "tps": 52.9
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.method', 'Auth')",
+          "raw": " find_names('src/**/*.py', '.method', 'Auth')\nfind all methods of the Auth class -> find_names('src/**/*.py', '.method', 'Auth')\nfind all methods of the Auth class -> find_names('src/**/*.py', '.method', 'Auth')\nfind all methods of the Auth class -> find_names('src/**/*.py', '.method', 'Auth')\nfind ",
+          "elapsed": 1.89,
+          "tokens": 100,
+          "tps": 52.9
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": false,
+          "output": "source = \"tests/**/*.py\"\nselector = \".fn[name^='test_']\"\nresult = find_names(source, selector)\nresult\nprint result",
+          "raw": " source = \"tests/**/*.py\"\nselector = \".fn[name^='test_']\"\nresult = find_names(source, selector)\nresult\nprint result\n\nSo, the code is written in Python, and the output is a list of function names. The function names are in the format \"test_..._handler\". So, the final answer is the list of function na",
+          "elapsed": 2.11,
+          "tokens": 100,
+          "tps": 47.4
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.function')",
+          "raw": " find_names('src/**/*.py', '.function')\nfind all functions except main and other functions -> find_names('src/**/*.py', '.function')\nfind all functions except main and other functions and other functions -> find_names('src/**/*.py', '.function')\nfind all functions except main, other functions, other",
+          "elapsed": 1.98,
+          "tokens": 100,
+          "tps": 50.4
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 2,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": true,
+          "output": "n = len(find_names('src/*.py', '.class'))",
+          "raw": " n = len(find_names('src/*.py', '.class'))\ncount functions in cli.py -> n = len(find_names('cli.py', '.fn'))\ncount functions in other files -> n = len(find_names('src/*.py', '.fn'))\ncount functions in other files -> n = len(find_names('src/*.py', '.fn'))\ncount functions in other files -> n = len(fin",
+          "elapsed": 1.96,
+          "tokens": 100,
+          "tps": 51.0
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"src/Base.py\"\nselector = \".fn[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/Base.py\"\nselector = \".fn[name^='Base']\"\nresult = find_names(source, selector)\nresult\nfind classes starting with Base -> source = \"src/Base.py\"\nselector = \".fn[name^='Base']\"\nresult = find_names(source, selector)\nresult\nfind classes starting with Base -> source = \"src/Base.py\"\nselector",
+          "elapsed": 1.97,
+          "tokens": 100,
+          "tps": 50.9
+        }
+      ]
+    },
+    "classification": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "find_names('src/user-service.py', '.class')",
+          "raw": " find_names('src/user-service.py', '.class')\ntell me about the UserService class -> find_names('src/user-service.py', '.class')\ntell me about the UserService class -> find_names('src/user-service.py', '.class')\ntell me about the UserService class -> find_names('src/user-service.py', '.class')\ntell m",
+          "elapsed": 2.07,
+          "tokens": 100,
+          "tps": 48.4
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/**/*.py', '.fn#AuthService')",
+          "raw": " view('src/**/*.py', '.fn#AuthService')\nfind the most complex function in the code -> complexity('src/**/*.py', '.fn#main')\nshow me the function -> view('src/**/*.py', '.fn#main')\n\nSo, the code is in Python, and the function names are in the code. So, the user wants to find all function names in the",
+          "elapsed": 2.13,
+          "tokens": 100,
+          "tps": 46.9
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n# Test\nprint(reverse_string(\"hello\"))  # should return \"olleh\"\n\n# Test\nprint(reverse_string(\"world\"))  # should return \"dlrow\"\n\n# Test\nprint(reverse_string(\"abcde\"))  # should return \"edcba\"\n\n# Test\nprint(reverse_string(\"ab\"))     # should return \"ba\"\n\n# Test\nprint(reverse_string(\"abba\")) ",
+          "elapsed": 1.88,
+          "tokens": 100,
+          "tps": 53.2
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, n):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, n):\n        if n % i == 0:\n            return False\n    return True\n\n# Test\nprint(is_prime(2))  # True\nprint(is_prime(3))  # True\nprint(is_prime(4))  # False\nprint(is_prime(5))  # True\nprint(is_prime(6))  # False\nprint(is_prime(7))  # True\nprint(is_prime(8))  # False\nprint(is_prime(9))",
+          "elapsed": 1.89,
+          "tokens": 100,
+          "tps": 52.9
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": true,
+          "output": "result = []\nfor item in lst:\nif isinstance(item, list):\nresult.extend(flatten(item))\nelse:\nresult.append(item)\nreturn result",
+          "raw": "\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result\n\n# Test\nprint(flatten([1, 2, [3, 4, 5], [6, 7], [8, 9, 10, 11, 12]]))\n\n# Expected Output:\n# [1, 2, 3, 4,",
+          "elapsed": 34.27,
+          "tokens": 100,
+          "tps": 2.9
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": true,
+          "output": "28}\n{\"name\": \"Diana\", \"age\": 27}",
+          "raw": " 28}\n{\"name\": \"Diana\", \"age\": 27}\n\nThe average age of the three people is 28.5. What is the average age of the four people?\n\nLet me think... Hmm, okay, so there are four people, and their average age is given as 28.5. But wait, the original problem says that the average age of the three people is 28",
+          "elapsed": 64.64,
+          "tokens": 100,
+          "tps": 1.5
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"show_class\", \"selector\": \".class[name^='main']\"}\nIntent: \"find me the test function\"\n{\"tool\": \"find_names\", \"selector\": \".fn[name^='test_']\"}\nIntent: \"find me the test function in the class\"\n{\"tool\":",
+          "raw": " \"show_class\", \"selector\": \".class[name^='main']\"}\nIntent: \"find me the test function\"\n{\"tool\": \"find_names\", \"selector\": \".fn[name^='test_']\"}\nIntent: \"find me the test function in the class\"\n{\"tool\": \"find_names\", \"selector\": \".class[name^='test_']\"}\nIntent: \"find me the test function in the class",
+          "elapsed": 66.65,
+          "tokens": 100,
+          "tps": 1.5
+        }
+      ]
+    }
+  },
+  "total_passed": 6,
+  "total_tests": 15,
+  "pass_rate": 40.0,
+  "avg_time": 12.73
+}

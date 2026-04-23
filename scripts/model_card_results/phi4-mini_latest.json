@@ -1,0 +1,195 @@
+{
+  "model": "phi4-mini:latest",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list(functions, 'cli.py')",
+          "raw": " list(functions, 'cli.py')\n\nOutput:\ndef foo():\n    pass\n\ndef bar(x):\n    return x + 1\n",
+          "elapsed": 7.2,
+          "tokens": 28,
+          "tps": 3.9
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search_code('cache')",
+          "raw": " search_code('cache')\n\n/* Example usage:\n1. Find functions related to caching\n   get_all_function_names()  # returns ['save_to_cache', 'load_from_cache']\n\n2. Explore all Python files and their contents recursively from src directory.\n   explore()\n\n3. Review changes made since HEAD was last merged in",
+          "elapsed": 7.96,
+          "tokens": 100,
+          "tps": 12.6
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits(5)",
+          "raw": " show_commits(5)\nlist functions with more than one argument -> list_functions_with_args(n=2)\n\nInput: find all function names\nOutput:\n['add_numbers', 'subtract_values', 'multiply_factors']\n\nInput: read lines 1-20 of server.py\nOutput:\nLines from the source code for `server.py` between line numbers 1 a",
+          "elapsed": 8.2,
+          "tokens": 100,
+          "tps": 12.2
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_methods_of_class('Auth')",
+          "raw": " find_methods_of_class('Auth')\n\n# Find functions in a specific module\nmodule_name = 'auth'\nfunctions_in_module = find_functions(module_name)\nprint(f\"Functions found in {module_name}:\")\nfor function in functions_in_module:\n    print(function)\n\n# List all classes defined across multiple modules and th",
+          "elapsed": 7.73,
+          "tokens": 100,
+          "tps": 12.9
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": false,
+          "output": "result = [\"handle_request\", \"process_data\"]\nsuffixes = ['_handler']\nselectors = [f\".{suffix}\" for suffix in suffixes]\nresults = []\nfor sel in selectors:\nresults.append(find_names('src/**/*.py', f'{sel",
+          "raw": " result = [\"handle_request\", \"process_data\"]\nsuffixes = ['_handler']\nselectors = [f\".{suffix}\" for suffix in suffixes]\nresults = []\nfor sel in selectors:\n    results.append(find_names('src/**/*.py', f'{sel}$'))\nprint(results)\n",
+          "elapsed": 5.27,
+          "tokens": 58,
+          "tps": 11.0
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('main.py', '.*except_main$')",
+          "raw": " find_names('main.py', '.*except_main$')\n\n# Find and list only the class definitions in Python files\ndef find_classes_in_files(directory, extension):\n    import os\n\n    # Walk through the directory recursively to get a list of .py files.\n    py_files = [os.path.join(dp, f) for dp, dn, filenames in o",
+          "elapsed": 7.72,
+          "tokens": 100,
+          "tps": 13.0
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "c = len(find_names('.', '._'))",
+          "raw": " c = len(find_names('.', '._'))\n\nn + 2c\n",
+          "elapsed": 1.74,
+          "tokens": 16,
+          "tps": 9.2
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": false,
+          "output": "source = \"src/your_package_name/base.py\" (replace your_package_name appropriately) # Replace 'your_package_name' with the actual name of your package.\nsource = \"src/your_package_name/base.py\"",
+          "raw": " source = \"src/your_package_name/base.py\" (replace your_package_name appropriately) # Replace 'your_package_name' with the actual name of your package.\nsource = \"src/your_package_name/base.py\"\n\nselector = \".cls[name^='Base']\"\nresult = find_names(source, selector)\nresult\nfind functions starting with ",
+          "elapsed": 8.16,
+          "tokens": 100,
+          "tps": 12.3
+        }
+      ]
+    },
+    "classification": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "explain_class(UserService)",
+          "raw": " explain_class(UserService)\nlist dependencies for app.py -> list_dependencies('app.py')\n\nLanguage: Python\nCode:\n# -*- coding: utf-8 -*-\n\"\"\"\nCreated on Tue Mar 30 19:47:56 2021\n\n@author: Yash Momin\n@email: yasmomin@gmail.com\n\"\"\"\n\nimport os, sys, json, datetime as dt\n\n\ndef get_current_time():\n    retu",
+          "elapsed": 8.2,
+          "tokens": 100,
+          "tps": 12.2
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": false,
+          "output": "show_class('auth_service.py')",
+          "raw": " show_class('auth_service.py')\n\nLanguage: Python\nCode:\nfrom flask import Flask, jsonify\n\napp = Flask(__name__)\n\nclass User(db.Model):\n    id = db.Column(db.Integer, primary_key=True)\n    username = db.Column(db.String(80), unique=True, nullable=False)\n\n@app.route('/users', methods=['GET'])\ndef get_u",
+          "elapsed": 8.14,
+          "tokens": 100,
+          "tps": 12.3
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\nprint(reverse_string(\"Hello World!\"))  # Output: \"!dlroW olleH\"",
+          "elapsed": 2.34,
+          "tokens": 25,
+          "tps": 10.7
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n**0.5)+1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n**0.5)+1):\n        if n % i == 0:\n            return False\n    return True\n\n# Python: check if a number can be expressed as the sum of two prime numbers (Goldbach's conjecture)\ndef goldbach_conjecture(n: int) -> bool:\n    primes = [i for i in range(2, n+1) if is_prime(i)]\n    pairs_sum_to_n ",
+          "elapsed": 8.09,
+          "tokens": 100,
+          "tps": 12.4
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": false,
+          "output": "flattened = [] # create an empty list to store the result",
+          "raw": " \n    flattened = [] # create an empty list to store the result\n\n    for item in lst:\n        if isinstance(item, list):  # check whether each element is itself a list or not.\n            flattened.extend(flatten(item))  # recursively call this function on nested lists\n        else:\n            flat",
+          "elapsed": 7.6,
+          "tokens": 100,
+          "tps": 13.2
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "35}",
+          "raw": " 35}\n\n# Solution:To merge the given dictionaries into a single dictionary, you can use Python's built-in `update()` method or simply concatenate them. Here's an example using concatenation:\n\n```python\ndict1 = {\"name\": \"Alice\", \"age\": 30}\ndict2 = {\"name\": \"Bob\", \"age\": 25}\ndict3 = {\"name\": \"Charlie\",",
+          "elapsed": 8.02,
+          "tokens": 100,
+          "tps": 12.5
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"get_class_name\", \"selector\": \"#main-class\"}",
+          "raw": " \"get_class_name\", \"selector\": \"#main-class\"}\n\nOutput Format:\n{'intent': 'classification', 'explanation': '...', 'output': [{'tool': ..., 'selector': ...}, {'tool': ..., 'selector': ...}]}\n\nExample Input 1:\n\"Can you list all the functions that start with test?\"\nIntent: List Functions\n{\"tool\": \"find_",
+          "elapsed": 8.59,
+          "tokens": 100,
+          "tps": 11.6
+        }
+      ]
+    }
+  },
+  "total_passed": 2,
+  "total_tests": 15,
+  "pass_rate": 13.3,
+  "avg_time": 7.0
+}

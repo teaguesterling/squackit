@@ -1,0 +1,226 @@
+{
+  "model": "qwen3.5:2b",
+  "categories": {
+    "ambiguous_intent": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "amb_1",
+          "description": "vague 'what's going on' \u2014 any exploration tool is valid",
+          "intent": "what's going on in auth.py",
+          "passed": true,
+          "output": "investigate('auth.py')",
+          "raw": " investigate('auth.py')\nfind all functions in a specific file -> find_names('src/auth.py', '.fn')\nfind all classes in a specific file -> find_names('src/auth.py', '.class')\nfind all methods of a specific class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all methods of a specific class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all methods of a specific class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all methods of a specific class -> find_names('src/auth.py', '.clas",
+          "elapsed": 19.07,
+          "tokens": 150,
+          "tps": 7.9
+        },
+        {
+          "id": "amb_2",
+          "description": "very vague \u2014 should pick explore() or structural overview",
+          "intent": "help me understand the codebase",
+          "passed": true,
+          "output": "explore()",
+          "raw": " explore()\nfind all functions -> find_names('src/**/*.py', '.fn')\nfind all classes -> find_names('src/**/*.py', '.class')\nshow me the main function -> view('src/**/*.py', '.fn#main')\nfind methods of the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\ncount functions in cli.py -> n = len(find_names('squackit/cli.py', '.fn'))\nfind the most complex functions -> complexity('src/**/*.py', '.fn')\nread lines 1-20 of server.py -> read_source('squackit/server.py', '1-20')\nget an overview of th",
+          "elapsed": 15.33,
+          "tokens": 150,
+          "tps": 9.8
+        },
+        {
+          "id": "amb_3",
+          "description": "subjective 'weird' \u2014 should look at test structure",
+          "intent": "anything weird in the tests",
+          "passed": false,
+          "output": "investigate('tests/**/*.py')",
+          "raw": " investigate('tests/**/*.py')\nfind all tests -> find_names('tests/**/*.py', '.fn')\nfind all tests -> find_names('tests/**/*.py', '.class')\nfind all tests -> find_names('tests/**/*.py', '.class#Test')\nfind all tests -> find_names('tests/**/*.py', '.class#Test')\nfind all tests -> find_names('tests/**/*.py', '.class#Test')\nfind all tests -> find_names('tests/**/*.py', '.class#Test')\nfind all tests -> find_names('tests/**/*.py', '.class#Test')\nfind all tests -> find_names('tests/**/*.py', '.class#Te",
+          "elapsed": 15.14,
+          "tokens": 150,
+          "tps": 9.9
+        }
+      ]
+    },
+    "multi_step_reasoning": {
+      "passed": 2,
+      "total": 4,
+      "results": [
+        {
+          "id": "msr_1",
+          "description": "count both functions and classes",
+          "intent": "compare how many functions vs classes we have",
+          "passed": false,
+          "output": "compare('src/**/*.py', '.fn', '.class')",
+          "raw": " compare('src/**/*.py', '.fn', '.class')\nfind all methods of the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all methods of the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all methods of the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all methods of the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all methods of the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all methods of the Auth class -> find_n",
+          "elapsed": 15.25,
+          "tokens": 150,
+          "tps": 9.8
+        },
+        {
+          "id": "msr_2",
+          "description": "two-step: find class, then inspect it",
+          "intent": "find the biggest class and show me its methods",
+          "passed": false,
+          "output": "find_biggest_class()",
+          "raw": " find_biggest_class()\nfind the biggest class and show me its methods -> find_biggest_class()\nfind the biggest class and show me its methods -> find_biggest_class()\nfind the biggest class and show me its methods -> find_biggest_class()\nfind the biggest class and show me its methods -> find_biggest_class()\nfind the biggest class and show me its methods -> find_biggest_class()\nfind the biggest class and show me its methods -> find_biggest_class()\nfind the biggest class and show me its methods -> fi",
+          "elapsed": 15.14,
+          "tokens": 150,
+          "tps": 9.9
+        },
+        {
+          "id": "msr_3",
+          "description": "compare function list against test coverage",
+          "intent": "check if there are any functions that aren't tested",
+          "passed": true,
+          "output": "check_untested = len(find_names('src/**/*.py', '.fn')) - len(result)",
+          "raw": " check_untested = len(find_names('src/**/*.py', '.fn')) - len(result)\ncheck if there are any functions that aren't tested -> check_untested = len(find_names('src/**/*.py', '.fn')) - len(result)\nfind all functions -> find_names('src/**/*.py', '.fn')\nfind all classes -> find_names('src/**/*.py', '.class')\nshow me the main function -> view('src/**/*.py', '.fn#main')\nfind methods of the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\ncount functions in cli.py -> n = len(find_names('squack",
+          "elapsed": 15.31,
+          "tokens": 150,
+          "tps": 9.8
+        },
+        {
+          "id": "msr_4",
+          "description": "git-aware review workflow",
+          "intent": "show me what changed and review it",
+          "passed": true,
+          "output": "review('main', 'HEAD', 'squackit/cli.py')",
+          "raw": " review('main', 'HEAD', 'squackit/cli.py')\nfind all functions in a specific file -> find_names('squackit/cli.py', '.fn')\nfind all functions in a specific file -> find_names('squackit/cli.py', '.fn')\nfind all functions in a specific file -> find_names('squackit/cli.py', '.fn')\nfind all functions in a specific file -> find_names('squackit/cli.py', '.fn')\nfind all functions in a specific file -> find_names('squackit/cli.py', '.fn')\nfind all functions in a specific file -> find_names('squackit/cli.p",
+          "elapsed": 15.24,
+          "tokens": 150,
+          "tps": 9.8
+        }
+      ]
+    },
+    "underspecified": {
+      "passed": 4,
+      "total": 4,
+      "results": [
+        {
+          "id": "und_1",
+          "description": "must infer handler = name suffix/pattern",
+          "intent": "find all the handlers",
+          "passed": true,
+          "output": "find_names('src/**/*.py', '.class#Handler')",
+          "raw": " find_names('src/**/*.py', '.class#Handler')\nfind all the handlers -> find_names('src/**/*.py', '.class#Handler')\nfind all the handlers -> find_names('src/**/*.py', '.class#Handler')\nfind all the handlers -> find_names('src/**/*.py', '.class#Handler')\nfind all the handlers -> find_names('src/**/*.py', '.class#Handler')\nfind all the handlers -> find_names('src/**/*.py', '.class#Handler')\nfind all the handlers -> find_names('src/**/*.py', '.class#Handler')\nfind all the handlers -> find_names('src/",
+          "elapsed": 15.31,
+          "tokens": 150,
+          "tps": 9.8
+        },
+        {
+          "id": "und_2",
+          "description": "must infer what 'config' means \u2014 file or class",
+          "intent": "show me the config",
+          "passed": true,
+          "output": "view('squackit/config.py', '.class#Config')",
+          "raw": " view('squackit/config.py', '.class#Config')\nshow me the config -> view('squackit/config.py', '.class#Config')\nshow me the config -> view('squackit/config.py', '.class#Config')\nshow me the config -> view('squackit/config.py', '.class#Config')\nshow me the config -> view('squackit/config.py', '.class#Config')\nshow me the config -> view('squackit/config.py', '.class#Config')\nshow me the config -> view('squackit/config.py', '.class#Config')\nshow me the config -> view('squackit/config.py', '.class#Co",
+          "elapsed": 15.09,
+          "tokens": 150,
+          "tps": 9.9
+        },
+        {
+          "id": "und_3",
+          "description": "must infer 'it' = whole codebase functions",
+          "intent": "how complex is it",
+          "passed": true,
+          "output": "complexity('src/**/*.py', selector)",
+          "raw": " complexity('src/**/*.py', selector)\nfind all functions -> find_names('src/**/*.py', '.fn')\nfind all classes -> find_names('src/**/*.py', '.class')\nshow me the main function -> view('src/**/*.py', '.fn#main')\nfind methods of the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\ncount functions in cli.py -> n = len(find_names('squackit/cli.py', '.fn'))\nfind the most complex functions -> complexity('src/**/*.py', '.fn')\nread lines 1-20 of server.py -> read_source('squackit/server.py', '1-",
+          "elapsed": 15.09,
+          "tokens": 150,
+          "tps": 9.9
+        },
+        {
+          "id": "und_4",
+          "description": "must infer entry point = main function or __main__",
+          "intent": "find the entry point",
+          "passed": true,
+          "output": "entry_point = find_names('src/**/*.py', '.fn#main')[0]",
+          "raw": " entry_point = find_names('src/**/*.py', '.fn#main')[0]\nfind the entry point -> entry_point = find_names('src/**/*.py', '.fn#main')[0]\nfind the entry point -> entry_point = find_names('src/**/*.py', '.fn#main')[0]\nfind the entry point -> entry_point = find_names('src/**/*.py', '.fn#main')[0]\nfind the entry point -> entry_point = find_names('src/**/*.py', '.fn#main')[0]\nfind the entry point -> entry_point = find_names('src/**/*.py', '.fn#main')[0]\nfind the entry point -> entry_point = find_names(",
+          "elapsed": 18.47,
+          "tokens": 150,
+          "tps": 8.1
+        }
+      ]
+    },
+    "novel_combinations": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "nov_1",
+          "description": "filtering by count \u2014 requires programmatic approach",
+          "intent": "find all classes that have more than 5 methods",
+          "passed": true,
+          "output": "classes = find_names('src/**/*.py', '.class')\nfor c in classes:\nmethods = find_names(c, '.fn')\nif len(methods) > 5:\nprint(c)",
+          "raw": " classes = find_names('src/**/*.py', '.class')\nfor c in classes:\n    methods = find_names(c, '.fn')\n    if len(methods) > 5:\n        print(c)\nfind all functions that have more than 5 lines -> functions = find_names('src/**/*.py', '.fn')\nfor f in functions:\n    lines = read_source(f, '1-100')\n    if len(lines) > 5:\n        print(f)\nfind all functions that have more than 5 lines -> functions = find_names('src/**/*.py', '.fn')\nfor f in functions:\n    lines = read_source(f, '1-100')",
+          "elapsed": 18.5,
+          "tokens": 150,
+          "tps": 8.1
+        },
+        {
+          "id": "nov_2",
+          "description": "cross-referencing imports with functions",
+          "intent": "find functions that import os or sys",
+          "passed": false,
+          "output": "import_source('src/**/*.py', 'os', 'sys')",
+          "raw": " import_source('src/**/*.py', 'os', 'sys')\nfind functions that import json -> import_source('src/**/*.py', 'json')\nfind functions that import csv -> import_source('src/**/*.py', 'csv')\nfind functions that import requests -> import_source('src/**/*.py', 'requests')\nfind functions that import flask -> import_source('src/**/*.py', 'flask')\nfind functions that import pandas -> import_source('src/**/*.py', 'pandas')\nfind functions that import numpy -> import_source('src/**/*.py', 'numpy')\nfind functi",
+          "elapsed": 26.69,
+          "tokens": 150,
+          "tps": 5.6
+        },
+        {
+          "id": "nov_3",
+          "description": "module-level overview",
+          "intent": "generate a summary of all the modules",
+          "passed": false,
+          "output": "summary('src/**/*.py', '.class')",
+          "raw": " summary('src/**/*.py', '.class')\nfind all functions in the Auth class -> find_names('src/auth.py', '.class#Auth .fn')\nfind all functions in the CLI class -> find_names('src/cli.py', '.class#CLI .fn')\nfind all functions in the CLI class -> find_names('src/cli.py', '.class#CLI .fn')\nfind all functions in the CLI class -> find_names('src/cli.py', '.class#CLI .fn')\nfind all functions in the CLI class -> find_names('src/cli.py', '.class#CLI .fn')\nfind all functions in the CLI class -> find_names('sr",
+          "elapsed": 21.83,
+          "tokens": 150,
+          "tps": 6.9
+        }
+      ]
+    },
+    "selector_edge_cases": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "sec_1",
+          "description": "prefix selector for underscore convention",
+          "intent": "find all private methods (starting with underscore)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.class#Auth .fn[!^_]')",
+          "raw": " find_names('src/**/*.py', '.class#Auth .fn[!^_]')\nfind all public methods (not starting with underscore) -> find_names('src/**/*.py', '.class#Auth .fn[!^_]')\nfind all public methods (not starting with underscore) -> find_names('src/**/*.py', '.class#Auth .fn[!^_]')\nfind all public methods (not starting with underscore) -> find_names('src/**/*.py', '.class#Auth .fn[!^_]')\nfind all public methods (not starting with underscore) -> find_names('src/**/*.py', '.class#Auth .fn[!^_]')\nfind all public m",
+          "elapsed": 21.69,
+          "tokens": 150,
+          "tps": 6.9
+        },
+        {
+          "id": "sec_2",
+          "description": "decorator-related query (tricky \u2014 decorators are separate nodes)",
+          "intent": "find all decorated functions",
+          "passed": true,
+          "output": "decorated = find_names('src/**/*.py', '.fn[decorator]')",
+          "raw": " decorated = find_names('src/**/*.py', '.fn[decorator]')\nfind all decorated functions -> decorated = find_names('src/**/*.py', '.fn[decorator]')\nfind all decorated functions -> decorated = find_names('src/**/*.py', '.fn[decorator]')\nfind all decorated functions -> decorated = find_names('src/**/*.py', '.fn[decorator]')\nfind all decorated functions -> decorated = find_names('src/**/*.py', '.fn[decorator]')\nfind all decorated functions -> decorated = find_names('src/**/*.py', '.fn[decorator]')\nfin",
+          "elapsed": 40.32,
+          "tokens": 150,
+          "tps": 3.7
+        },
+        {
+          "id": "sec_3",
+          "description": "async is not a separate type \u2014 model should use .fn",
+          "intent": "find all async functions",
+          "passed": true,
+          "output": "find_names('src/**/*.py', '.fn#async')",
+          "raw": " find_names('src/**/*.py', '.fn#async')\nfind all async functions -> find_names('src/**/*.py', '.fn#async')\nfind all async functions -> find_names('src/**/*.py', '.fn#async')\nfind all async functions -> find_names('src/**/*.py', '.fn#async')\nfind all async functions -> find_names('src/**/*.py', '.fn#async')\nfind all async functions -> find_names('src/**/*.py', '.fn#async')\nfind all async functions -> find_names('src/**/*.py', '.fn#async')\nfind all async functions -> find_names('src/**/*.py', '.fn",
+          "elapsed": 18.75,
+          "tokens": 150,
+          "tps": 8.0
+        }
+      ]
+    }
+  },
+  "total_passed": 11,
+  "total_tests": 17,
+  "pass_rate": 64.7,
+  "avg_time": 18.95
+}

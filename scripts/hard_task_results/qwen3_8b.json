@@ -1,0 +1,226 @@
+{
+  "model": "qwen3:8b",
+  "categories": {
+    "ambiguous_intent": {
+      "passed": 3,
+      "total": 3,
+      "results": [
+        {
+          "id": "amb_1",
+          "description": "vague 'what's going on' \u2014 any exploration tool is valid",
+          "intent": "what's going on in auth.py",
+          "passed": true,
+          "output": "view('src/auth.py')",
+          "raw": " view('src/auth.py')\nwhat's in the cli module -> view('src/cli.py')\nwhat's in the server module -> view('src/server.py')\nwhat's in the models module -> view('src/models.py')\nwhat's in the utils module -> view('src/utils.py')\nwhat's in the config module -> view('src/config.py')\nwhat's in the db module -> view('src/db.py')\nwhat's in the routes module -> view('src/routes.py')\nwhat's in the tasks module -> view('src/tasks.py')\nwhat's in the workers module -> view('src/workers.py')\nwhat's in the test",
+          "elapsed": 34.1,
+          "tokens": 150,
+          "tps": 4.4
+        },
+        {
+          "id": "amb_2",
+          "description": "very vague \u2014 should pick explore() or structural overview",
+          "intent": "help me understand the codebase",
+          "passed": true,
+          "output": "explore()",
+          "raw": " explore()\nshow me the code for the Auth class -> view('src/auth.py', '.class#Auth')\nshow me the code for the get_user function -> view('src/auth.py', '.fn#get_user')\nshow me the code for the User class -> view('src/models.py', '.class#User')\nshow me the code for the get_user_by_id function -> view('src/models.py', '.fn#get_user_by_id')\nshow me the code for the create_user function -> view('src/models.py', '.fn#create_user')\nshow me the code for the delete_user function -> view('src/models.py', ",
+          "elapsed": 21.43,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "amb_3",
+          "description": "subjective 'weird' \u2014 should look at test structure",
+          "intent": "anything weird in the tests",
+          "passed": true,
+          "output": "find_names('tests/**/*.py', '.fn[name^=Test]')",
+          "raw": " find_names('tests/**/*.py', '.fn[name^=Test]')\nfind functions with 'auth' in their name -> find_names('src/**/*.py', '.fn[name*=\"auth\"]')\nfind functions with 'auth' in their name in the auth module -> find_names('src/auth.py', '.fn[name*=\"auth\"]')\nfind functions with 'auth' in their name in the auth module and in the cli module -> find_names('src/auth.py', '.fn[name*=\"auth\"]') + find_names('src/cli.py', '.fn[name*=\"auth\"]')\nfind functions with 'auth' in their name in the auth module and in the ",
+          "elapsed": 21.37,
+          "tokens": 150,
+          "tps": 7.0
+        }
+      ]
+    },
+    "multi_step_reasoning": {
+      "passed": 0,
+      "total": 4,
+      "results": [
+        {
+          "id": "msr_1",
+          "description": "count both functions and classes",
+          "intent": "compare how many functions vs classes we have",
+          "passed": false,
+          "output": "count('fn') - count('class')",
+          "raw": " count('fn') - count('class')\nshow me the code for the main function -> view('src/**/*.py', '.fn#main')\nshow me the code for the Auth class -> view('src/**/*.py', '.class#Auth')\nshow me the code for the get_user method -> view('src/**/*.py', '.class#Auth .fn#get_user')\nshow me the code for the main function in cli.py -> view('src/cli.py', '.fn#main')\nshow me the code for the Auth class in auth.py -> view('src/auth.py', '.class#Auth')\nshow me the code for the get_user method in auth.py -> view('s",
+          "elapsed": 21.55,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "msr_2",
+          "description": "two-step: find class, then inspect it",
+          "intent": "find the biggest class and show me its methods",
+          "passed": false,
+          "output": "biggest_class()",
+          "raw": " biggest_class()\nshow me the dependencies -> dependencies()\nshow me the code for the Auth class -> view('src/auth.py', '.class#Auth')\nshow me the code for the get_user function -> view('src/auth.py', '.fn#Auth.get_user')\nshow me the code for the User class -> view('src/user.py', '.class#User')\nshow me the code for the User class and its methods -> view('src/user.py', '.class#User .fn')\nshow me the code for the User class and its methods, including private ones -> view('src/user.py', '.class#User",
+          "elapsed": 21.55,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "msr_3",
+          "description": "compare function list against test coverage",
+          "intent": "check if there are any functions that aren't tested",
+          "passed": false,
+          "output": "find_unittests('src/**/*.py', '.fn')",
+          "raw": " find_unittests('src/**/*.py', '.fn')\nfind all functions that are not in tests -> find_unittests('tests/**/*.py', '.fn', invert=True)\nfind all functions that are in tests -> find_unittests('tests/**/*.py', '.fn')\nfind all functions that are not in tests -> find_unittests('src/**/*.py', '.fn')\nfind all functions that are not in tests -> find_unittest\nfind all functions that are not in tests -> find_unittests('src/**/*.py', '.fn')\nfind all functions that are not in tests -> find_unittests('src/**/",
+          "elapsed": 21.55,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "msr_4",
+          "description": "git-aware review workflow",
+          "intent": "show me what changed and review it",
+          "passed": false,
+          "output": "review_changes()",
+          "raw": " review_changes()\nshow me the diff between main and HEAD -> diff('main', 'HEAD')\nshow me the diff between the last commit and HEAD -> diff('HEAD~1', 'HEAD')\nshow me the diff between the last 3 commits -> diff('HEAD~3', 'HEAD')\nshow me the diff between the last 3 commits and HEAD -> diff('HEAD~3', 'HEAD')\nshow me the diff between the last 3 commits and HEAD -> diff('HEAD~3', 'HEAD')\nshow me the diff between the last 3 commits and HEAD -> diff('HEAD~3', 'HEAD')\nshow me the diff between the last 3 ",
+          "elapsed": 21.47,
+          "tokens": 150,
+          "tps": 7.0
+        }
+      ]
+    },
+    "underspecified": {
+      "passed": 2,
+      "total": 4,
+      "results": [
+        {
+          "id": "und_1",
+          "description": "must infer handler = name suffix/pattern",
+          "intent": "find all the handlers",
+          "passed": true,
+          "output": "find_names('src/handlers/**/*.py', '.fn')",
+          "raw": " find_names('src/handlers/**/*.py', '.fn')\nfind all the functions in the handlers -> find_names('src/handlers/**/*.py', '.fn')\nfind all the functions in the handlers that start with 'get' -> find_names('src/handlers/**/*.py', '.fn[name^=\"get\"]')\nfind all the functions in the handlers that start with 'get' and end with 'by_id' -> find_names('src/handlers/**/*.py', '.fn[name^=\"get\" and name$=\"by_id\"]')\nfind all the functions in the handlers that start with 'get' and end with 'by_id' and have a par",
+          "elapsed": 21.46,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "und_2",
+          "description": "must infer what 'config' means \u2014 file or class",
+          "intent": "show me the config",
+          "passed": false,
+          "output": "config()",
+          "raw": " config()\nshow me the logs -> logs()\nshow me the history -> history()\nshow me the dependencies -> dependencies()\nshow me the test coverage -> coverage()\nshow me the performance metrics -> metrics()\nshow me the security report -> security()\nshow me the documentation -> docs()\nshow me the architecture diagram -> diagram()\nshow me the code quality report -> quality()\nshow me the release notes -> release_notes()\nshow me the roadmap -> roadmap()\nshow me the team structure -> team()\nshow me the projec",
+          "elapsed": 21.47,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "und_3",
+          "description": "must infer 'it' = whole codebase functions",
+          "intent": "how complex is it",
+          "passed": true,
+          "output": "complexity('src/**/*.py', '.fn')",
+          "raw": " complexity('src/**/*.py', '.fn')\nshow me the code for the get_users function -> view('src/users.py', '.fn#get_users')\nshow me the code for the get_users function in the users module -> view('src/users.py', '.fn#get_users')\nshow me the code for the get_users function in the users module -> view('src/users.py', '.fn#get_users')\nshow me the code for the get_users function in the users module -> view('src/users.py', '.fn#get_users')\nshow me the code for the get_users function in the users module ->",
+          "elapsed": 21.35,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "und_4",
+          "description": "must infer entry point = main function or __main__",
+          "intent": "find the entry point",
+          "passed": false,
+          "output": "entry_point()",
+          "raw": " entry_point()\nfind the test entry point -> entry_point('test')\nfind the test entry point for cli -> entry_point('test', 'cli')\nfind the test entry point for cli with args -> entry_point('test', 'cli', ['--help'])\nfind the test entry point for cli with args and env -> entry_point('test', 'cli', ['--help'], env={'TEST_ENV': 'value'})\nfind the test entry point for cli with args, env, and config -> entry\npoint('test', 'cli', ['--help'], env={'TEST_ENV': 'value'}, config='test.yaml')\nfind the test e",
+          "elapsed": 21.42,
+          "tokens": 150,
+          "tps": 7.0
+        }
+      ]
+    },
+    "novel_combinations": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "nov_1",
+          "description": "filtering by count \u2014 requires programmatic approach",
+          "intent": "find all classes that have more than 5 methods",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.class .fn:5')",
+          "raw": " find_names('src/**/*.py', '.class .fn:5')\nfind all functions that are not in any class -> find_names('src/**/*.py', '.fn:not(.class)')\nfind all functions that are not in any class and have more than 5 lines -> find_names('src/**/*.py', '.fn:not(.class) .line:5')\nfind all functions that are not in any class and have more than 5 lines and are not in the src directory -> find_names('src/**/*.py', '.fn:not(.class) .line:5', exclude_dirs=['src'])\nfind all functions that are not in any class and have",
+          "elapsed": 21.53,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "nov_2",
+          "description": "cross-referencing imports with functions",
+          "intent": "find functions that import os or sys",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[import='os'] .fn[import='sys']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[import='os'] .fn[import='sys']\"\nresult = find_names(source, selector)\nresult\nfind functions that have a comment -> source = \"src/**/*.py\"\nselector = \".fn[comment]\"\nresult = find_names(source, selector)\nresult\nfind functions that have a docstring -> source = \"src/**/*.py\"\nselector = \".fn[docstring]\"\nresult = find_names(source, selector)\nresult\nfind functions that have a comment or a docstring -> source = \"src/**/*.py\"\nselector = \".fn[comment] .fn[docstring]",
+          "elapsed": 21.44,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "nov_3",
+          "description": "module-level overview",
+          "intent": "generate a summary of all the modules",
+          "passed": false,
+          "output": "summary()",
+          "raw": " summary()\nshow me the dependencies -> graph()\nshow me the code structure -> structure()\nshow me the code flow -> flow()\nshow me the code metrics -> metrics()\nshow me the code coverage -> coverage()\nshow me the code quality -> quality()\nshow me the code documentation -> documentation()\nshow me the code comments -> comments()\nshow me the code style -> style()\nshow me the code performance -> performance()\nshow me the code security -> security()\nshow me the code maintainability -> maintainability()",
+          "elapsed": 21.45,
+          "tokens": 150,
+          "tps": 7.0
+        }
+      ]
+    },
+    "selector_edge_cases": {
+      "passed": 3,
+      "total": 3,
+      "results": [
+        {
+          "id": "sec_1",
+          "description": "prefix selector for underscore convention",
+          "intent": "find all private methods (starting with underscore)",
+          "passed": true,
+          "output": "selector = \".fn[name^='_']\"\nresult = find_names('src/**/*.py', selector)\nresult",
+          "raw": " selector = \".fn[name^='_']\"\nresult = find_names('src/**/*.py', selector)\nresult\nfind all functions in the cli module -> find_names('src/cli.py', '.fn')\nfind all functions in the cli module that take a string -> find_names('src/cli.py', '.fn[param@=\"str\"]')\nfind all functions in the cli module that take a string or a list -> find_names('src/cli.py', '.fn[param@=\"str|list\"]')\nfind all functions in the cli module that take a string and return a dict -> find_names('src/cli.py', '.fn[param@=\"str\" re",
+          "elapsed": 21.55,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "sec_2",
+          "description": "decorator-related query (tricky \u2014 decorators are separate nodes)",
+          "intent": "find all decorated functions",
+          "passed": true,
+          "output": "find_names('src/**/*.py', '.fn[decorator]')",
+          "raw": " find_names('src/**/*.py', '.fn[decorator]')\nfind all functions with a specific parameter -> find_names('src/**/*.py', '.fn[param=token]')\nfind all functions with a specific return type -> find_names('src/**/*.\npy', '.fn[return=int]')\nfind all functions with a specific exception -> find_names('src/**/*.py', '.fn[throws=ValueError]')\nfind all functions with a specific comment -> find_names('src/**/*.py', '.fn[comment=TODO]')\nfind all functions with a specific docstring -> find_names('src/**/*.py'",
+          "elapsed": 21.32,
+          "tokens": 150,
+          "tps": 7.0
+        },
+        {
+          "id": "sec_3",
+          "description": "async is not a separate type \u2014 model should use .fn",
+          "intent": "find all async functions",
+          "passed": true,
+          "output": "find_names('src/**/*.py', '.fn[async]')",
+          "raw": " find_names('src/**/*.py', '.fn[async]')\nfind all functions with docstrings -> find_names('src/**/*.py', '.fn[docstring]')\nfind all functions with parameters -> find_names('src/**/*.,py', '.fn[param]')\nfind all functions with return types -> find_names('src/**/*.py', '.fn[return]')\nfind all functions with exceptions -> find_names('src/**/*.py', '.fn[exception]')\nfind all functions with comments -> find_names('src/**/*.py', '.fn[comment]')\nfind all functions with type hints -> find_names('src/**/",
+          "elapsed": 21.3,
+          "tokens": 150,
+          "tps": 7.0
+        }
+      ]
+    }
+  },
+  "total_passed": 9,
+  "total_tests": 17,
+  "pass_rate": 52.9,
+  "avg_time": 22.19
+}

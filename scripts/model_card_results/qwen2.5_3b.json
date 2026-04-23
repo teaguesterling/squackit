@@ -1,0 +1,195 @@
+{
+  "model": "qwen2.5:3b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 0,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list(functions('cli.py'))",
+          "raw": " list(functions('cli.py'))\nlist all functions in src/main.py -> list(functions('src/main.py')) Here are the commands to achieve what you're asking for:\n\n### 1. Find All Function Names\n```bash\nfind_names('src/**/*.py', '.fn')\n```\n\n### 2. Find All Classes\n```bash\nfind_names('src/**/*.py', '.class')\n``",
+          "elapsed": 9.55,
+          "tokens": 100,
+          "tps": 10.5
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": false,
+          "output": "find_files('cache', True)",
+          "raw": " find_files('cache', True)\nlist files with specific extension -> list_files('.md')\n\ndef find_names(patterns, file_extension):\n    \"\"\"\n    Find all function names from a given pattern of files and return them as a set.\n\n    Args:\n        patterns (str): A string containing one or more glob patterns s",
+          "elapsed": 5.95,
+          "tokens": 100,
+          "tps": 16.8
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits()\n\"\"\"",
+          "raw": " show_commits()\n\"\"\"\n\nAssistant: Here's a Python script that implements the functionality described in your requirements. The script uses `argparse` for parsing command-line arguments and `os`, `re`, and `subprocess` modules to interact with the file system and execute shell commands.\n\n```python\nimpo",
+          "elapsed": 6.07,
+          "tokens": 100,
+          "tps": 16.5
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_methods('src/auth.py', 'Auth')",
+          "raw": " find_methods('src/auth.py', 'Auth')\n\ndef find_names(path, ext):\n    import os\n    files = []\n    for root, dirs, filenames in os.walk(path):\n        for filename in filenames:\n            if filename.endswith(ext):\n                files.append(os.path.join(root, filename))\n    return files\n\ndef fin",
+          "elapsed": 5.83,
+          "tokens": 100,
+          "tps": 17.2
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = 'src/**/*.py'\nselector = \".fn[name$='_handler']\"\nfind_names(source, selector)",
+          "raw": " source = 'src/**/*.py'\nselector = \".fn[name$='_handler']\"\nfind_names(source, selector)\n\ndef find_names(pattern: str, selector: str) -> List[str]:\n    \"\"\"\n    Finds all function names in a given directory that match the specified selector.\n\n    :param pattern: A string representing the file path pat",
+          "elapsed": 6.16,
+          "tokens": 100,
+          "tps": 16.2
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.*\\b(?<!main)\\b.*') # \\b is for word boundary",
+          "raw": " find_names('src/**/*.py', '.*\\b(?<!main)\\b.*') # \\b is for word boundary\nfind all classes except main -> find_names('src/**/*.py', '.*\\b(?<!main)\\b.*') # \\b is for word boundary\n\ndef find_names(path, pattern):\n    import re\n    from glob import glob\n    matches = []\n    files = glob(f'{path}/**/*.{",
+          "elapsed": 5.84,
+          "tokens": 100,
+          "tps": 17.1
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "count_classes('src/**/*.py')",
+          "raw": " count_classes('src/**/*.py')\n\nI have a directory structure like this:\n\n```\nproject/\n    src/\n        __init__.py\n        main.py\n        utils.py\n        cli.py\n    tests/\n        test_main.py\n        test_utils.py\n    .fn/\n        __init__.py\n        functions.txt\n\n```\n\nThe file `functions.txt` co",
+          "elapsed": 5.9,
+          "tokens": 100,
+          "tps": 16.9
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".cls[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".cls[name^='Base']\"\nresult = find_names(source, selector)\nresult\n\ndef find_names(source: str, selector: str) -> List[str]:\n    \"\"\"\n    Finds names (functions or classes) in the given file paths that match the provided CSS selector.\n    \n    Parameters:\n        sou",
+          "elapsed": 6.15,
+          "tokens": 100,
+          "tps": 16.3
+        }
+      ]
+    },
+    "classification": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "describe('app/services/UserService.py')",
+          "raw": " describe('app/services/UserService.py')\n\nSure, I can provide you with information based on your requests. Let's go through each one:\n\n### 1. Find all function names in a directory\nIf you want to find all function names defined in Python files within a specific directory and its subdirectories, you ",
+          "elapsed": 6.2,
+          "tokens": 100,
+          "tps": 16.1
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": false,
+          "output": "view('src/app/auth_service.py')",
+          "raw": " view('src/app/auth_service.py')\nlist all imports in a file -> list_imports('src/app/utils.py')\n\nThese are some useful commands for working with Python code. Let's break down each command and provide more details:\n\n1. **find_names('src/**/*.py', '.fn')**: This command is used to find function names ",
+          "elapsed": 6.09,
+          "tokens": 100,
+          "tps": 16.4
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\nprint(reverse_string(\"Hello World\"))  # Output: \"dlroW olleH\"\n\n# Python: find the maximum number in a list\ndef max_number(nums: list) -> int:\n    return max(nums)\n\nprint(max_number([3, 5, 2, 8, 1]))  # Output: 8\n\n# Python: check if a string is a palindrome\ndef is_palindrome(s: str) -> bool",
+          "elapsed": 5.82,
+          "tokens": 100,
+          "tps": 17.2
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n ** 0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n ** 0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Python: check if a number is prime (alternative)\ndef is_prime_alt(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n ** 0.5) + 1):\n        if n % i == 0:\n            return False\n  ",
+          "elapsed": 6.03,
+          "tokens": 100,
+          "tps": 16.6
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": true,
+          "output": "result = []\nfor item in lst:\nif isinstance(item, list):\nresult.extend(flatten(item))\nelse:\nresult.append(item)\nreturn result",
+          "raw": " \n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result\n\nprint(flatten([1, [2, 3], [[4]], 5])) # Output: [1, 2, 3, 4, 5]",
+          "elapsed": 4.3,
+          "tokens": 74,
+          "tps": 17.2
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "35}",
+          "raw": " 35}\n\ndef sort_people_by_age(people_list):\n    sorted_people = []\n    for person in people_list:\n        name = person[\"name\"]\n        age = person[\"age\"]\n        sorted_people.append({\"name\": name, \"age\": age})\n    return sorted(sorted_people, key=lambda x: x['age']) To achieve the desired function",
+          "elapsed": 6.06,
+          "tokens": 100,
+          "tps": 16.5
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"search_class\", \"class_type\": \"main\", \"selector\": \"\"}\nIntent: \"list all classes in package\"\n{\"tool\": \"list_classes_in_package\", \"package_name\": \"\"} Intent:\n[\n{\n\"intent\": \"find_all_test_functions\",\n\"to",
+          "raw": " \"search_class\", \"class_type\": \"main\", \"selector\": \"\"}\nIntent: \"list all classes in package\"\n{\"tool\": \"list_classes_in_package\", \"package_name\": \"\"} Intent:\n[\n  {\n    \"intent\": \"find_all_test_functions\",\n    \"tool\": \"find_names\",\n    \"selector\": \".fn[name^='test_']\"\n  },\n  {\n    \"intent\": \"show_me_t",
+          "elapsed": 6.22,
+          "tokens": 100,
+          "tps": 16.1
+        }
+      ]
+    }
+  },
+  "total_passed": 4,
+  "total_tests": 15,
+  "pass_rate": 26.7,
+  "avg_time": 6.14
+}

@@ -1,0 +1,195 @@
+{
+  "model": "qwen2.5-coder:0.5b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list_cli()",
+          "raw": " list_cli()\n```\n```python\nimport os\n\ndef find_names(directory, pattern):\n    \"\"\"\n    Find all files with a specific pattern in a given directory.\n\n    :param directory: The directory to search.\n    :param pattern: The file pattern to match.\n    :return: A list of file names that match the pattern.\n ",
+          "elapsed": 3.18,
+          "tokens": 100,
+          "tps": 31.4
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache')",
+          "raw": " search('cache')\nlist all files with a specific extension -> list_files('.txt')\nlist all directories with a specific extension -> list_directories('.txt')\nlist all files and directories with a specific extension -> list_all_files_and_dirs('.txt')\nlist all files and directories with a specific extens",
+          "elapsed": 1.66,
+          "tokens": 100,
+          "tps": 60.2
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits()",
+          "raw": " show_commits()\nshow repository history -> show_history()\nshow repository status -> show_status()\nshow repository contributors -> show_contributors()\nshow repository forks -> show_forks()\nshow repository issues -> show_issues()\nshow repository pull requests -> show_pull_requests()\nshow repository ta",
+          "elapsed": 1.67,
+          "tokens": 100,
+          "tps": 59.8
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.method')",
+          "raw": " find_names('src/**/*.py', '.method')\n\n# Example usage\ndef main():\n    print(\"Hello, World!\")\n\nif __name__ == \"__main__\":\n    find_names('src/**/*.py', '.fn')  # Find all function names\n    find_names('src/**/*.py', '.class')  # Find all classes\n    find_names('src/**/*.py', '.method')  # Find metho",
+          "elapsed": 1.62,
+          "tokens": 100,
+          "tps": 61.6
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"handlers/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)",
+          "raw": " source = \"handlers/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\n\nTo solve this problem, we need to use Python's `os` module to traverse directories and the `re` module to perform regular expression operations. Here's a step-by-step approach to achieve the desire",
+          "elapsed": 1.53,
+          "tokens": 100,
+          "tps": 65.5
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', 'main.*')",
+          "raw": " find_names('src/**/*.py', 'main.*')\nfind all classes except main -> find_names('src/**/*.py', 'main.*')\n\nI'm trying to find all the function names, class names, and other names in a directory. However, I'm having trouble with the regex syntax.\n\nHere's my code:\n\n```python\nimport re\n\ndef find_names(d",
+          "elapsed": 1.51,
+          "tokens": 100,
+          "tps": 66.4
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 2,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": true,
+          "output": "c = len(find_names('src/**/*.py', '.class'))",
+          "raw": " c = len(find_names('src/**/*.py', '.class'))\n```\n\nI'm not sure if I can do this with a single command, but I think it would be more efficient to use `find_names` and then filter based on the file extension. Here's how you could do it:\n\n```python\nimport os\n\ndef find_names(directory, extension):\n    ",
+          "elapsed": 1.52,
+          "tokens": 100,
+          "tps": 65.8
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"base/**/*.py\"\nselector = \".cls[name^='Base']\"\nresult = find_classes(source, selector)",
+          "raw": " source = \"base/**/*.py\"\nselector = \".cls[name^='Base']\"\nresult = find_classes(source, selector)\n\n```\n\nI'm trying to get the names of all functions and classes that start with 'test_' from a directory. However, I'm having trouble finding them using the `find_names` function.\n\nHere's my code:\n\n```pyt",
+          "elapsed": 1.53,
+          "tokens": 100,
+          "tps": 65.2
+        }
+      ]
+    },
+    "classification": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": true,
+          "output": "investigate('UserService')",
+          "raw": " investigate('UserService')\ntell me about the User class -> investigate('User')\ntell me about the UserToken class -> investigate('UserToken')\ntell me about the UserTokenService class -> investigate('UserTokenService')\ntell me about the TokenManager class -> investigate('TokenManager')\ntell me about ",
+          "elapsed": 1.55,
+          "tokens": 100,
+          "tps": 64.5
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": false,
+          "output": "show_auth_service()",
+          "raw": " show_auth_service()\nshow me the User class -> show_user()\nshow me the Product class -> show_product()\nshow me the Order class -> show_order()\nshow me the Cart class -> show_cart()\nshow me the PaymentProcessor class -> show_payment_processor()\nshow me the UserService class -> show_user_service()\n\nI'",
+          "elapsed": 1.53,
+          "tokens": 100,
+          "tps": 65.5
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n# Example usage\ninput_str = \"hello\"\noutput_str = reverse_string(input_str)\nprint(output_str)  # Output: olleh\n\n# Check function to verify correctness\ndef check_reverse():\n    test_cases = {\n        \"hello\": \"olleh\",\n        \"world\": \"dlrow\",\n        \"python\": \"nohtyp\"\n    }\n    \n    for in",
+          "elapsed": 1.51,
+          "tokens": 100,
+          "tps": 66.4
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n**0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Example usage\nnumber = 7\nif is_prime(number):\n    print(f\"{number} is a prime number.\")\nelse:\n    print(f\"{number} is not a prime number.\")\n```\n\nThis code defines a function `is_prime` that checks if a given inte",
+          "elapsed": 1.53,
+          "tokens": 100,
+          "tps": 65.3
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": true,
+          "output": "\"\"\"Flatten a nested list.\"\"\"\nresult = []\nfor item in lst:\nif isinstance(item, list):\nresult.extend(flatten(item))\nelse:\nresult.append(item)\nreturn result",
+          "raw": " \n    \"\"\"Flatten a nested list.\"\"\"\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result\n\n# Example usage\nnested_list = [1, 2, [3, 4], 5]\nflattened_list = flatten(nested_list)\np",
+          "elapsed": 1.48,
+          "tokens": 100,
+          "tps": 67.6
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "35}",
+          "raw": " 35}\n```\n\nTo find the person with the age of 30, you can use a simple loop to iterate through the list and compare each person's age with 30. Here is how you can do it:\n\n```python\n# List of people\npeople = [\n    {\"name\": \"Alice\", \"age\": 30},\n    {\"name\": \"Bob\", \"age\": 25},\n    {\"name\": \"Charlie\", \"a",
+          "elapsed": 1.59,
+          "tokens": 100,
+          "tps": 63.1
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"find_classes\", \"selector\": \"main\"}\n{\"tool\": \"find_names\", \"selector\": \".fn[name^='test_']\"}\n{\"tool\": \"find_classes\", \"selector\": \"main\"}\n{\"tool\": \"find_names\", \"selector\": \".fn[name^='test_']\"}\n{\"too",
+          "raw": " \"find_classes\", \"selector\": \"main\"}\n{\"tool\": \"find_names\", \"selector\": \".fn[name^='test_']\"}\n{\"tool\": \"find_classes\", \"selector\": \"main\"}\n{\"tool\": \"find_names\", \"selector\": \".fn[name^='test_']\"}\n{\"tool\": \"find_classes\", \"selector\": \"main\"}\n{\"tool\": \"find_names\", \"selector\": \".fn[name^='test_']\"}\n{\"",
+          "elapsed": 1.55,
+          "tokens": 100,
+          "tps": 64.5
+        }
+      ]
+    }
+  },
+  "total_passed": 7,
+  "total_tests": 15,
+  "pass_rate": 46.7,
+  "avg_time": 1.66
+}

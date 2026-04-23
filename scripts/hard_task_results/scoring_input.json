@@ -1,0 +1,818 @@
+[
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "amb_1",
+    "intent": "what's going on in auth.py",
+    "output": "whats_happening('src/auth.py')",
+    "mechanical_pass": false,
+    "elapsed": 19.35
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "amb_2",
+    "intent": "help me understand the codebase",
+    "output": "help()",
+    "mechanical_pass": false,
+    "elapsed": 2.33
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "amb_3",
+    "intent": "anything weird in the tests",
+    "output": "suspicious_code('tests/**/*.py')",
+    "mechanical_pass": false,
+    "elapsed": 6.4
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "msr_1",
+    "intent": "compare how many functions vs classes we have",
+    "output": "compare('.fn', '.class')",
+    "mechanical_pass": false,
+    "elapsed": 0.7
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "msr_2",
+    "intent": "find the biggest class and show me its methods",
+    "output": "explore('.class', max_depth=2)",
+    "mechanical_pass": false,
+    "elapsed": 2.43
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "msr_3",
+    "intent": "check if there are any functions that aren't tested",
+    "output": "coverage('src/**/*.py', 'tests/**/*.py')",
+    "mechanical_pass": false,
+    "elapsed": 1.57
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "msr_4",
+    "intent": "show me what changed and review it",
+    "output": "diff_review()",
+    "mechanical_pass": true,
+    "elapsed": 0.54
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "und_1",
+    "intent": "find all the handlers",
+    "output": "find_handlers('src/auth.py', '.class#Handler .fn')",
+    "mechanical_pass": false,
+    "elapsed": 7.24
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "und_2",
+    "intent": "show me the config",
+    "output": "show_config()",
+    "mechanical_pass": false,
+    "elapsed": 3.52
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "und_3",
+    "intent": "how complex is it",
+    "output": "complexity(source, selector)",
+    "mechanical_pass": true,
+    "elapsed": 7.23
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "und_4",
+    "intent": "find the entry point",
+    "output": "entry_point()",
+    "mechanical_pass": false,
+    "elapsed": 7.26
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "nov_1",
+    "intent": "find all classes that have more than 5 methods",
+    "output": "find_classes_with_methods('src/**/*.py', '.class .fn', min_methods=5)",
+    "mechanical_pass": false,
+    "elapsed": 7.37
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "nov_2",
+    "intent": "find functions that import os or sys",
+    "output": "find_imports('src/**/*.py', ['os', 'sys'], '.fn')",
+    "mechanical_pass": false,
+    "elapsed": 7.29
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "nov_3",
+    "intent": "generate a summary of all the modules",
+    "output": "module_summary()",
+    "mechanical_pass": false,
+    "elapsed": 4.37
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "sec_1",
+    "intent": "find all private methods (starting with underscore)",
+    "output": "find_names('src/**/*.py', '.class .fn[name^=\"_\"]')",
+    "mechanical_pass": true,
+    "elapsed": 1.28
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "sec_2",
+    "intent": "find all decorated functions",
+    "output": "find_decorated_functions('src/**/*.py', '.fn')",
+    "mechanical_pass": false,
+    "elapsed": 7.25
+  },
+  {
+    "model": "deepseek-coder-v2:16b",
+    "test_id": "sec_3",
+    "intent": "find all async functions",
+    "output": "find_async_functions('src/**/*.py')",
+    "mechanical_pass": false,
+    "elapsed": 3.23
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "amb_1",
+    "intent": "what's going on in auth.py",
+    "output": "inspect()",
+    "mechanical_pass": false,
+    "elapsed": 2.42
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "amb_2",
+    "intent": "help me understand the codebase",
+    "output": "help()",
+    "mechanical_pass": false,
+    "elapsed": 0.62
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "amb_3",
+    "intent": "anything weird in the tests",
+    "output": "investigate()",
+    "mechanical_pass": false,
+    "elapsed": 2.41
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "msr_1",
+    "intent": "compare how many functions vs classes we have",
+    "output": "n = len(result)",
+    "mechanical_pass": false,
+    "elapsed": 2.38
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "msr_2",
+    "intent": "find the biggest class and show me its methods",
+    "output": "find_max_class()",
+    "mechanical_pass": false,
+    "elapsed": 2.44
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "msr_3",
+    "intent": "check if there are any functions that aren't tested",
+    "output": "check_result(result)",
+    "mechanical_pass": false,
+    "elapsed": 2.26
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "msr_4",
+    "intent": "show me what changed and review it",
+    "output": "show_changes(result, result)",
+    "mechanical_pass": false,
+    "elapsed": 2.31
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "und_1",
+    "intent": "find all the handlers",
+    "output": "find_names(source, '.handler')",
+    "mechanical_pass": true,
+    "elapsed": 2.25
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "und_2",
+    "intent": "show me the config",
+    "output": "config",
+    "mechanical_pass": false,
+    "elapsed": 2.21
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "und_3",
+    "intent": "how complex is it",
+    "output": "complexity(result)",
+    "mechanical_pass": true,
+    "elapsed": 2.51
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "und_4",
+    "intent": "find the entry point",
+    "output": "entry_point = find_names(source, '.entrypoint')\nentry_point",
+    "mechanical_pass": true,
+    "elapsed": 2.51
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "nov_1",
+    "intent": "find all classes that have more than 5 methods",
+    "output": "find_names('src/**/*.py', '.class#Class .fn')",
+    "mechanical_pass": false,
+    "elapsed": 2.55
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "nov_2",
+    "intent": "find functions that import os or sys",
+    "output": "find_names('squackit/os.py', '.class#os .fn')",
+    "mechanical_pass": true,
+    "elapsed": 2.55
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "nov_3",
+    "intent": "generate a summary of all the modules",
+    "output": "module_summary()",
+    "mechanical_pass": false,
+    "elapsed": 2.62
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "sec_1",
+    "intent": "find all private methods (starting with underscore)",
+    "output": "find_names(source, selector)\nresult = find_names(source, selector)\nresult",
+    "mechanical_pass": false,
+    "elapsed": 2.46
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "sec_2",
+    "intent": "find all decorated functions",
+    "output": "find_decorated_functions('src/**/*.py', '.fn#DecoratedFunction')",
+    "mechanical_pass": false,
+    "elapsed": 2.52
+  },
+  {
+    "model": "qwen2.5-coder:0.5b",
+    "test_id": "sec_3",
+    "intent": "find all async functions",
+    "output": "find_names(source, '.async')",
+    "mechanical_pass": false,
+    "elapsed": 2.56
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "amb_1",
+    "intent": "what's going on in auth.py",
+    "output": "analyze('auth.py')",
+    "mechanical_pass": false,
+    "elapsed": 16.89
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "amb_2",
+    "intent": "help me understand the codebase",
+    "output": "explain()",
+    "mechanical_pass": false,
+    "elapsed": 8.95
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "amb_3",
+    "intent": "anything weird in the tests",
+    "output": "investigate_tests()",
+    "mechanical_pass": false,
+    "elapsed": 8.95
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "msr_1",
+    "intent": "compare how many functions vs classes we have",
+    "output": "compare_functions_and_classes()\n'''",
+    "mechanical_pass": false,
+    "elapsed": 9.04
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "msr_2",
+    "intent": "find the biggest class and show me its methods",
+    "output": "biggest_class('src/**/*.py', '.class')",
+    "mechanical_pass": false,
+    "elapsed": 8.98
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "msr_3",
+    "intent": "check if there are any functions that aren't tested",
+    "output": "n = len(find_names(source, selector))\nif n > 0:\nprint(\"There are untested functions.\")\nelse:\nprint(\"All functions are tested.\")",
+    "mechanical_pass": false,
+    "elapsed": 9.05
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "msr_4",
+    "intent": "show me what changed and review it",
+    "output": "diff('main', 'HEAD')",
+    "mechanical_pass": false,
+    "elapsed": 9.03
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "und_1",
+    "intent": "find all the handlers",
+    "output": "find_names('squackit/handlers.py', '.class#Handler .fn')",
+    "mechanical_pass": true,
+    "elapsed": 8.94
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "und_2",
+    "intent": "show me the config",
+    "output": "show_config()\n\"\"\"",
+    "mechanical_pass": false,
+    "elapsed": 8.79
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "und_3",
+    "intent": "how complex is it",
+    "output": "complexity('src/**/*.py', '.fn#validate_token')",
+    "mechanical_pass": true,
+    "elapsed": 8.69
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "und_4",
+    "intent": "find the entry point",
+    "output": "entry_point()",
+    "mechanical_pass": false,
+    "elapsed": 8.67
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "nov_1",
+    "intent": "find all classes that have more than 5 methods",
+    "output": "find_classes_with_more_than_five_methods('src/**/*.py')",
+    "mechanical_pass": false,
+    "elapsed": 8.76
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "nov_2",
+    "intent": "find functions that import os or sys",
+    "output": "source = \"src/**/*.py\"\nselector = \".fn[import=os] .fn[import=sys]\"\nresult = find_names(source, selector)\nresult",
+    "mechanical_pass": true,
+    "elapsed": 8.7
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "nov_3",
+    "intent": "generate a summary of all the modules",
+    "output": "module_summary()",
+    "mechanical_pass": false,
+    "elapsed": 8.77
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "sec_1",
+    "intent": "find all private methods (starting with underscore)",
+    "output": "find_names('src/**/*.py', '.class .fn[name^=\"_\"]')",
+    "mechanical_pass": true,
+    "elapsed": 8.76
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "sec_2",
+    "intent": "find all decorated functions",
+    "output": "find_names('src/**/*.py', '.decorated.fn')",
+    "mechanical_pass": true,
+    "elapsed": 8.65
+  },
+  {
+    "model": "qwen2.5-coder:3b",
+    "test_id": "sec_3",
+    "intent": "find all async functions",
+    "output": "find_names('src/**/*.py', '.fn[async]')",
+    "mechanical_pass": true,
+    "elapsed": 8.64
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "amb_1",
+    "intent": "what's going on in auth.py",
+    "output": "read_source('squackit/auth.py')",
+    "mechanical_pass": false,
+    "elapsed": 17.54
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "amb_2",
+    "intent": "help me understand the codebase",
+    "output": "explain_codebase()",
+    "mechanical_pass": false,
+    "elapsed": 1.04
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "amb_3",
+    "intent": "anything weird in the tests",
+    "output": "review('main', 'HEAD', search='test')",
+    "mechanical_pass": false,
+    "elapsed": 18.91
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "msr_1",
+    "intent": "compare how many functions vs classes we have",
+    "output": "compare_counts('src/**/*.py', '.fn', '.class')",
+    "mechanical_pass": false,
+    "elapsed": 18.98
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "msr_2",
+    "intent": "find the biggest class and show me its methods",
+    "output": "view('src/**/*.py', '.class .fn')",
+    "mechanical_pass": false,
+    "elapsed": 7.93
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "msr_3",
+    "intent": "check if there are any functions that aren't tested",
+    "output": "untested_functions('src/**/*.py')",
+    "mechanical_pass": false,
+    "elapsed": 5.99
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "msr_4",
+    "intent": "show me what changed and review it",
+    "output": "review_changes()",
+    "mechanical_pass": false,
+    "elapsed": 18.95
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "und_1",
+    "intent": "find all the handlers",
+    "output": "find_names('src/handlers.py', '.class#Handler .fn')",
+    "mechanical_pass": true,
+    "elapsed": 2.34
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "und_2",
+    "intent": "show me the config",
+    "output": "show_config()",
+    "mechanical_pass": false,
+    "elapsed": 18.87
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "und_3",
+    "intent": "how complex is it",
+    "output": "complexity('src/auth.py', '.class#Auth .fn')",
+    "mechanical_pass": true,
+    "elapsed": 5.08
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "und_4",
+    "intent": "find the entry point",
+    "output": "view('src/**/*.py', '.fn#entry_point')",
+    "mechanical_pass": true,
+    "elapsed": 1.85
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "nov_1",
+    "intent": "find all classes that have more than 5 methods",
+    "output": "large_classes('src/**/*.py', '.class[methods>5]')",
+    "mechanical_pass": false,
+    "elapsed": 4.72
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "nov_2",
+    "intent": "find functions that import os or sys",
+    "output": "source = \"src/**/*.py\"\nselector = '.fn[import~=\"os|sys\"]'\nresult = find_names(source, selector)\nresult",
+    "mechanical_pass": true,
+    "elapsed": 18.97
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "nov_3",
+    "intent": "generate a summary of all the modules",
+    "output": "summarize_modules()",
+    "mechanical_pass": false,
+    "elapsed": 6.17
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "sec_1",
+    "intent": "find all private methods (starting with underscore)",
+    "output": "source = \"src/**/*.py\"\nselector = \".fn[name^='_']\"\nresult = find_names(source, selector)\nresult",
+    "mechanical_pass": true,
+    "elapsed": 6.33
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "sec_2",
+    "intent": "find all decorated functions",
+    "output": "find_names('src/**/*.py', '.fn[decorated]')",
+    "mechanical_pass": true,
+    "elapsed": 18.93
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "test_id": "sec_3",
+    "intent": "find all async functions",
+    "output": "find_names('src/**/*.py', '.fn[async]')",
+    "mechanical_pass": true,
+    "elapsed": 6.24
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "amb_1",
+    "intent": "what's going on in auth.py",
+    "output": "investigate('auth.py')",
+    "mechanical_pass": true,
+    "elapsed": 19.07
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "amb_2",
+    "intent": "help me understand the codebase",
+    "output": "explore()",
+    "mechanical_pass": true,
+    "elapsed": 15.33
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "amb_3",
+    "intent": "anything weird in the tests",
+    "output": "investigate('tests/**/*.py')",
+    "mechanical_pass": false,
+    "elapsed": 15.14
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "msr_1",
+    "intent": "compare how many functions vs classes we have",
+    "output": "compare('src/**/*.py', '.fn', '.class')",
+    "mechanical_pass": false,
+    "elapsed": 15.25
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "msr_2",
+    "intent": "find the biggest class and show me its methods",
+    "output": "find_biggest_class()",
+    "mechanical_pass": false,
+    "elapsed": 15.14
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "msr_3",
+    "intent": "check if there are any functions that aren't tested",
+    "output": "check_untested = len(find_names('src/**/*.py', '.fn')) - len(result)",
+    "mechanical_pass": true,
+    "elapsed": 15.31
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "msr_4",
+    "intent": "show me what changed and review it",
+    "output": "review('main', 'HEAD', 'squackit/cli.py')",
+    "mechanical_pass": true,
+    "elapsed": 15.24
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "und_1",
+    "intent": "find all the handlers",
+    "output": "find_names('src/**/*.py', '.class#Handler')",
+    "mechanical_pass": true,
+    "elapsed": 15.31
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "und_2",
+    "intent": "show me the config",
+    "output": "view('squackit/config.py', '.class#Config')",
+    "mechanical_pass": true,
+    "elapsed": 15.09
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "und_3",
+    "intent": "how complex is it",
+    "output": "complexity('src/**/*.py', selector)",
+    "mechanical_pass": true,
+    "elapsed": 15.09
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "und_4",
+    "intent": "find the entry point",
+    "output": "entry_point = find_names('src/**/*.py', '.fn#main')[0]",
+    "mechanical_pass": true,
+    "elapsed": 18.47
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "nov_1",
+    "intent": "find all classes that have more than 5 methods",
+    "output": "classes = find_names('src/**/*.py', '.class')\nfor c in classes:\nmethods = find_names(c, '.fn')\nif len(methods) > 5:\nprint(c)",
+    "mechanical_pass": true,
+    "elapsed": 18.5
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "nov_2",
+    "intent": "find functions that import os or sys",
+    "output": "import_source('src/**/*.py', 'os', 'sys')",
+    "mechanical_pass": false,
+    "elapsed": 26.69
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "nov_3",
+    "intent": "generate a summary of all the modules",
+    "output": "summary('src/**/*.py', '.class')",
+    "mechanical_pass": false,
+    "elapsed": 21.83
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "sec_1",
+    "intent": "find all private methods (starting with underscore)",
+    "output": "find_names('src/**/*.py', '.class#Auth .fn[!^_]')",
+    "mechanical_pass": false,
+    "elapsed": 21.69
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "sec_2",
+    "intent": "find all decorated functions",
+    "output": "decorated = find_names('src/**/*.py', '.fn[decorator]')",
+    "mechanical_pass": true,
+    "elapsed": 40.32
+  },
+  {
+    "model": "qwen3.5:2b",
+    "test_id": "sec_3",
+    "intent": "find all async functions",
+    "output": "find_names('src/**/*.py', '.fn#async')",
+    "mechanical_pass": true,
+    "elapsed": 18.75
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "amb_1",
+    "intent": "what's going on in auth.py",
+    "output": "view('src/auth.py')",
+    "mechanical_pass": true,
+    "elapsed": 34.1
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "amb_2",
+    "intent": "help me understand the codebase",
+    "output": "explore()",
+    "mechanical_pass": true,
+    "elapsed": 21.43
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "amb_3",
+    "intent": "anything weird in the tests",
+    "output": "find_names('tests/**/*.py', '.fn[name^=Test]')",
+    "mechanical_pass": true,
+    "elapsed": 21.37
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "msr_1",
+    "intent": "compare how many functions vs classes we have",
+    "output": "count('fn') - count('class')",
+    "mechanical_pass": false,
+    "elapsed": 21.55
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "msr_2",
+    "intent": "find the biggest class and show me its methods",
+    "output": "biggest_class()",
+    "mechanical_pass": false,
+    "elapsed": 21.55
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "msr_3",
+    "intent": "check if there are any functions that aren't tested",
+    "output": "find_unittests('src/**/*.py', '.fn')",
+    "mechanical_pass": false,
+    "elapsed": 21.55
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "msr_4",
+    "intent": "show me what changed and review it",
+    "output": "review_changes()",
+    "mechanical_pass": false,
+    "elapsed": 21.47
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "und_1",
+    "intent": "find all the handlers",
+    "output": "find_names('src/handlers/**/*.py', '.fn')",
+    "mechanical_pass": true,
+    "elapsed": 21.46
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "und_2",
+    "intent": "show me the config",
+    "output": "config()",
+    "mechanical_pass": false,
+    "elapsed": 21.47
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "und_3",
+    "intent": "how complex is it",
+    "output": "complexity('src/**/*.py', '.fn')",
+    "mechanical_pass": true,
+    "elapsed": 21.35
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "und_4",
+    "intent": "find the entry point",
+    "output": "entry_point()",
+    "mechanical_pass": false,
+    "elapsed": 21.42
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "nov_1",
+    "intent": "find all classes that have more than 5 methods",
+    "output": "find_names('src/**/*.py', '.class .fn:5')",
+    "mechanical_pass": false,
+    "elapsed": 21.53
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "nov_2",
+    "intent": "find functions that import os or sys",
+    "output": "source = \"src/**/*.py\"\nselector = \".fn[import='os'] .fn[import='sys']\"\nresult = find_names(source, selector)\nresult",
+    "mechanical_pass": true,
+    "elapsed": 21.44
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "nov_3",
+    "intent": "generate a summary of all the modules",
+    "output": "summary()",
+    "mechanical_pass": false,
+    "elapsed": 21.45
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "sec_1",
+    "intent": "find all private methods (starting with underscore)",
+    "output": "selector = \".fn[name^='_']\"\nresult = find_names('src/**/*.py', selector)\nresult",
+    "mechanical_pass": true,
+    "elapsed": 21.55
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "sec_2",
+    "intent": "find all decorated functions",
+    "output": "find_names('src/**/*.py', '.fn[decorator]')",
+    "mechanical_pass": true,
+    "elapsed": 21.32
+  },
+  {
+    "model": "qwen3:8b",
+    "test_id": "sec_3",
+    "intent": "find all async functions",
+    "output": "find_names('src/**/*.py', '.fn[async]')",
+    "mechanical_pass": true,
+    "elapsed": 21.3
+  }
+]

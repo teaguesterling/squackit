@@ -1,0 +1,195 @@
+{
+  "model": "granite-code:3b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": true,
+          "output": "find_names('cli.py', '.fn')",
+          "raw": " find_names('cli.py', '.fn')\nlist all classes in cli.py -> find_names('cli.py', '.class')\nshow me the main function in cli.py -> view('cli.py', '.fn#main')\n",
+          "elapsed": 8.57,
+          "tokens": 55,
+          "tps": 6.4
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache')",
+          "raw": " search('cache')\n```\n",
+          "elapsed": 1.31,
+          "tokens": 8,
+          "tps": 6.1
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits(5)",
+          "raw": " show_commits(5)\n```\n",
+          "elapsed": 1.55,
+          "tokens": 10,
+          "tps": 6.5
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('src/**/*.py', 'Auth.method')",
+          "raw": " find_names('src/**/*.py', 'Auth.method')\nfind all variables in a file -> find_names('src/**/*.py', 'variable_name')\nfind all global variables -> find_names('src/**/*.py', 'global_variable_name')\nfind all local variables -> find_names('src/**/*.py', 'local_variable_name')\nfind all functions that ret",
+          "elapsed": 7.17,
+          "tokens": 100,
+          "tps": 13.9
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult\n",
+          "elapsed": 3.28,
+          "tokens": 34,
+          "tps": 10.4
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', 'not .main')",
+          "raw": " find_names('src/**/*.py', 'not .main')\nfind all functions in a file -> find_names('src/file.py', '.fn')\nfind all functions in a class -> find_names('src/file.py', '.class.fn')\nfind all classes in a file -> find_names('src/file.py', '.class')\nfind all global variables -> find_names('src/**/*.py', 'n",
+          "elapsed": 7.17,
+          "tokens": 100,
+          "tps": 13.9
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "n = len(find_names('src/**/*.py', '.cl'))",
+          "raw": " n = len(find_names('src/**/*.py', '.cl'))\ncount lines of code in a function -> n = sum(len(line) for line in read_lines('src/mymodule.py'))\ncount all functions and classes -> n = sum(len(line) for line in read_lines('src/**/*.py'))\ncount all methods -> n = sum(len(line) for line in read_lines('src/",
+          "elapsed": 7.43,
+          "tokens": 100,
+          "tps": 13.5
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"mymodule.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"mymodule.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult\n",
+          "elapsed": 3.47,
+          "tokens": 35,
+          "tps": 10.1
+        }
+      ]
+    },
+    "classification": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "describe('services.user')",
+          "raw": " describe('services.user')\n```\n",
+          "elapsed": 1.83,
+          "tokens": 10,
+          "tps": 5.5
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/**/*.py', '.class#AuthService')",
+          "raw": " view('src/**/*.py', '.class#AuthService')\nfind all classes in a package -> find_classes('src/package/**/*')\nfind all methods in a class -> find_methods('src/**/*.py', '.class#AuthService')\nfind all fields in a class -> find_fields('src/**/*.py', '.class#AuthService')\nfind all imports in a file -> f",
+          "elapsed": 7.67,
+          "tokens": 100,
+          "tps": 13.0
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n\n# C++: reverse a string\nstd::string reverseString(const std::string& s) {\n    int length = s.length();\n    for (int i = 0; i < length / 2; ++i) {\n        std::swap(s[i], s[length - 1 - i]);\n    }\n    return s;\n}\n\n\n# JavaScript: reverse a string\nfunction reverseString(str) {\n   ",
+          "elapsed": 6.89,
+          "tokens": 100,
+          "tps": 14.5
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n ** 0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n ** 0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n\n# Python: check if a number is divisible by 3 or 5\ndef is_divisible_by_3_or_5(n: int) -> bool:\n    if n % 3 == 0 or n % 5 == 0:\n        return True\n    return False\n\n\n# Python: check",
+          "elapsed": 7.41,
+          "tokens": 100,
+          "tps": 13.5
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": false,
+          "output": "\"\"\" Flattens a nested list into a single-level list. \"\"\"",
+          "raw": "\n    \"\"\" Flattens a nested list into a single-level list. \"\"\"\n\n    def _flatten(lst: list, depth: int = 0) -> list:\n        result = []\n\n        for item in lst:\n            if isinstance(item, list):\n                result += _flatten(item, depth + 1)\n            else:\n                result.append",
+          "elapsed": 6.21,
+          "tokens": 88,
+          "tps": 14.2
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "40}",
+          "raw": " 40}\n",
+          "elapsed": 1.43,
+          "tokens": 6,
+          "tps": 4.2
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"find_names\", \"selector\": \".cls[name='Main']\"}",
+          "raw": " \"find_names\", \"selector\": \".cls[name='Main']\"}\n",
+          "elapsed": 2.6,
+          "tokens": 18,
+          "tps": 6.9
+        }
+      ]
+    }
+  },
+  "total_passed": 6,
+  "total_tests": 15,
+  "pass_rate": 40.0,
+  "avg_time": 4.93
+}

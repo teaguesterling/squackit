@@ -1,0 +1,195 @@
+{
+  "model": "llama3.2-vision:11b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": true,
+          "output": "find_names('src/cli.py', '.fn')",
+          "raw": " find_names('src/cli.py', '.fn')\n```\n\n### Usage\n\nYou can use the `find_names` function to find all function names in a file or directory. The function takes two arguments: the path to the file or directory, and a regular expression pattern to match function names.\n\n```python\nimport re\n\ndef find_name",
+          "elapsed": 24.49,
+          "tokens": 100,
+          "tps": 4.1
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache')",
+          "raw": " search('cache')\n```\n\n### Code Organization\n\nThe code is organized into several modules, each with a specific responsibility:\n\n*   `__init__.py`: The main entry point of the project.\n*   `utils.py`: Utility functions for tasks like finding function names, getting an overview of the codebase, and sea",
+          "elapsed": 15.27,
+          "tokens": 100,
+          "tps": 6.6
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits()",
+          "raw": " show_commits()\n```\n\n### Example Use Cases\n\n*   `find_names('src/**/*.py', '.fn')` can be used to find all function names in the `src` directory and its subdirectories.\n*   `read_source('server.py', '1-20')` can be used to read the first 20 lines of the `server.py` file.\n*   `explore()` can be used ",
+          "elapsed": 15.81,
+          "tokens": 100,
+          "tps": 6.3
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.Auth')",
+          "raw": " find_names('src/**/*.py', '.Auth')\nfind all functions in the src directory -> find_names('src', '.fn')\nfind all classes in the src directory -> find_names('src', '.class')\nfind methods of the Auth class in the src directory -> find_names('src', '.Auth')\n```\n### Usage\n```bash\npython -m find_names sr",
+          "elapsed": 14.88,
+          "tokens": 100,
+          "tps": 6.7
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult\nfind functions with a specific name -> source = \"src/**/*.py\"\nselector = \".fn[name='my_function']\"\nresult = find_names(source, selector)\nresult\nfind functions with a specific name containing a sub",
+          "elapsed": 16.02,
+          "tokens": 100,
+          "tps": 6.2
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.fn', exclude=['main'])",
+          "raw": " find_names('src/**/*.py', '.fn', exclude=['main'])\n```\n\n### Example Use Cases\n\n*   Find all function names in a project:\n    ```python\nfind_names('src/**/*.py', '.fn')\n```\n*   Find all class names in a project:\n    ```python\nfind_names('src/**/*.py', '.class')\n```\n*   Find all function names except",
+          "elapsed": 15.08,
+          "tokens": 100,
+          "tps": 6.6
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "n = len(find_names('src/**/*.py', '.cl'))",
+          "raw": " n = len(find_names('src/**/*.py', '.cl'))\ncount methods in the project -> n = len(find_names('src/**/*.py', '.m'))\ncount methods in a file -> n = len(find_names('src/file.py', '.m'))\ncount methods in a package -> n = len(find_names('src/package/__init__.py', '.m'))\ncount methods in a module -> n = ",
+          "elapsed": 15.25,
+          "tokens": 100,
+          "tps": 6.6
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"tests/**/*.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"tests/**/*.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult\nfind functions starting with test_ and classes starting with Base -> source = \"tests/**/*.py\"\nselector = \".fn[name^='test_']|.class[name^='Base']\"\nresult = find_names(source, selector)\nresult\nfin",
+          "elapsed": 15.71,
+          "tokens": 100,
+          "tps": 6.4
+        }
+      ]
+    },
+    "classification": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "describe('UserService')",
+          "raw": " describe('UserService')\n```\nYou can use the `--help` flag to see a list of all available commands and their descriptions.\n\n### Installation\n\nYou can install `pydoc` using pip:\n```bash\npip install pydoc\n```\n### Usage\n\nTo use `pydoc`, simply run it from the command line, and it will start in interact",
+          "elapsed": 16.07,
+          "tokens": 100,
+          "tps": 6.2
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/**/*.py', '.class#AuthService')",
+          "raw": " view('src/**/*.py', '.class#AuthService')\nfind all functions that contain the word 'auth' -> find('src/**/*.py', '.fn', 'auth')\nfind all functions that contain the word 'auth' and have more than 2 arguments -> find('src/**/*.py', '.fn', 'auth', 2)\nfind all functions that contain the word 'auth' and",
+          "elapsed": 15.78,
+          "tokens": 100,
+          "tps": 6.3
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n# Python: reverse a string\ndef reverse_string(s: str) -> str:\n    return ''.join(reversed(s))\n\n# Python: reverse a string\ndef reverse_string(s: str) -> str:\n    return s[::-1]\n\n# Python: reverse a string\ndef reverse_string(s: str) -> str:\n    return ''.join(reversed(s))\n\n# Python: reverse ",
+          "elapsed": 14.84,
+          "tokens": 100,
+          "tps": 6.7
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n**0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Python: check if a number is prime\ndef is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Pytho",
+          "elapsed": 15.57,
+          "tokens": 100,
+          "tps": 6.4
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": true,
+          "output": "\"\"\"Flatten a nested list into a one-dimensional list.\"\"\"\nresult = []\nfor item in lst:\nif isinstance(item, list):\nresult.extend(flatten(item))\nelse:\nresult.append(item)\nreturn result",
+          "raw": " \n    \"\"\"Flatten a nested list into a one-dimensional list.\"\"\"\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result\n\n# Example usage:\nnested_list = [1, 2, [3, 4, [5, 6]], 7, [8",
+          "elapsed": 14.53,
+          "tokens": 100,
+          "tps": 6.9
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "35}",
+          "raw": " 35}\n```\n\nIn this example, the `Person` class has two attributes: `name` and `age`. The `Person` class is used to create objects, which are then added to the `people` list. The `people` list is then printed to the console.\n\n### Step 2: Create a function to add a new person to the list\n\n```python\ndef",
+          "elapsed": 15.35,
+          "tokens": 100,
+          "tps": 6.5
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"show_class\", \"selector\": \".main\"}\nIntent: \"show me the main function\"\n{\"tool\": \"show_function\", \"selector\": \".main\"}\nIntent: \"show me the main function with its children\"\n{\"tool\": \"show_function\", \"s",
+          "raw": " \"show_class\", \"selector\": \".main\"}\nIntent: \"show me the main function\"\n{\"tool\": \"show_function\", \"selector\": \".main\"}\nIntent: \"show me the main function with its children\"\n{\"tool\": \"show_function\", \"selector\": \".main\", \"children\": true}\nIntent: \"show me the main function with its children and its c",
+          "elapsed": 15.93,
+          "tokens": 100,
+          "tps": 6.3
+        }
+      ]
+    }
+  },
+  "total_passed": 7,
+  "total_tests": 15,
+  "pass_rate": 46.7,
+  "avg_time": 16.04
+}

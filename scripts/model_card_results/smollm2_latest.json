@@ -1,0 +1,195 @@
+{
+  "model": "smollm2:latest",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list_functions('cli.py')",
+          "raw": " list_functions('cli.py')\nlist all class names in cli.py -> list_classes('cli.py')\nfind all imports -> find_imports('src/**/*.py')\nshow me the main function of cli.py -> view('src/**/*.py', '.fn#main')\nlist all function names in cli.py -> list_functions('cli.py')\nlist all class names in cli.py -> li",
+          "elapsed": 8.56,
+          "tokens": 100,
+          "tps": 11.7
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache')",
+          "raw": " search('cache')\n```",
+          "elapsed": 0.6,
+          "tokens": 7,
+          "tps": 11.6
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_recent_commits(3)",
+          "raw": " show_recent_commits(3)\n```",
+          "elapsed": 0.96,
+          "tokens": 12,
+          "tps": 12.6
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_methods('auth.py', 'Auth')",
+          "raw": " find_methods('auth.py', 'Auth')\nfind functions in auth module -> find_functions('auth.py', 'Auth')\nfind all function names in auth module -> find_names('auth.py', '.fn')\nfind all classes in auth module -> find_classes('auth.py', 'Auth')\nfind methods of the Auth class in auth module -> find_methods(",
+          "elapsed": 5.87,
+          "tokens": 100,
+          "tps": 17.0
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult\nfind all function names starting with test_ and ending with _handler -> source = \"tests/**/*.py\"\nselector = \".fn[name^='test_'][name$='_handler']\"\nresult = find_names(source, selector)\nresult\nfind",
+          "elapsed": 5.82,
+          "tokens": 100,
+          "tps": 17.2
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.fn,!main')",
+          "raw": " find_names('src/**/*.py', '.fn,!main')\n```",
+          "elapsed": 1.35,
+          "tokens": 20,
+          "tps": 14.8
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "count_classes()",
+          "raw": " count_classes()\nprint out results to console -> print(n)\n```",
+          "elapsed": 1.28,
+          "tokens": 18,
+          "tps": 14.0
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"tests/**/*.py\"\nselector = \".cls[base^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"tests/**/*.py\"\nselector = \".cls[base^='Base']\"\nresult = find_names(source, selector)\nresult\n```",
+          "elapsed": 2.47,
+          "tokens": 38,
+          "tps": 15.4
+        }
+      ]
+    },
+    "classification": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "inspect('UserService')",
+          "raw": " inspect('UserService')\n```",
+          "elapsed": 0.83,
+          "tokens": 8,
+          "tps": 9.6
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": false,
+          "output": "show_class('AuthService.py', 'AuthService')",
+          "raw": " show_class('AuthService.py', 'AuthService')\n```",
+          "elapsed": 1.28,
+          "tokens": 16,
+          "tps": 12.5
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n```\n\nThis function uses slicing to create a reversed copy of the input string. The `[::-1]` slice means \"start at the end of the string and end at position 0, move with the step -1\".",
+          "elapsed": 3.24,
+          "tokens": 53,
+          "tps": 16.3
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n**0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n\n# Python: check if a number is prime using list comprehension\ndef is_prime_list_comp(n: int) -> bool:\n    if n < 2:\n        return False\n    return all(n % i != 0 for i in range(2, int(n**0.5) + 1))\n\n",
+          "elapsed": 5.83,
+          "tokens": 100,
+          "tps": 17.2
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": true,
+          "output": "\"\"\"Flatten a nested list.\"\"\"\nresult = []\nfor item in lst:\nif isinstance(item, list):\nresult.extend(flatten(item))\nelse:\nresult.append(item)\nreturn result",
+          "raw": "\n    \"\"\"Flatten a nested list.\"\"\"\n    result = []\n    for item in lst:\n        if isinstance(item, list):\n            result.extend(flatten(item))\n        else:\n            result.append(item)\n    return result\n```",
+          "elapsed": 2.96,
+          "tokens": 51,
+          "tps": 17.2
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "40}",
+          "raw": " 40}\n```",
+          "elapsed": 0.75,
+          "tokens": 7,
+          "tps": 9.3
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"get_main_class\", \"selector\": \".main-class\"}\nIntent: \"show me the main function\"\n{\"tool\": \"get_main_function\", \"selector\": \".main-function\"}\nIntent: \"find all test functions with name starting with 't",
+          "raw": " \"get_main_class\", \"selector\": \".main-class\"}\nIntent: \"show me the main function\"\n{\"tool\": \"get_main_function\", \"selector\": \".main-function\"}\nIntent: \"find all test functions with name starting with 'test_' and class name ending with '_test'\"\n{\"tool\": \"find_names\", \"selector\": \".fn[name^='test_'][cl",
+          "elapsed": 5.93,
+          "tokens": 100,
+          "tps": 16.9
+        }
+      ]
+    }
+  },
+  "total_passed": 5,
+  "total_tests": 15,
+  "pass_rate": 33.3,
+  "avg_time": 3.18
+}

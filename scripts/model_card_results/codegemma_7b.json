@@ -1,0 +1,195 @@
+{
+  "model": "codegemma:7b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": true,
+          "output": "find_names('src/cli.py', '.fn')",
+          "raw": " find_names('src/cli.py', '.fn')",
+          "elapsed": 21.3,
+          "tokens": 14,
+          "tps": 0.7
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": false,
+          "output": "grep('cache')",
+          "raw": " grep('cache')\nview the codebase structure -> tree()\nview the codebase history -> log()\nview the codebase files -> files()\nview the codebase branches -> branches()\nview the codebase tags -> tags()",
+          "elapsed": 10.78,
+          "tokens": 50,
+          "tps": 4.6
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "git log --pretty=oneline --abbrev-commit --date=short",
+          "raw": " git log --pretty=oneline --abbrev-commit --date=short\nshow the current working directory -> pwd\nshow the current branch -> git rev-parse --abbrev-branch\nshow the current commit hash -> git rev-parse --short HEAD\nshow the current line number -> lnum\nshow the current file name -> fname\nshow the curre",
+          "elapsed": 19.51,
+          "tokens": 100,
+          "tps": 5.1
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.method', 'Auth')",
+          "raw": " find_names('src/**/*.py', '.method', 'Auth')\nfind all functions in the models.py file -> find_names('src/models.py', '.fn')",
+          "elapsed": 8.69,
+          "tokens": 39,
+          "tps": 4.5
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult",
+          "elapsed": 8.79,
+          "tokens": 33,
+          "tps": 3.8
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.fn', exclude=['main'])",
+          "raw": " find_names('src/**/*.py', '.fn', exclude=['main'])",
+          "elapsed": 4.01,
+          "tokens": 16,
+          "tps": 4.0
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "n = len(find_names('src/**/*.py', '.cls'))",
+          "raw": " n = len(find_names('src/**/*.py', '.cls'))\ncount functions in the project -> n = len(find_names('src/**/*.py', '.fn'))\ntotal functions in the project -> n = len(find_names('src/**/*.py', '.fn')) + len(find_names('src/**/*.py', '.cls'))",
+          "elapsed": 13.62,
+          "tokens": 74,
+          "tps": 5.4
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"tests/**/*.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"tests/**/*.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "elapsed": 9.29,
+          "tokens": 33,
+          "tps": 3.6
+        }
+      ]
+    },
+    "classification": {
+      "passed": 2,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": true,
+          "output": "investigate('UserService')",
+          "raw": " investigate('UserService')\ntell me about the User model -> investigate('User')\ntell me about the JWT token -> investigate('JWT token')",
+          "elapsed": 8.19,
+          "tokens": 30,
+          "tps": 3.7
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/**/*.py', '.class.AuthService')",
+          "raw": " view('src/**/*.py', '.class.AuthService')",
+          "elapsed": 4.96,
+          "tokens": 12,
+          "tps": 2.4
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n\n# Example usage:\nprint(reverse_string(\"hello\"))  # Output: olleh\nprint(reverse_string(\"world\"))  # Output: dlrow\n```\n\n**Explanation:**\n\n* The function `reverse_string()` takes a single argument, `s`, which is the string to be reversed.\n* The `return` statement returns the reversed string ",
+          "elapsed": 20.12,
+          "tokens": 100,
+          "tps": 5.0
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, n):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, n):\n        if n % i == 0:\n            return False\n    return True\n\n# Example usage:\nprint(is_prime(7))  # Output: True\nprint(is_prime(10))  # Output: False\n```\n\n**Explanation:**\n\n* The `is_prime()` function takes an integer `n` as input.\n* It first checks if `n` is less than 2. If so, it return",
+          "elapsed": 19.5,
+          "tokens": 100,
+          "tps": 5.1
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": false,
+          "output": "\"\"\"Flattens a nested list.",
+          "raw": "\n    \"\"\"Flattens a nested list.\n\n    Args:\n        lst: The nested list to flatten.\n\n    Returns:\n        A flattened list.\n    \"\"\"\n\n    flattened_list = []\n\n    for item in lst:\n        if isinstance(item, list):\n            flattened_list.extend(flatten(item))\n        else:\n            flattened_l",
+          "elapsed": 18.57,
+          "tokens": 100,
+          "tps": 5.4
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "40}",
+          "raw": " 40}\n\n**Task:**\n\n* Find the oldest person in the list.\n* Find the youngest person in the list.\n* Calculate the average age of all the people in the list.\n\n```python\npeople = [\n    {\"name\": \"Alice\", \"age\": 30},\n    {\"name\": \"Bob\", \"age\": 25},\n    {\"name\": \"Charlie\", \"age\": 40},\n]\n\n# Find the",
+          "elapsed": 19.28,
+          "tokens": 100,
+          "tps": 5.2
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"find_names\", \"selector\": \".class[name='Main']\"}\nIntent: \"list all functions in the current file\"\n{\"tool\": \"find_names\", \"selector\": \".fn\"}\nIntent: \"find all classes in the project\"\n{\"tool\": \"find_nam",
+          "raw": " \"find_names\", \"selector\": \".class[name='Main']\"}\nIntent: \"list all functions in the current file\"\n{\"tool\": \"find_names\", \"selector\": \".fn\"}\nIntent: \"find all classes in the project\"\n{\"tool\": \"find_names\", \"selector\": \".class\"}",
+          "elapsed": 15.05,
+          "tokens": 70,
+          "tps": 4.7
+        }
+      ]
+    }
+  },
+  "total_passed": 6,
+  "total_tests": 15,
+  "pass_rate": 40.0,
+  "avg_time": 13.44
+}

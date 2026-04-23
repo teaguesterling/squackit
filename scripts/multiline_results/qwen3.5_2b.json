@@ -1,0 +1,105 @@
+{
+  "model": "qwen3.5:2b",
+  "results": [
+    {
+      "id": "ml_1",
+      "description": "per-file function/class counts as a table",
+      "intent": "for each python file in the project, count functions and classes, print a table",
+      "program": "for f in files:\n    n = len(find_names(f, '.fn'))\n    n_classes = len(find_names(f, '.class'))\n    print(f, n, n_classes)",
+      "raw": "\nfor f in files:\n    n = len(find_names(f, '.fn'))\n    n_classes = len(find_names(f, '.class'))\n    print(f, n, n_classes)\nfind the most complex function -> complexity('src/**/*.py', '.fn')\nfind the most complex class -> complexity('src/**/*.py', '.class')\nfind the most complex function in a specific file -> complexity('src/auth.py', '.fn')\nfind the most complex class in a specific file -> complexity('src/auth.py', '.class')\nfind the most complex function in a specific file -> complexity('src/auth.py', '.fn')\nfind the most complex class in a specific file -> complexity('src/auth.py', '.class')\nfind the most complex function in a specific file -> complexity('src/auth.py', '.fn')\nfind the most complex class in a specific file -> complexity('src/auth.py', '.class')\nfind the most complex funct",
+      "line_count": 4,
+      "min_lines": 3,
+      "elapsed": 33.51,
+      "tokens": 300,
+      "tps": 9.0
+    },
+    {
+      "id": "ml_2",
+      "description": "iterate classes, list methods per class",
+      "intent": "find all classes, then for each class show its methods",
+      "program": " classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.class#{cls} .fn')\n    print(f\"{cls}: {len(methods)} methods\")",
+      "raw": " classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.class#{cls} .fn')\n    print(f\"{cls}: {len(methods)} methods\")\nfind all classes, then for each class show its methods -> classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.class#{cls} .fn')\n    print(f\"{cls}: {len(methods)} methods\")\nfind all classes, then for each class show its methods -> classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.class#{cls} .fn')\n    print(f\"{cls}: {len(methods)} methods\")\nfind all classes, then for each class show its methods -> classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.cla",
+      "line_count": 4,
+      "min_lines": 3,
+      "elapsed": 29.04,
+      "tokens": 300,
+      "tps": 10.3
+    },
+    {
+      "id": "ml_3",
+      "description": "complexity ranking then view top 3",
+      "intent": "find the 3 most complex functions and show their source code",
+      "program": " complexity('src/**/*.py', '.fn')",
+      "raw": " complexity('src/**/*.py', '.fn')\nfind the 3 most complex functions and show their source code -> complexity('src/**/*.py', '.fn')\nfind the 3 most complex functions and show their source code -> complexity('src/**/*.py', '.fn')\nfind the 3 most complex functions and show their source code -> complexity('src/**/*.py', '.fn')\nfind the 3 most complex functions and show their source code -> complexity('src/**/*.py', '.fn')\nfind the 3 most complex functions and show their source code -> complexity('src/**/*.py', '.fn')\nfind the 3 most complex functions and show their source code -> complexity('src/**/*.py', '.fn')\nfind the 3 most complex functions and show their source code -> complexity('src/**/*.py', '.fn')\nfind the 3 most complex functions and show their source code -> complexity('src/**/*.py",
+      "line_count": 1,
+      "min_lines": 3,
+      "elapsed": 29.1,
+      "tokens": 300,
+      "tps": 10.3
+    },
+    {
+      "id": "ml_4",
+      "description": "set difference between src and test function names",
+      "intent": "compare the function names in tests/ vs src/ to find untested functions",
+      "program": " tests = \"tests/**/*.py\"\nsrc = \"src/**/*.py\"\ntest_names = find_names(tests, '.fn')\nsrc_names = find_names(src, '.fn')\nuntested = [n for n in src_names if n not in test_names]\nprint(untested)",
+      "raw": " tests = \"tests/**/*.py\"\nsrc = \"src/**/*.py\"\ntest_names = find_names(tests, '.fn')\nsrc_names = find_names(src, '.fn')\nuntested = [n for n in src_names if n not in test_names]\nprint(untested)\nfind the most complex functions in tests/ -> complexity('tests/**/*.py', '.fn')\nfind the most complex functions in src/ -> complexity('src/**/*.py', '.fn')\nfind the most complex functions in tests/ -> complexity('tests/**/*.py', '.fn')\nfind the most complex functions in src/ -> complexity('src/**/*.py', '.fn')\nfind the most complex functions in tests/ -> complexity('tests/**/*.py', '.fn')\nfind the most complex functions in src/ -> complexity('src/**/*.py', '.fn')\nfind the most complex functions in tests/ -> complexity('tests/**/*.py', '.fn')\nfind the most complex functions in src/ -> complexity('src/**",
+      "line_count": 6,
+      "min_lines": 3,
+      "elapsed": 29.22,
+      "tokens": 300,
+      "tps": 10.3
+    },
+    {
+      "id": "ml_5",
+      "description": "per-file function count with filtering and sorting",
+      "intent": "find all files that have more than 10 functions and rank them",
+      "program": " files = ['cli.py', 'server.py', 'auth.py']\nfor f in files:\n    n = len(find_names(f, '.fn'))\n    if n > 10:\n        print(f, n)",
+      "raw": " files = ['cli.py', 'server.py', 'auth.py']\nfor f in files:\n    n = len(find_names(f, '.fn'))\n    if n > 10:\n        print(f, n)\nfind all files that have more than 10 methods and rank them -> files = ['cli.py', 'server.py', 'auth.py']\nfor f in files:\n    n = len(find_names(f, '.fn'))\n    if n > 10:\n        print(f, n)\nfind all files that have more than 10 classes and rank them -> files = ['cli.py', 'server.py', 'auth.py']\nfor f in files:\n    n = len(find_names(f, '.fn'))\n    if n > 10:\n        print(f, n)\nfind all files that have more than 10 functions and rank them -> files = ['cli.py', 'server.py', 'auth.py']\nfor f in files:\n    n = len(find_names(f, '.fn'))\n    if n > 10:\n        print(f, n)\nfind all files that have more than 10 methods and rank them -> files = ['cli.py', 'server.py', '",
+      "line_count": 5,
+      "min_lines": 4,
+      "elapsed": 29.09,
+      "tokens": 300,
+      "tps": 10.3
+    },
+    {
+      "id": "ml_6",
+      "description": "multi-metric codebase summary",
+      "intent": "show me a summary: how many functions, classes, and files, plus the top 5 most complex",
+      "program": " summary = explore()\nprint(summary)",
+      "raw": " summary = explore()\nprint(summary)\nshow me a summary: how many functions, classes, and files, plus the top 5 most complex -> summary = explore()\nprint(summary)\nshow me a summary: how many functions, classes, and files, plus the top 5 most complex -> summary = explore()\nprint(summary)\nshow me a summary: how many functions, classes, and files, plus the top 5 most complex -> summary = explore()\nprint(summary)\nshow me a summary: how many functions, classes, and files, plus the top 3 most complex -> summary = explore()\nprint(summary)\nshow me a summary: how many functions, classes, and files, plus the top 5 most complex -> summary = explore()\nprint(summary)\nshow me a summary: how many functions, explore()\nprint(summary)\nshow me a summary: how many functions, classes, and files, plus the top 5 m",
+      "line_count": 2,
+      "min_lines": 4,
+      "elapsed": 29.26,
+      "tokens": 300,
+      "tps": 10.3
+    },
+    {
+      "id": "ml_7",
+      "description": "class init signature inspection",
+      "intent": "find all classes that have an __init__ method and show what parameters it takes",
+      "program": " classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.class#{cls} .fn')\n    if 'init' in methods:\n        print(cls, methods)",
+      "raw": " classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.class#{cls} .fn')\n    if 'init' in methods:\n        print(cls, methods)\nfind all classes that have a __init__ method and show what parameters it takes -> classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.class#{cls} .fn')\n    if 'init' in methods:\n        print(cls, methods)\nfind all classes that have a __init__ method and show what parameters it takes -> classes = find_names('src/**/*.py', '.class')\nfor cls in classes:\n    methods = find_names('src/**/*.py', f'.class#{cls} .fn')\n    if 'init' in methods:\n        print(cls, methods)\nfind all classes that have a __init__ method and show what parameters it takes -> classes = ",
+      "line_count": 5,
+      "min_lines": 3,
+      "elapsed": 29.22,
+      "tokens": 300,
+      "tps": 10.3
+    },
+    {
+      "id": "ml_8",
+      "description": "grouped private function listing",
+      "intent": "for each module, find functions that start with _ (private) and list them grouped by file",
+      "program": "    for f in files:\n        n = len(find_names(f, '.fn'))\n        private = [name for name in n if name.startswith('_')]\n        print(f, n, private)",
+      "raw": "\n    for f in files:\n        n = len(find_names(f, '.fn'))\n        private = [name for name in n if name.startswith('_')]\n        print(f, n, private)\nfind all functions that start with _ (private) -> find_names('src/**/*.py', '.fn#_')\nfind all functions that start with _ (private) -> find_names('src/**/*.py', '.fn#_')\nfind all functions that start with _ (private) -> find_names('src/**/*.py', '.fn#_')\nfind all functions that start with _ (private) -> find_names('src/**/*.py', '.fn#_')\nfind all functions that start with _ (private) -> find_names('src/**/*.py', '.fn#_')\nfind all functions that start with _ (private) -> find_names('src/**/*.py', '.fn#_')\nfind all functions that start with _ (private) -> find_names('src/**/*.py', '.fn#_')\nfind all functions that start with _ (private) -> find",
+      "line_count": 4,
+      "min_lines": 4,
+      "elapsed": 29.26,
+      "tokens": 300,
+      "tps": 10.3
+    }
+  ],
+  "avg_time": 29.71,
+  "avg_lines": 3.9,
+  "met_minimum": 6,
+  "total": 8
+}

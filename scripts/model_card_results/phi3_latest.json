@@ -1,0 +1,195 @@
+{
+  "model": "phi3:latest",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list_all('.cli.py')",
+          "raw": " list_all('.cli.py')\nlist class name and methods of MyClass in src/mylib.py -> list_classes('src/mylib.py') \nfind the main method inside a file named test.py using regexp search: find_names('test.py', 'def\\s+main\\b')\nshow me all function names that start with get and are in src directory or subdirec",
+          "elapsed": 11.61,
+          "tokens": 100,
+          "tps": 8.6
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('.cache*')",
+          "raw": " search('.cache*')\nfind functions that need to be refactored because they are too long -> refactor_long_functions(100)\ngenerate a report on TODOs and FIXME comments throughout the project -> generate_report()\n```\nThis pseudo-code represents commands for navigating, exploring, reviewing changes in co",
+          "elapsed": 7.39,
+          "tokens": 100,
+          "tps": 13.5
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits(last=5)",
+          "raw": " show_commits(last=5)\ncheck out a specific commit by hash -> checkout_commit('#abcdefg')\ncompare two versions using diff -> compare_versions('v1.2', 'v2.0')\nfind all TODOs in the codebase -> find_todos()\ngenerate and run unit tests for each function -> generate_tests()\ncreate a new branch to work on",
+          "elapsed": 8.06,
+          "tokens": 100,
+          "tps": 12.4
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_members(Auth, '^__')\nfind functions that take a string as an argument in any file under src/api folder and return them sorted by name: get_sorted_string_functions()",
+          "raw": " find_members(Auth, '^__')\nfind functions that take a string as an argument in any file under src/api folder and return them sorted by name: get_sorted_string_functions()\nget all function names from files with extension .py or .ipynb (in the current directory) -> find_names('.fn|.cell')<jupyter end>",
+          "elapsed": 8.29,
+          "tokens": 100,
+          "tps": 12.1
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "selectors=(\".fn[name$='_handler']\")\nresult2 = find_names(\"src/main.py\", \"selectors\")\nresult2<jupyter end>",
+          "raw": " selectors=(\".fn[name$='_handler']\")\nresult2 = find_names(\"src/main.py\", \"selectors\")\nresult2<jupyter end>\n# 10.3 - Find all function names and test cases in the codebase using XPath expressions, regexes or other methods of your choice (e.g., grep). The functions should be located inside Python file",
+          "elapsed": 7.74,
+          "tokens": 100,
+          "tps": 12.9
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_except('main' , 'src/**/*.py', '.fn')",
+          "raw": " find_except('main' , 'src/**/*.py', '.fn')\nfind all methods of a class (e.g., MyClass) -> find_methods(MyClass, src/**/*.py) \n\"\"\"\nimport os\nfrom fnmatch import filter as ffilter\nfrom glob import iglob\nfrom inspect import getmembers, isfunction\n\ndef find_names(pattern='*.fn', path=None):\n    \"\"\"Find",
+          "elapsed": 7.07,
+          "tokens": 100,
+          "tps": 14.1
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "m = count('.cl') + 1 (for main) # assuming there's a Main class at least once defined and it is not nested within another class or function, which would require additional logic to handle correctly.\nt",
+          "raw": " m = count('.cl') + 1 (for main) # assuming there's a Main class at least once defined and it is not nested within another class or function, which would require additional logic to handle correctly.\ntotal code entities: n+m-2 (excluding self from classes when counting functions in the project). Thi",
+          "elapsed": 7.06,
+          "tokens": 100,
+          "tps": 14.2
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": false,
+          "output": "selectors=(\".Bc\") or (\".bC\")  # case insensitive selection for class name start letters only\nresult = find_names(source, \".BC\", True)\nlen(result), result[:3]<jupyter end>",
+          "raw": " selectors=(\".Bc\") or (\".bC\")  # case insensitive selection for class name start letters only\nresult = find_names(source, \".BC\", True)\nlen(result), result[:3]<jupyter end>\n",
+          "elapsed": 4.71,
+          "tokens": 57,
+          "tps": 12.1
+        }
+      ]
+    },
+    "classification": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": false,
+          "output": "tell('UserService')",
+          "raw": " tell('UserService')\n```\nThis command sequence will perform all of these actions in one go, leveraging your custom tool's capabilities.",
+          "elapsed": 3.51,
+          "tokens": 31,
+          "tps": 8.8
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": false,
+          "output": "show('.authservice')",
+          "raw": " show('.authservice')\nlist all methods in a given service or module, including private ones (useful for code coverage) -> list_methods()  # TODO: implement this function!",
+          "elapsed": 3.84,
+          "tokens": 40,
+          "tps": 10.4
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]  # Use slice notation to reverse the string.",
+          "raw": " s[::-1]  # Use slice notation to reverse the string.\n\n# C++ equivalent using std::reverse and iterators for efficiency in large strings.\nstd::string original = \"Hello, World!\";\nstdeneral::vector<char> vec(original); // Convert string to a vector of characters.\nstd::reverse(vec.begin(), vec.end()); ",
+          "elapsed": 6.88,
+          "tokens": 100,
+          "tps": 14.5
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n ** 0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n ** 0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# C++: check if a number is prime using the Sieve of Eratosthenes algorithm\ndef sieve_of_eratosthenes(n: int) -> bool:\n    primes = [True for _ in range(n + 1)]\n    p = 2\n",
+          "elapsed": 7.41,
+          "tokens": 100,
+          "tps": 13.5
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": false,
+          "output": "result = []",
+          "raw": "\n    result = []\n    \n    for i in lst:\n        if isinstance(i,list): \n            j=flatten(i)\n            result.extend(j)\n        else: \n            result.append(i)\n            \n    return result\n# Python: flatten a nested list using recursion and yield keyword\ndef flatten_recursive(lst: list, ",
+          "elapsed": 6.58,
+          "tokens": 100,
+          "tps": 15.2
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "35}",
+          "raw": " 35}\n```\nWrite a Python function that takes this JSON data as input and returns the average age of these individuals. Ensure your code includes appropriate error handling for cases where the 'age' key might be missing from any individual dictionary in the list, defaulting to an age value of zero if ",
+          "elapsed": 7.21,
+          "tokens": 100,
+          "tps": 13.9
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"get_class\", \"selector\": \"#main-class\"}\nIntent: \"list of methods in a specific function named 'calculate'\"\n{\"tool\": \"find_names\", \"selector\": \".fn[name*='calculate'] .mf\"}\nIntent: \"show me the documen",
+          "raw": " \"get_class\", \"selector\": \"#main-class\"}\nIntent: \"list of methods in a specific function named 'calculate'\"\n{\"tool\": \"find_names\", \"selector\": \".fn[name*='calculate'] .mf\"}\nIntent: \"show me the documentation for class A\"\n{\"tool\": \"get_doc\", \"selector\": \"#A-class\"}\nIntent: \"list all functions in a sp",
+          "elapsed": 7.71,
+          "tokens": 100,
+          "tps": 13.0
+        }
+      ]
+    }
+  },
+  "total_passed": 3,
+  "total_tests": 15,
+  "pass_rate": 20.0,
+  "avg_time": 7.0
+}

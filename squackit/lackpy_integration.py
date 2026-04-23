@@ -26,6 +26,27 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
+# Concise selector reference for small-model prompts.
+# This is injected into ToolSpec descriptions so the model knows what
+# selectors are valid without hallucinating CSS-like extensions.
+SELECTOR_REFERENCE = """\
+Selector syntax (CSS-like, applied to AST nodes):
+  Node types:   .fn  .class  .module  .import  .assign  .decorator
+  By name:      .fn#main  .class#AuthService
+  Name prefix:  .fn[name^='test_']
+  Name suffix:  .fn[name$='_handler']
+  Descendants:  .class .fn          (methods anywhere inside a class)
+  Children:     .class > .fn        (direct methods only)
+  Negation:     .fn:not(#main)      (all functions except 'main')
+  Compound:     .class#Auth .fn[name^='get_']
+
+NOT valid selectors (common mistakes):
+  .async_fn          → just use .fn (async is not a separate type)
+  .fn[params~='x']   → parameter filtering not supported
+  .class[dataclass]   → decorator filtering not supported
+  function            → bare words are not selectors; use .fn
+  .fn[name='x']      → use #x shorthand or [name^='x'] prefix match"""
+
 
 def register_squackit_kit(toolbox: Any) -> None:
     """Register the squackit provider and all squackit tool specs.
@@ -140,13 +161,14 @@ def _make_tool_specs() -> list[Any]:
             provider="squackit",
             description=(
                 "Render source code matching a CSS-like AST selector as markdown. "
-                "Use for 'show me function X' or 'show me the body of the class'."
+                "Use for 'show me function X' or 'show me the body of the class'. "
+                "See selector syntax in find_names description."
             ),
             args=[
                 ArgSpec(name="source", type="str",
                         description="Glob pattern for files (e.g. 'src/**/*.py')."),
                 ArgSpec(name="selector", type="str",
-                        description="CSS selector: .fn#name for a function, .class#Name for a class, .class > .fn for methods."),
+                        description="CSS selector (see find_names)."),
             ],
             returns="str",
             grade_w=0, effects_ceiling=0,
@@ -168,7 +190,8 @@ def _make_tool_specs() -> list[Any]:
             provider="squackit",
             description=(
                 "Find AST nodes matching a CSS selector. Returns a list of dicts "
-                "with name, file_path, start_line, end_line, and other metadata."
+                "with name, file_path, start_line, end_line, and other metadata. "
+                "See selector syntax in find_names description."
             ),
             args=[
                 ArgSpec(name="source", type="str",
@@ -197,10 +220,8 @@ def _make_tool_specs() -> list[Any]:
             description=(
                 "Returns names of functions/classes/etc. matching a selector. "
                 "Call this tool DIRECTLY — do not open files, do not define "
-                "helper functions, do not use os/Path. "
-                "Selector syntax: '.fn' for functions, '.class' for classes, "
-                "'.fn#foo' for a function named foo. "
-                "Never pass bare words like 'function' — use the dot-shorthand."
+                "helper functions, do not use os/Path.\n\n"
+                + SELECTOR_REFERENCE
             ),
             args=[
                 ArgSpec(name="source", type="str",

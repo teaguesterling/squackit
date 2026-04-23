@@ -1,0 +1,195 @@
+{
+  "model": "glm4:9b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list_names('src/cli.py', '.fn')",
+          "raw": " list_names('src/cli.py', '.fn')\nshow all functions in cli.py -> view('src/cli.py', '.fn')\nshow all classes in cli.py -> view('src/cli.py', '.class')\nshow all methods in cli.py -> view('src/cli.py', '.method')\nshow all variables in cli.py -> view('src/cli.py', '.var')\nshow all comments in cli.py -> ",
+          "elapsed": 28.65,
+          "tokens": 100,
+          "tps": 3.5
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search('cache')",
+          "raw": " search('cache')\nfind all occurrences of a string -> find('str')\nfind all functions that call a given function -> find_callers('foo')\nfind all functions that are called by a given function -> find_callees('foo')\nfind all functions that have a given name -> find_functions('foo')\nfind all files that c",
+          "elapsed": 19.28,
+          "tokens": 100,
+          "tps": 5.2
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits()",
+          "raw": " show_commits()\nsearch for a string in the codebase -> search('mystring')\nshow all functions that call a function -> find_callers('myfunction')\nshow all functions that are called by a function -> find_callees('myfunction')\nshow all functions that use a specific variable -> find_uses('myvar')\nshow al",
+          "elapsed": 18.21,
+          "tokens": 100,
+          "tps": 5.5
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_methods('src/**/*.py', 'Auth')",
+          "raw": " find_methods('src/**/*.py', 'Auth')\nfind all functions that have a parameter named 'user' -> find_functions_with_param('src/**/*.py', 'user')\nfind all functions that return an int -> find_functions_returning_type('src/**/*.py', 'int')\nfind all functions that call the function 'get_user_data' -> fin",
+          "elapsed": 16.6,
+          "tokens": 100,
+          "tps": 6.0
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult\nCode:",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult\nCode:\n```python\ndef find_names(directory, selector):\n    import os\n    import re\n\n    # Compile the selector pattern\n    pattern = re.compile(selector)\n\n    # List all files in the directory\n    f",
+          "elapsed": 17.39,
+          "tokens": 100,
+          "tps": 5.8
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.fn', 'main')",
+          "raw": " find_names('src/**/*.py', '.fn', 'main')\nfind all methods -> find_names('src/**/*.py', '.method')\nfind all variables -> find_names('src/**/*.py', '.var')\nfind all constants -> find_names('src/**/*.py', '.const')\nfind all imports -> find_names('src/**/*.py', '.import')\nfind all comments -> find_name",
+          "elapsed": 16.48,
+          "tokens": 100,
+          "tps": 6.1
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "n = len(find_names('src/**/*.py', '.cl'))",
+          "raw": " n = len(find_names('src/**/*.py', '.cl'))\ncount methods in the project -> n = len(find_names('src/**/*.py', '.mt'))\nfind all functions that have more than 10 lines -> find_names('src/**/*.py', '.fn', lambda x: len(x.split('\\n')) > 10)\nfind all classes with more than 100 lines -> find_names('src/**/",
+          "elapsed": 16.62,
+          "tokens": 100,
+          "tps": 6.0
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".class[name^='Base']\"\nresult = find_names(source, selector)\nresult\nTo find functions starting with `test_` in the `tests` directory and their corresponding names, you can use the following code:\n\n```python\nimport re\n\ndef find_functions_with_prefix(directory, prefi",
+          "elapsed": 17.41,
+          "tokens": 100,
+          "tps": 5.7
+        }
+      ]
+    },
+    "classification": {
+      "passed": 2,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": true,
+          "output": "investigate('UserService')",
+          "raw": " investigate('UserService')\nshow me the code for a given function -> show('validate_token')\nshow me the code for a given file -> show('src/main.py')\nshow me the code for a given module -> show('src/user_service.py')\nshow me the code for a given package -> show('src/user_service')\nshow me the code fo",
+          "elapsed": 17.26,
+          "tokens": 100,
+          "tps": 5.8
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/auth_service.py', 'AuthService')",
+          "raw": " view('src/auth_service.py', 'AuthService')\nshow me the methods of the AuthService class -> view('src/auth_service.py', 'AuthService.*')\nshow me all classes -> view('src/**/*.py', 'class .*:')\nshow me all functions -> view('src/**/*.py', 'def .*:')\nshow me all variables -> view('src/**/*.py', 'var .",
+          "elapsed": 17.71,
+          "tokens": 100,
+          "tps": 5.6
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 2,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]\nprint(reverse_string(\"Hello, World!\")) # Output: !dlroW ,olleH\nThe function `reverse_string` takes a string as input and returns the reversed version of that string. It uses slicing with a ste",
+          "raw": " s[::-1]\nprint(reverse_string(\"Hello, World!\")) # Output: !dlroW ,olleH\nThe function `reverse_string` takes a string as input and returns the reversed version of that string. It uses slicing with a step of -1 to reverse the string.\nTo test the function, we call it with the string \"Hello, World!\" and",
+          "elapsed": 16.56,
+          "tokens": 100,
+          "tps": 6.0
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n ** 0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n ** 0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Test cases\nassert is_prime(2)\nassert not is_prime(3)\nassert is_prime(5)\nassert not is_prime(4)\nassert not is_prime(17)\nassert is_prime(19)\nassert not is_prime(20) assert is_prime(29)\nassert not is_prime(30) ass",
+          "elapsed": 17.3,
+          "tokens": 100,
+          "tps": 5.8
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": true,
+          "output": "flat_list = []\nfor item in lst:\nif isinstance(item, list):\nflat_list.extend(flatten(item))\nelse:\nflat_list.append(item)\nreturn flat_list",
+          "raw": " \n    flat_list = [] \n    for item in lst: \n        if isinstance(item, list): \n            flat_list.extend(flatten(item)) \n        else: \n            flat_list.append(item) \n    return flat_list\n\n# Test cases\nprint(flatten([1, [2, 3], [4, [5, 6]]])) # Output: [1, 2, 3, 4, 5, 6]\nprint(flatten([[1,",
+          "elapsed": 16.1,
+          "tokens": 100,
+          "tps": 6.2
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "35}\nThe data represents a list of three people, each with their name and age. Alice is 30 years old, Bob is 25 years old, and Charlie is 35 years old.\nAlice: 30\nBob: 25\nCharlie: 35\n{\"name\": \"Alice\", \"",
+          "raw": " 35}\nThe data represents a list of three people, each with their name and age. Alice is 30 years old, Bob is 25 years old, and Charlie is 35 years old.\nAlice: 30\nBob: 25\nCharlie: 35\n{\"name\": \"Alice\", \"age\": 30},\n{\"name\": \"Bob\", \"age\": 25},\n{\"name\": \"Charlie\", \"age\": 35}\nThe data represents a list of",
+          "elapsed": 17.52,
+          "tokens": 100,
+          "tps": 5.7
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"find_names\", \"selector\": \".class[main]\"}\nIntent: \"list all methods in the class 'Main'\"\n{\"tool\": \"find_names\", \"selector\": \".method[parent='Main']\"}\nIntent: \"search for 'hello' in the file 'test.py'\"",
+          "raw": " \"find_names\", \"selector\": \".class[main]\"}\nIntent: \"list all methods in the class 'Main'\"\n{\"tool\": \"find_names\", \"selector\": \".method[parent='Main']\"}\nIntent: \"search for 'hello' in the file 'test.py'\"\n{\"tool\": \"search_text\", \"file_name\": \"test.py\", \"text_to_search\": \"hello\"}Intents classified as JS",
+          "elapsed": 17.65,
+          "tokens": 100,
+          "tps": 5.7
+        }
+      ]
+    }
+  },
+  "total_passed": 7,
+  "total_tests": 15,
+  "pass_rate": 46.7,
+  "avg_time": 18.05
+}

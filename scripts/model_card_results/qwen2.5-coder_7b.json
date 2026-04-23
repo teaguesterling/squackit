@@ -1,0 +1,195 @@
+{
+  "model": "qwen2.5-coder:7b",
+  "categories": {
+    "simple_tool_call": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "stc_1",
+          "description": "find_names on a specific file",
+          "passed": false,
+          "output": "list_functions('cli.py')",
+          "raw": " list_functions('cli.py')\n\n```\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n",
+          "elapsed": 12.92,
+          "tokens": 37,
+          "tps": 2.9
+        },
+        {
+          "id": "stc_2",
+          "description": "search with a keyword",
+          "passed": true,
+          "output": "search_cache()",
+          "raw": " search_cache()\nlist all functions that call a specific function -> list_calls('function_name')\nlist all files that contain a specific string -> list_files('string')\nlist all files that have been modified between two commits -> list_modified_files('commit1', 'commit2')\nlist all commits that include ",
+          "elapsed": 12.89,
+          "tokens": 100,
+          "tps": 7.8
+        },
+        {
+          "id": "stc_3",
+          "description": "recent_changes",
+          "passed": false,
+          "output": "show_commits()",
+          "raw": " show_commits()\n\n```python\nimport os\nimport subprocess\n\ndef find_names(pattern, output_file):\n    \"\"\"Find all function names in Python files matching a pattern and save them to a file.\"\"\"\n    with open(output_file, 'w') as f:\n        for root, _, files in os.walk('.'):\n            for file in files:",
+          "elapsed": 13.1,
+          "tokens": 100,
+          "tps": 7.6
+        }
+      ]
+    },
+    "selector_generation": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "sel_1",
+          "description": "descendant selector .class#Auth .fn",
+          "passed": false,
+          "output": "find_methods('src/**/*.py', 'Auth')",
+          "raw": " find_methods('src/**/*.py', 'Auth')\n\n# Function to find names based on a pattern\ndef find_names(file_pattern, name_type):\n    import glob\n    import re\n    \n    # Define the regular expression patterns for different types of names\n    if name_type == '.fn':\n        pattern = r'def (\\w+)\\('\n    elif",
+          "elapsed": 13.17,
+          "tokens": 100,
+          "tps": 7.6
+        },
+        {
+          "id": "sel_2",
+          "description": "suffix selector [name$='_handler']",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".fn[name$='_handler']\"\nresult = find_names(source, selector)\nresult\nfind all function names in a specific file -> source = \"src/some_module.py\"\nselector = \".fn\"\nresult = find_names(source, selector)\nresult\nfind functions with a specific parameter name -> source = ",
+          "elapsed": 13.47,
+          "tokens": 100,
+          "tps": 7.4
+        },
+        {
+          "id": "sel_3",
+          "description": "negation selector :not(#main)",
+          "passed": false,
+          "output": "find_names('src/**/*.py', '.func')",
+          "raw": " find_names('src/**/*.py', '.func')\n\n```\nobj['code']\n```",
+          "elapsed": 2.83,
+          "tokens": 18,
+          "tps": 6.4
+        }
+      ]
+    },
+    "multi_step": {
+      "passed": 1,
+      "total": 2,
+      "results": [
+        {
+          "id": "ms_1",
+          "description": "count with len() wrapper",
+          "passed": false,
+          "output": "count_classes('src/**/*.py')",
+          "raw": " count_classes('src/**/*.py')\n```\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n<|im_start|>\n```",
+          "elapsed": 5.65,
+          "tokens": 41,
+          "tps": 7.3
+        },
+        {
+          "id": "ms_2",
+          "description": "variable assignment pattern for complex selector",
+          "passed": true,
+          "output": "source = \"src/**/*.py\"\nselector = \".cl[name^='Base']\"\nresult = find_names(source, selector)\nresult",
+          "raw": " source = \"src/**/*.py\"\nselector = \".cl[name^='Base']\"\nresult = find_names(source, selector)\nresult\nfind functions starting with calculate -> source = \"src/**/*.py\"\nselector = \".fn[name^='calculate']\"\nresult = find_names(source, selector)\nresult\nfind classes starting with Data -> source = \"src/**/*.",
+          "elapsed": 12.41,
+          "tokens": 93,
+          "tps": 7.5
+        }
+      ]
+    },
+    "classification": {
+      "passed": 2,
+      "total": 2,
+      "results": [
+        {
+          "id": "cls_1",
+          "description": "investigate for 'tell me about X'",
+          "passed": true,
+          "output": "investigate('UserService')",
+          "raw": " investigate('UserService')\nlist all files in a directory -> list_files('src/')\nshow diff between two commits -> show_diff('commit1', 'commit2')\nfind all function calls to a specific function -> find_calls('function_name')\nrename file or directory -> rename('old_name', 'new_name')\ncreate new branch ",
+          "elapsed": 13.55,
+          "tokens": 100,
+          "tps": 7.4
+        },
+        {
+          "id": "cls_2",
+          "description": "view for 'show me X' (not find_names)",
+          "passed": true,
+          "output": "view('src/**/*.py', '.fn#AuthService')",
+          "raw": " view('src/**/*.py', '.fn#AuthService')\n\n```\nobj['response']\n```",
+          "elapsed": 3.67,
+          "tokens": 19,
+          "tps": 5.2
+        }
+      ]
+    },
+    "code_snippet": {
+      "passed": 1,
+      "total": 3,
+      "results": [
+        {
+          "id": "code_1",
+          "description": "string reversal",
+          "passed": true,
+          "output": "s[::-1]",
+          "raw": " s[::-1]\n\n# Python: check if a number is prime\ndef is_prime(n: int) -> bool:\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Python: find the largest number in a list\ndef find_largest_number(numbers: list)",
+          "elapsed": 12.66,
+          "tokens": 100,
+          "tps": 7.9
+        },
+        {
+          "id": "code_2",
+          "description": "primality check",
+          "passed": false,
+          "output": "2, int(n**0.5) + 1):\nif n % i == 0:\nreturn False\nreturn True",
+          "raw": "2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# Python: generate a list of prime numbers up to a given number\ndef generate_primes(limit: int) -> list:\n    primes = []\n    for num in range(2, limit + 1):\n        if is_prime(num):\n            primes.append(num)\n",
+          "elapsed": 13.17,
+          "tokens": 100,
+          "tps": 7.6
+        },
+        {
+          "id": "code_3",
+          "description": "flatten nested list",
+          "passed": false,
+          "output": "\"\"\"Flatten a nested list.\"\"\"\nreturn [item for sublist in lst for item in sublist]",
+          "raw": " \n    \"\"\"Flatten a nested list.\"\"\"\n    return [item for sublist in lst for item in sublist]\n\nnested_list = [[1, 2], [3, 4], [5, 6]]\nprint(flatten(nested_list)) # Output: [1, 2, 3, 4, 5, 6]",
+          "elapsed": 8.98,
+          "tokens": 72,
+          "tps": 8.0
+        }
+      ]
+    },
+    "json_output": {
+      "passed": 0,
+      "total": 2,
+      "results": [
+        {
+          "id": "json_1",
+          "description": "complete a JSON object",
+          "passed": false,
+          "output": "35}",
+          "raw": " 35}",
+          "elapsed": 1.8,
+          "tokens": 5,
+          "tps": 2.8
+        },
+        {
+          "id": "json_2",
+          "description": "classify intent as JSON",
+          "passed": false,
+          "output": "\"find_names\", \"selector\": \".class[name='main']\"}",
+          "raw": " \"find_names\", \"selector\": \".class[name='main']\"}",
+          "elapsed": 3.33,
+          "tokens": 15,
+          "tps": 4.5
+        }
+      ]
+    }
+  },
+  "total_passed": 6,
+  "total_tests": 15,
+  "pass_rate": 40.0,
+  "avg_time": 9.57
+}
