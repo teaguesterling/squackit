@@ -311,6 +311,28 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
     mcp.add_tool(tool_fn)
 
 
+# FTS search macros need a one-time index build. The index lives in the
+# (in-memory) connection and rebuild is manual + ~2s, so build it lazily on
+# first search rather than taxing every server startup.
+_FTS_MACROS = {"search_code", "search_content", "search_docs"}
+
+
+def _ensure_fts(con):
+    """Build the FTS index once per connection, on first FTS search."""
+    if getattr(con, "_fts_built", False):
+        return
+    try:
+        n = con._con.execute("SELECT count(*) FROM fts.content").fetchone()[0]
+    except Exception:
+        n = 0  # fts.content not created yet
+    if not n:
+        try:
+            con.rebuild_fts()
+        except Exception:
+            pass
+    con._fts_built = True
+
+
 def _register_tool(
     mcp,  # FastMCP type annotation removed to avoid import at module level
     con,
@@ -330,6 +352,7 @@ def _register_tool(
     description = presentation.description
     is_text = presentation.format == "text"
     numeric_params = presentation.numeric_params
+    is_fts = macro_name in _FTS_MACROS
 
     if presentation.max_lines is not None:
         limit_param = "max_lines"
@@ -393,6 +416,10 @@ def _register_tool(
                                   cached=True, elapsed_ms=elapsed)
                 age = int(cached.age_seconds())
                 return f"(cached — same as {age}s ago)\n{cached.text}"
+
+        # FTS search tools need the index built once (lazy, on first search).
+        if is_fts:
+            _ensure_fts(con)
 
         # Call macro
         macro = getattr(con, macro_name)
