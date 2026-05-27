@@ -79,14 +79,14 @@ def create_server(
     mcp._defaults = defaults
 
     cache = SessionCache()
-    access_log = AccessLog(con._con)
+    access_log = AccessLog(con.con)
     mcp.session_cache = cache
     mcp.access_log = access_log
 
     # Register each macro as an MCP tool
     from squackit.tools import PLUCKIT_TOOLS, collect_pluckin_tools
     extra = list(PLUCKIT_TOOLS) + collect_pluckin_tools(plucker)
-    registry = build_tool_registry(con._tools, extra_tools=extra)
+    registry = build_tool_registry(con.tools, extra_tools=extra)
     for presentation in registry.values():
         _register_tool(mcp, con, presentation, defaults, cache, access_log)
 
@@ -318,19 +318,10 @@ _FTS_MACROS = {"search_code", "search_content", "search_docs"}
 
 
 def _ensure_fts(con):
-    """Build the FTS index once per connection, on first FTS search."""
-    if getattr(con, "_fts_built", False):
-        return
-    try:
-        n = con._con.execute("SELECT count(*) FROM fts.content").fetchone()[0]
-    except Exception:
-        n = 0  # fts.content not created yet
-    if not n:
-        try:
-            con.rebuild_fts()
-        except Exception:
-            pass
-    con._fts_built = True
+    """Build the FTS index once, lazily on first FTS search. fledgling owns the
+    build + idempotency (Connection.ensure_fts); squackit only decides *which*
+    tools need it (see _FTS_MACROS)."""
+    con.ensure_fts()
 
 
 def _register_tool(

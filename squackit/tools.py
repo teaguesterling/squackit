@@ -58,7 +58,7 @@ def complexity_executor(*, source: str, selector: str):
 def _chain_mutation_ops(chain) -> list[str]:
     """Return the list of mutation op names present in the chain (in order)."""
     from pluckit.chain import Chain as _Chain
-    return [step.op for step in chain.steps if step.op in _Chain._MUTATION_OPS]
+    return [step.op for step in chain.steps if step.op in _Chain.MUTATION_OPS]
 
 
 def collect_pluckin_tools(plucker) -> list:
@@ -74,10 +74,7 @@ def collect_pluckin_tools(plucker) -> list:
     and only fires when squackit actually calls it.
     """
     tools: list = []
-    registry = getattr(plucker, "_registry", None)
-    if registry is None:
-        return tools
-    pluckins = getattr(registry, "pluckins", None)
+    pluckins = getattr(plucker, "pluckins", None)
     if pluckins is None:
         return tools
     for pluckin in pluckins:

@@ -101,7 +101,7 @@ def _get_registry():
     p = Plucker(plugins=[AstViewer, Search])
     con = p.connection
     extra = list(PLUCKIT_TOOLS) + collect_pluckin_tools(p)
-    return build_tool_registry(con._tools, extra_tools=extra), con
+    return build_tool_registry(con.tools, extra_tools=extra), con
 
 
 def _format_result(result, presentation, json_output):
