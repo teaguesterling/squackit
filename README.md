@@ -42,8 +42,10 @@ Tab completion is built in (`eval "$(_SQUACKIT_COMPLETE=bash_source squackit)"`)
 
 ## What agents get via MCP
 
-- **20 tools** — CSS-selector code queries (via pluckit), file I/O, git history,
-  doc navigation, diagnostics
+- **~35 tools** — CSS-selector code queries (via pluckit), file I/O, git history,
+  doc navigation, conversation analytics, and diagnostics. The exact set is dynamic
+  (fledgling macros + pluckit tools + pluckins); a full install exposes ~40 MCP tools
+  including the workflows below.
 - **4 compound workflows** — `explore`, `investigate`, `review`, `search`
 - **3 prompt templates** — pre-loaded with live project data
 - **5 resources** — project overview, docs, git status, session log, diagnostics
