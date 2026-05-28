@@ -64,13 +64,15 @@ Returns:
 
 This one tool gives you the definition *and* its neighborhood. Usually enough to decide if this is the right function to focus on.
 
-**`investigate` AND full-text search are scoped to the MCP server's project root.** If you're
-exploring a *different* project (absolute paths in Phase 1), `investigate` returns "No
-definition found," and the FTS tools (`search_code` / `search_content` / `search_docs`) search
-the *server's* project, not your path — they ignore the `source` argument and an empty result
-means "not in the server's project," not "doesn't exist." For a non-rooted project, use the
-structural tools (`find` / `view` / `find_names` / `read_source`) with an absolute `source`,
-and substitute Phase 2 with manual queries:
+**Working on a project other than the server's own?** Two scoping rules:
+
+- **Full-text search** (`search_code` / `search_content` / `search_docs`) defaults to the
+  server's project and ignores the structural `source` glob. To FTS a *different* repo, pass
+  **`root=<repository directory>`** (absolute path) — squackit indexes it on first use and
+  caches it. `search_code(query="...", root="/abs/repo")` works across repos.
+- **`investigate`** is scoped to the server's project; on a different project it returns "No
+  definition found." Substitute Phase 2 with the structural tools (`find` / `view` /
+  `find_names` / `read_source`), which take an absolute `source` glob per call:
 
 ```
 # Equivalent of investigate(name="X") for a non-rooted project:
