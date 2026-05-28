@@ -21,6 +21,8 @@ Usage::
 from __future__ import annotations
 
 import inspect
+import threading
+from collections import OrderedDict
 from pathlib import Path
 from typing import Optional
 
@@ -324,6 +326,79 @@ def _ensure_fts(con):
     con.ensure_fts()
 
 
+# ── Per-root FTS index cache (opt-in) ──────────────────────────────────────
+# An FTS macro (search_*) queries a BM25 index built into ONE connection — the server's
+# project. To let an agent full-text-search a *different* repository, an FTS tool accepts a
+# `root`: we build & cache a small connection-per-root and run the macro there. This is
+# opt-in — without `root`, FTS searches the server's project exactly as before.
+#
+# Safety: `root` is validated to an existing directory (no globs, no files); the build is
+# scoped to that root (Plucker derives its own globs); the cache is LRU-bounded so a session
+# can't accumulate unbounded connections. squackit's structural tools already read arbitrary
+# paths, so this adds no new filesystem exposure — and it deliberately does NOT reach into
+# fledgling's private sandbox helpers (keeping the public-contract boundary intact).
+_FTS_CACHE_MAX = 4
+_fts_lock = threading.Lock()
+
+
+def _resolve_fts_root(root: str) -> Path:
+    """Validate an FTS ``root`` → an existing directory (absolute). Rejects globs and
+    non-directories so a stray ``source``-style glob or a file path can't trigger a build.
+    Raises ValueError with an agent-readable message on bad input."""
+    if any(ch in root for ch in "*?["):
+        raise ValueError(
+            f"root must be a repository directory, not a glob ({root!r}) — "
+            "FTS derives its own globs from the root."
+        )
+    p = Path(root).expanduser()
+    try:
+        p = p.resolve()
+    except OSError as e:  # pragma: no cover - resolve rarely raises
+        raise ValueError(f"could not resolve root {root!r}: {e}") from e
+    if not p.is_dir():
+        raise ValueError(f"root {str(p)!r} is not an existing directory.")
+    return p
+
+
+def _fts_con_for_root(mcp, root: str):
+    """Get-or-build a cached FTS connection scoped to ``root`` (LRU-bounded).
+
+    Builds ``Plucker(repo=root)`` + ``ensure_fts()`` on first request for a root (~1s),
+    caches it, and closes the least-recently-used connection past ``_FTS_CACHE_MAX``.
+    Returns the fledgling Connection to run the FTS macro against. May raise ValueError."""
+    abs_root = _resolve_fts_root(root)
+    key = str(abs_root)
+    with _fts_lock:
+        cache = getattr(mcp, "_fts_servers", None)
+        if cache is None:
+            cache = mcp._fts_servers = OrderedDict()
+        entry = cache.get(key)
+        if entry is not None:
+            cache.move_to_end(key)
+            return entry["con"]
+        # Same plugins as the server connection (AstViewer + Search).
+        from pluckit.pluckins.search import Search
+        from pluckit.pluckins.viewer import AstViewer
+        pk = Plucker(repo=key, plugins=[AstViewer, Search])
+        con = pk.connection
+        try:
+            con.ensure_fts()
+        except Exception:  # pragma: no cover - depends on repo shape
+            # Some repos (e.g. no markdown to index) make the full FTS build raise.
+            # Don't crash the search tool — cache the connection anyway; the query then
+            # returns whatever was indexed, or the fail-loud empty message via tool_fn.
+            pass
+        cache[key] = {"plucker": pk, "con": con}
+        cache.move_to_end(key)
+        while len(cache) > _FTS_CACHE_MAX:
+            _, old = cache.popitem(last=False)
+            try:
+                old["con"].close()
+            except Exception:  # pragma: no cover - best-effort close
+                pass
+        return con
+
+
 def _register_tool(
     mcp,  # FastMCP type annotation removed to avoid import at module level
     con,
@@ -367,6 +442,10 @@ def _register_tool(
         # Apply smart defaults for None params
         kwargs = apply_defaults(defaults, macro_name, kwargs)
 
+        # FTS opt-in: a `root` selects WHICH repository to full-text search. Popped here so
+        # it never reaches the macro args; without it, FTS uses the server's own project.
+        fts_root = kwargs.pop("root", None) if is_fts else None
+
         # Extract truncation parameter before passing to SQL macro
         max_rows = default_limit
         if limit_param and limit_param in kwargs:
@@ -397,6 +476,8 @@ def _register_tool(
         cache_args = dict(filtered)
         if limit_param and max_rows != default_limit:
             cache_args[limit_param] = max_rows
+        if fts_root:
+            cache_args["root"] = fts_root  # cache FTS results per searched repo
 
         # Check cache
         if cache_ttl is not None:
@@ -408,12 +489,39 @@ def _register_tool(
                 age = int(cached.age_seconds())
                 return f"(cached — same as {age}s ago)\n{cached.text}"
 
-        # FTS search tools need the index built once (lazy, on first search).
+        # FTS search needs an index. Default target = the server's project (built lazily).
+        # If a `root` was given, full-text-search THAT repo via a cached per-root index.
+        target_con = con
         if is_fts:
-            _ensure_fts(con)
+            if fts_root:
+                try:
+                    target_con = _fts_con_for_root(mcp, fts_root)
+                except ValueError as e:
+                    return f"(invalid root: {e})"
+            else:
+                _ensure_fts(con)
 
-        # Call macro
-        macro = getattr(con, macro_name)
+        def _empty_msg() -> str:
+            # A bare "(no results)" from FTS was read by agents as "symbol doesn't exist".
+            # Say what was searched and what FTS actually indexes, so empty is interpretable.
+            if is_fts and fts_root:
+                return (
+                    f"(no full-text matches in `{fts_root}`. FTS indexes definition names, "
+                    "string literals, comments, and doc sections — not bare code tokens; "
+                    "try a name/string term, or a structural query via find / find_names.)"
+                )
+            if is_fts:
+                return (
+                    "(no matches in this server's indexed project — code_pattern "
+                    f"`{defaults.code_pattern}`. Full-text search defaults to the server's "
+                    "project; pass `root=<repo dir>` to full-text-search a different "
+                    "repository, or use the structural tools — find / view / find_names / "
+                    "read_source — with an explicit `source` glob.)"
+                )
+            return "(no results)"
+
+        # Call macro (against the per-root index when a `root` was given)
+        macro = getattr(target_con, macro_name)
         try:
             rel = macro(**filtered)
             cols = rel.columns
@@ -424,13 +532,13 @@ def _register_tool(
                 elapsed = (_time.time() - t0) * 1000
                 access_log.record(tool_name, cache_args, 0,
                                   cached=False, elapsed_ms=elapsed)
-                return "(no results)"
+                return _empty_msg()
             raise
         if not rows:
             elapsed = (_time.time() - t0) * 1000
             access_log.record(tool_name, cache_args, 0,
                               cached=False, elapsed_ms=elapsed)
-            return "(no results)"
+            return _empty_msg()
 
         total_rows = len(rows)
 
@@ -464,6 +572,10 @@ def _register_tool(
                 md_lines.insert(insert_at, omission)
                 text = "\n".join(md_lines)
 
+        # Make the searched corpus explicit when FTS ran against a per-call root.
+        if is_fts and fts_root:
+            text = f"(full-text search of `{fts_root}`)\n{text}"
+
         elapsed = (_time.time() - t0) * 1000
 
         # Store in cache
@@ -488,6 +600,13 @@ def _register_tool(
     # Set function metadata for FastMCP
     tool_fn.__name__ = tool_name
     tool_fn.__qualname__ = tool_name
+    if is_fts:
+        description = (
+            description.rstrip()
+            + "\n\nBy default this searches the server's own project. To full-text-search a "
+            "DIFFERENT repository, pass `root=<repository directory>` (an absolute path) — the "
+            "repo is indexed on first use and cached."
+        )
     tool_fn.__doc__ = description
 
     # Build parameter annotations for FastMCP schema generation.
@@ -508,6 +627,13 @@ def _register_tool(
             inspect.Parameter.KEYWORD_ONLY,
             default=None,
             annotation=Optional[int],
+        ))
+    if is_fts:
+        # Opt-in target: full-text-search a repository other than the server's project.
+        annotations["root"] = Optional[str]
+        sig_params.append(inspect.Parameter(
+            "root", inspect.Parameter.KEYWORD_ONLY, default=None,
+            annotation=Optional[str],
         ))
     tool_fn.__annotations__ = {**annotations, "return": str}
 

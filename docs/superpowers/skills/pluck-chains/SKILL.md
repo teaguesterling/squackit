@@ -121,14 +121,32 @@ pluck(argv="--plugin AstViewer src/auth.py find .fn#validate_token view")
 
 ## Selector cheat sheet
 
-Same CSS grammar as the single-purpose tools:
+Same CSS grammar as the single-purpose tools. **Verified working:**
 
-- `.fn` / `.class` / `.call` — by kind
-- `#name` — by exact name (e.g. `.fn#main`)
-- `[attr]` — by attribute (e.g. `.fn[name*="test"]`)
-- `.class > .fn` — direct children
-- `.fn:has(.call#foo)` — functions that call foo
-- `.class[name*="Test"]` — classes with "Test" in name
+- `.fn` / `.class` / `.call` — by kind (`.function` / `.func` / `.def` all alias `.fn`)
+- `#name` — by exact name: `.fn#main` (function def `main`), `.class#Foo`, and crucially
+  `.call#foo` (every **call site** of `foo(...)`)
+- `[attr]` — attribute match: `.fn[name*="test"]`, `.fn[name^=test_]`, `.class[name*="Test"]`
+- `.class > .fn` — direct children (a class's methods)
+
+### Finding callers — use `.call#NAME`, not `:has`
+
+The reliable way to find who calls a function:
+
+- `find ".call#get_notifications"` → every call site of `get_notifications()`. Each result
+  row's `scope.function` field is the **enclosing function** (i.e. the caller). Exact and cheap.
+- ⚠️ **`.fn:has(.call#NAME)` over-matches** — the `#NAME` filter is currently dropped inside
+  `:has`, so it returns *every* function that contains *any* call, not just callers of NAME.
+  Don't use it to find callers; use `.call#NAME` (above) or the `investigate` tool.
+- A function passed as a **value** (`pool.submit(fn)`, a decorator, a callback) is **not** a
+  call site, so `.call#NAME` won't list it. To find those references, search the bare name.
+
+### Filtering by decorator
+
+There is no decorator pseudo-selector. Instead, `find` / `find_names` return an
+`annotations` column (e.g. `['@mcp.tool()']` or `['@property']`) — select the functions, then
+filter on that column. Likewise attribute-chain calls (`os.environ.get(...)`) match on the
+final name: try `.call#get`, but verify with a quick `find` before relying on it.
 
 Escape whitespace in args with quotes: `containing "return None"`.
 

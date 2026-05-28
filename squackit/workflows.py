@@ -174,12 +174,20 @@ def investigate(con, defaults, name, file_pattern=None):
 
     sections.append(_section("Source", _source))
 
-    # 3. Who calls this function
-    sections.append(_section("Called by", lambda: _table(
-        con, "function_callers",
-        {"file_pattern": file_pattern, "func_name": name},
-        max_rows=15,
-    )))
+    # 3. Who calls this function — DIRECT call sites only. function_callers matches
+    # call-expression AST nodes; a function passed as a *value* (pool.submit(fn),
+    # decorators, callbacks, getattr) is not a call node and won't appear. Label the
+    # section so the result isn't mistaken for a complete caller set.
+    _caller_caveat = (
+        "\n\n_Direct call sites only — a function used as a value "
+        "(`pool.submit(fn)`, a decorator, a callback) is NOT listed here. "
+        "Search the name to find those references._"
+    )
+    sections.append(_section("Called by (direct calls)", lambda: (
+        _table(con, "function_callers",
+               {"file_pattern": file_pattern, "func_name": name}, max_rows=15)
+        or "(no direct call sites found)"
+    ) + _caller_caveat))
 
     # 4. What this function calls — scoped to the definition's file
     # to avoid scanning the entire codebase, then filtered to the
