@@ -6,7 +6,7 @@ work to squackit.
 
 Usage::
 
-    from lackpy import LackpyService
+    from lackpy.service import LackpyService
     from squackit.lackpy_integration import register_squackit_kit
 
     svc = LackpyService()
@@ -153,7 +153,7 @@ def _read_source_tool(file_path: str, lines: str | None = None) -> str:
 
 
 def _make_tool_specs() -> list[Any]:
-    from lackpy import ArgSpec, ToolSpec  # type: ignore
+    from lackpy.kit.toolbox import ArgSpec, ToolSpec  # type: ignore
 
     return [
         ToolSpec(
