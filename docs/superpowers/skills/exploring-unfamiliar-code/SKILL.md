@@ -64,13 +64,21 @@ Returns:
 
 This one tool gives you the definition *and* its neighborhood. Usually enough to decide if this is the right function to focus on.
 
-**`investigate` is scoped to the MCP server's project root.** If you're exploring a different project (absolute paths in Phase 1), `investigate` will return "No definition found" — it doesn't know about the other project. Substitute Phase 2 with manual queries:
+**`investigate` AND full-text search are scoped to the MCP server's project root.** If you're
+exploring a *different* project (absolute paths in Phase 1), `investigate` returns "No
+definition found," and the FTS tools (`search_code` / `search_content` / `search_docs`) search
+the *server's* project, not your path — they ignore the `source` argument and an empty result
+means "not in the server's project," not "doesn't exist." For a non-rooted project, use the
+structural tools (`find` / `view` / `find_names` / `read_source`) with an absolute `source`,
+and substitute Phase 2 with manual queries:
 
 ```
 # Equivalent of investigate(name="X") for a non-rooted project:
 find(source="/abs/path/**/*.py", selector=".fn#X")          # → definition + line range
 view(source="/abs/path/**/*.py", selector=".fn#X")          # → source body
-# (callers/callees: not currently available without investigate)
+find(source="/abs/path/**/*.py", selector=".call#X")        # → callers: each row's scope.function is the enclosing caller
+# (a function passed as a VALUE — pool.submit(X), a decorator, a callback — is not a call
+#  site, so .call#X won't list it; search the bare name "X" to find those references.)
 ```
 
 **When to repeat vs. pivot:**

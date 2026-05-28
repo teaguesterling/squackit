@@ -412,6 +412,22 @@ def _register_tool(
         if is_fts:
             _ensure_fts(con)
 
+        def _empty_msg() -> str:
+            # FTS is scoped to THIS server's indexed project (the connection's root); the
+            # per-call source/path argument does not re-scope full-text search. A bare
+            # "(no results)" was being read by agents as "symbol doesn't exist" when it
+            # really meant "not in the indexed project" — so say which, and what to do.
+            if is_fts:
+                return (
+                    "(no matches in the indexed project. NOTE: full-text search is scoped to "
+                    f"this server's indexed project — code_pattern `{defaults.code_pattern}` — "
+                    "and does NOT honor a per-call source/path argument. Empty means "
+                    "'not in the indexed project', not 'does not exist'. To search code "
+                    "outside this project, use the structural tools — find / view / "
+                    "read_source / find_names — with an explicit `source` glob.)"
+                )
+            return "(no results)"
+
         # Call macro
         macro = getattr(con, macro_name)
         try:
@@ -424,13 +440,13 @@ def _register_tool(
                 elapsed = (_time.time() - t0) * 1000
                 access_log.record(tool_name, cache_args, 0,
                                   cached=False, elapsed_ms=elapsed)
-                return "(no results)"
+                return _empty_msg()
             raise
         if not rows:
             elapsed = (_time.time() - t0) * 1000
             access_log.record(tool_name, cache_args, 0,
                               cached=False, elapsed_ms=elapsed)
-            return "(no results)"
+            return _empty_msg()
 
         total_rows = len(rows)
 
