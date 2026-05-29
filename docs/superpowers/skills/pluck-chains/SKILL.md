@@ -129,24 +129,24 @@ Same CSS grammar as the single-purpose tools. **Verified working:**
 - `[attr]` — attribute match: `.fn[name*="test"]`, `.fn[name^=test_]`, `.class[name*="Test"]`
 - `.class > .fn` — direct children (a class's methods)
 
-### Finding callers — use `.call#NAME`, not `:has`
+### Finding callers — `.call#NAME` or `.fn:has(.call#NAME)`
 
-The reliable way to find who calls a function:
+Two reliable ways to find who calls a function:
 
 - `find ".call#get_notifications"` → every call site of `get_notifications()`. Each result
   row's `scope.function` field is the **enclosing function** (i.e. the caller). Exact and cheap.
-- ⚠️ **`.fn:has(.call#NAME)` over-matches** — the `#NAME` filter is currently dropped inside
-  `:has`, so it returns *every* function that contains *any* call, not just callers of NAME.
-  Don't use it to find callers; use `.call#NAME` (above) or the `investigate` tool.
+- `find ".fn:has(.call#get_notifications)"` → the caller functions directly. (This now works:
+  the `#NAME` filter inside `:has` is honored — selector matching is delegated to sitting_duck's
+  `ast_select`. Earlier pluckit versions dropped it and over-matched; that's fixed.)
 - A function passed as a **value** (`pool.submit(fn)`, a decorator, a callback) is **not** a
-  call site, so `.call#NAME` won't list it. To find those references, search the bare name.
+  call site, so neither form lists it. To find those references, search the bare name.
 
 ### Filtering by decorator
 
-There is no decorator pseudo-selector. Instead, `find` / `find_names` return an
-`annotations` column (e.g. `['@mcp.tool()']` or `['@property']`) — select the functions, then
-filter on that column. Likewise attribute-chain calls (`os.environ.get(...)`) match on the
-final name: try `.call#get`, but verify with a quick `find` before relying on it.
+Use `:decorated` (functions with any decorator) or filter on the `annotations` /
+`modifiers` column that `find` / `find_names` return (e.g. `['@mcp.tool()']`, `['@property']`)
+when you need a specific decorator. Likewise attribute-chain calls (`os.environ.get(...)`) match
+on the final name: try `.call#get`, but verify with a quick `find` before relying on it.
 
 Escape whitespace in args with quotes: `containing "return None"`.
 
