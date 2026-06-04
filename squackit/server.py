@@ -226,6 +226,16 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
                 except (TypeError, ValueError):
                     pass
 
+        # Pop verbose param the same way — opts out of compact_columns
+        # projection so the caller can see the full AST bookkeeping schema.
+        verbose = False
+        if "verbose" in kwargs:
+            v = kwargs.pop("verbose")
+            if isinstance(v, str):
+                verbose = v.lower() in ("true", "1", "yes")
+            elif v is not None:
+                verbose = bool(v)
+
         filtered = {k: v for k, v in kwargs.items() if v is not None}
 
         try:
@@ -256,6 +266,23 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
                 omitted = len(rows) - max_limit
                 rows = rows[:max_limit]
                 omission = f"--- omitted {omitted} rows ---"
+
+            # Project to compact_columns by default. Tools opt in by setting
+            # presentation.compact_columns; callers opt OUT per-call with
+            # verbose=true. Unknown column names in compact_columns are
+            # silently skipped so a schema change doesn't break the projection.
+            if presentation.compact_columns and not verbose:
+                keep_idx = [
+                    i for i, name in enumerate(cols)
+                    if name in presentation.compact_columns
+                ]
+                # Reorder to match compact_columns order rather than source order.
+                order = {name: pos for pos, name in enumerate(presentation.compact_columns)}
+                keep_idx.sort(key=lambda i: order.get(cols[i], len(order)))
+                if keep_idx:
+                    cols = [cols[i] for i in keep_idx]
+                    rows = [tuple(row[i] for i in keep_idx) for row in rows]
+
             if is_text:
                 lines = []
                 for row in rows:
@@ -304,6 +331,13 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
         sig_params.append(inspect.Parameter(
             limit_param, inspect.Parameter.KEYWORD_ONLY,
             default=None, annotation=Optional[int],
+        ))
+    if presentation.compact_columns:
+        # Expose `verbose` so MCP clients can request the full AST schema.
+        annotations["verbose"] = Optional[bool]
+        sig_params.append(inspect.Parameter(
+            "verbose", inspect.Parameter.KEYWORD_ONLY,
+            default=None, annotation=Optional[bool],
         ))
     tool_fn.__annotations__ = {**annotations, "return": str}
     tool_fn.__signature__ = inspect.Signature(

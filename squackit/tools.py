@@ -158,10 +158,16 @@ FIND_TOOL = ToolPresentation(
         macro_name="find",
         params=["source", "selector"],
         description="Find AST nodes matching CSS selectors. Returns file paths, "
-                    "names, line ranges. Truncated to 50 rows by default.",
+                    "names, line ranges, and a peek of the source. "
+                    "Truncated to 50 rows by default. "
+                    "Pass verbose=true for the full AST bookkeeping columns "
+                    "(node_id, depth, sibling_index, semantic_type, etc.).",
         required=["source", "selector"],
     ),
     max_rows=50,
+    # Default projection keeps the four columns callers actually use; the rest
+    # are internal AST bookkeeping noise unless the caller asks for verbose.
+    compact_columns=("file_path", "start_line", "end_line", "name", "peek"),
     executor=find_executor,
 )
 

@@ -117,8 +117,12 @@ def explore(con, defaults, path=None):
         max_rows=15,
     )))
 
+    # Pass `repo=path` so recent_changes targets the explored project, not the
+    # MCP server's cwd. Without this, exploring `/home/teague/Projects/foo`
+    # from cwd `/some/other/repo` showed the wrong repo's git log.
     sections.append(_section("Recent Activity", lambda: _table(
-        con, "recent_changes", {"n": 5},
+        con, "recent_changes",
+        {"n": 5, **({"repo": path} if path else {})},
     )))
 
     title = f"Project: {path}" if path else "Explore"
@@ -158,6 +162,14 @@ def investigate(con, defaults, name, file_pattern=None):
     start_line = first[sl_idx]
     end_line = first[el_idx]
 
+    # Cap source rendering at SOURCE_PREVIEW lines per investigate call so a
+    # single sprawling function doesn't dominate the response. The Definition
+    # table already shows start_line + end_line, so a caller who wants the
+    # full body can `read_source(file_path, lines="<start>-<end>")` directly;
+    # but we used to silently truncate to 50 with no signal at all, which made
+    # the Definition end_line vs Source last-line mismatch confusing.
+    SOURCE_PREVIEW = 50
+
     def _source():
         rel = con.read_source(
             file_path=def_file,
@@ -169,7 +181,16 @@ def investigate(con, defaults, name, file_pattern=None):
         cols = rel.columns
         ln_idx = cols.index("line_number")
         ct_idx = cols.index("content")
-        lines = [f"{r[ln_idx]:4d}  {r[ct_idx]}" for r in rows[:50]]
+        total = len(rows)
+        kept = rows[:SOURCE_PREVIEW]
+        lines = [f"{r[ln_idx]:4d}  {r[ct_idx]}" for r in kept]
+        if total > SOURCE_PREVIEW:
+            shown_last = kept[-1][ln_idx]
+            lines.append(
+                f"\n[truncated {total - SOURCE_PREVIEW} of {total} lines — "
+                f"fetch the remainder with read_source(file_path=\"{def_file}\", "
+                f"lines=\"{shown_last + 1}-{end_line}\")]"
+            )
         return "\n".join(lines)
 
     sections.append(_section("Source", _source))

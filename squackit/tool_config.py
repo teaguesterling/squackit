@@ -55,6 +55,13 @@ class ToolPresentation:
     cache_mtime_params: tuple[str, ...] = ()
     executor: Callable | None = None
 
+    # Compact-by-default column projection for relation results. When set, the
+    # MCP server filters the response to these columns (in this order) unless
+    # the caller passes `verbose=True`. Use for tools whose underlying relation
+    # carries lots of internal AST bookkeeping (node_id, depth, sibling_index,
+    # …) that's noise for most callers.
+    compact_columns: tuple[str, ...] | None = None
+
     @property
     def name(self) -> str:
         if self.alias is not None:
