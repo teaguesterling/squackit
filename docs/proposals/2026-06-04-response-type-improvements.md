@@ -62,7 +62,7 @@ Either:
 - Always render Source through line `end_line` (the def is bounded; serving the full body is the point of `investigate`).
 - OR add a `max_source_lines` parameter (default high enough to fit most functions) plus a footer `[truncated — N more lines; fetch with read_source(file_path, lines="237-242")]` when capped.
 
-## 4. Selectors match call names, not qualified attribute paths
+## 4. Selectors match call names, not qualified attribute paths — DONE (sitting_duck c458a11)
 
 **Symptom**
 
@@ -71,16 +71,26 @@ find(source="/blq/**/*.py", selector=".call#connect")
 # Returns 28 rows: 21 duckdb.connect(...), 4 db.connect(), 3 bare connect()
 ```
 
-`.call#connect` matches any call whose attribute name is `connect`, regardless of receiver. To ask "every call to `duckdb.connect`", I had to inspect `peek` post-hoc. This is a real expressiveness gap — call-pattern selectors are one of the most useful queries and they conflate receiver-disambiguation.
+`.call#connect` matches any call whose attribute name is `connect`, regardless of receiver. To ask "every call to `duckdb.connect`", I had to inspect `peek` post-hoc.
 
-**Proposal**
+**Implemented**
 
-Either of:
+New `[receiver=X]` attribute filter on the existing `[attr op value]` selector surface. Supports `=`, `*=`, `^=`, `$=`. Examples:
 
-- **Qualified selector syntax** — `.call#duckdb.connect` matches by full attribute path. `.call#*.connect` matches any receiver. Plain `.call#connect` keeps current semantics for backward compat.
-- **Receiver in result columns** — add `receiver` (e.g., `"duckdb"`, `"db"`, `None` for bare) as a top-level column. Callers filter post-hoc but at least can.
+```python
+find(source="/blq/**/*.py", selector=".call#connect[receiver=duckdb]")
+# 21 rows — only duckdb.connect(...)
 
-Selector syntax is more powerful; result columns are easier to ship.
+find(source="/blq/**/*.py", selector=".call#connect[receiver=db]")
+# 4 rows — only db.connect()
+
+find(source="/blq/**/*.py", selector=".call#connect[receiver$=connect]")
+# Calls whose receiver chain ENDS with "connect" (rare but expressive)
+```
+
+Chose attribute syntax over `.call#duckdb.connect` because the latter isn't valid CSS (`#` can only appear once; `.` separates classes). Receivers containing parens (`(complex).method()`) and computed receivers (`getattr(...)()`) are out of scope for the first cut.
+
+Requires sitting_duck rebuild for the change to land in production. Tests at `sitting_duck/test/sql/ast_select_native.test` (4 cases covering positive/negative + 3 operators).
 
 ## 5. `find` returns ~15 columns; ~4 are useful
 
