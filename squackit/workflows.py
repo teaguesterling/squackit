@@ -117,17 +117,37 @@ def explore(con, defaults, path=None):
         max_rows=15,
     )))
 
+    # Pass `repo=path` so recent_changes targets the explored project, not the
+    # MCP server's cwd. Without this, exploring `/home/teague/Projects/foo`
+    # from cwd `/some/other/repo` showed the wrong repo's git log.
     sections.append(_section("Recent Activity", lambda: _table(
-        con, "recent_changes", {"n": 5},
+        con, "recent_changes",
+        {"n": 5, **({"repo": path} if path else {})},
     )))
 
     title = f"Project: {path}" if path else "Explore"
     return _format_briefing(title, sections)
 
 
-def investigate(con, defaults, name, file_pattern=None):
-    """Deep dive on a specific function or symbol."""
-    file_pattern = file_pattern or defaults.code_pattern
+def investigate(con, defaults, name, file_pattern=None, path=None):
+    """Deep dive on a specific function or symbol.
+
+    Args:
+        name: Symbol to investigate.
+        file_pattern: Explicit glob to scope the search. If None, scopes to
+            `path` (or cwd if `path` is also None) via
+            `defaults.scoped_code_pattern`. Defaulting to
+            `defaults.code_pattern` directly would leak across project
+            boundaries — e.g. `investigate("main")` substring-matched
+            "remain" in vendored JS from a different project (Priya's
+            empirical hit, 2026-06-06).
+        path: Project root to scope the search to. Defaults to process cwd.
+            Only consulted when file_pattern is None.
+    """
+    if file_pattern is None:
+        import os
+        scope_path = path if path is not None else os.getcwd()
+        file_pattern = defaults.scoped_code_pattern(scope_path)
 
     # 1. Find definitions matching the name
     try:
@@ -158,6 +178,14 @@ def investigate(con, defaults, name, file_pattern=None):
     start_line = first[sl_idx]
     end_line = first[el_idx]
 
+    # Cap source rendering at SOURCE_PREVIEW lines per investigate call so a
+    # single sprawling function doesn't dominate the response. The Definition
+    # table already shows start_line + end_line, so a caller who wants the
+    # full body can `read_source(file_path, lines="<start>-<end>")` directly;
+    # but we used to silently truncate to 50 with no signal at all, which made
+    # the Definition end_line vs Source last-line mismatch confusing.
+    SOURCE_PREVIEW = 50
+
     def _source():
         rel = con.read_source(
             file_path=def_file,
@@ -169,7 +197,16 @@ def investigate(con, defaults, name, file_pattern=None):
         cols = rel.columns
         ln_idx = cols.index("line_number")
         ct_idx = cols.index("content")
-        lines = [f"{r[ln_idx]:4d}  {r[ct_idx]}" for r in rows[:50]]
+        total = len(rows)
+        kept = rows[:SOURCE_PREVIEW]
+        lines = [f"{r[ln_idx]:4d}  {r[ct_idx]}" for r in kept]
+        if total > SOURCE_PREVIEW:
+            shown_last = kept[-1][ln_idx]
+            lines.append(
+                f"\n[truncated {total - SOURCE_PREVIEW} of {total} lines — "
+                f"fetch the remainder with read_source(file_path=\"{def_file}\", "
+                f"lines=\"{shown_last + 1}-{end_line}\")]"
+            )
         return "\n".join(lines)
 
     sections.append(_section("Source", _source))
@@ -384,14 +421,18 @@ def register_workflows(mcp, con, defaults):
             ("path", Optional[str], None),
         ])
 
-    async def investigate_tool(*, name, file_pattern=None):
-        return investigate(con, defaults, name=name, file_pattern=file_pattern)
+    async def investigate_tool(*, name, file_pattern=None, path=None):
+        return investigate(con, defaults, name=name, file_pattern=file_pattern, path=path)
 
     _add_workflow_tool(mcp, "investigate",
-        "Deep dive on a function or symbol: definition, source, callers, callees.",
+        "Deep dive on a function or symbol: definition, source, callers, callees. "
+        "Scoped to `path` (or process cwd if path is omitted) by default — pass "
+        "`file_pattern` to override the scope explicitly, or `path` to point at "
+        "a specific repo root.",
         investigate_tool, [
             ("name", str, _empty),
             ("file_pattern", Optional[str], None),
+            ("path", Optional[str], None),
         ])
 
     async def review_tool(*, from_rev=None, to_rev=None, file_pattern=None):

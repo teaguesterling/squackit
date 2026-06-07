@@ -5,6 +5,7 @@ orchestrate multiple fledgling macros in a single call.
 """
 
 import asyncio
+from pathlib import Path
 
 import pytest
 
@@ -204,6 +205,50 @@ class TestInvestigate:
 
     def test_tool_is_registered(self, mcp):
         assert "investigate" in _tool_names(mcp)
+
+    def test_scopes_to_project_by_default(self, mcp, tmp_path, monkeypatch):
+        """Regression: `investigate(name="main")` used to substring-match
+        across every indexed project, so a user in repo A would get hits
+        from a vendored JS file in repo B. The fix: default file_pattern
+        to the cwd-scoped pattern, not the global one.
+        """
+        # Make a tmp dir with no source files — chdir there.
+        empty = tmp_path / "isolated"
+        empty.mkdir()
+        monkeypatch.chdir(empty)
+
+        text = _text(_run_async(mcp.call_tool("investigate", {
+            "name": "create_server",
+        })))
+        # With proper scoping, `create_server` shouldn't be found in an
+        # empty tmpdir even though it exists in the squackit index globally.
+        assert "no definition found" in text.lower(), (
+            "investigate leaked across project boundaries — found "
+            "create_server while cwd was an empty tmp dir"
+        )
+
+    def test_explicit_path_argument_overrides_cwd(self, mcp, tmp_path, monkeypatch):
+        """When `path` is passed explicitly, investigate should scope to
+        that path regardless of process cwd.
+        """
+        # chdir to an empty dir; pass the real squackit source as `path`.
+        empty = tmp_path / "isolated2"
+        empty.mkdir()
+        monkeypatch.chdir(empty)
+
+        import squackit
+        squackit_root = str(Path(squackit.__file__).parent.parent)
+
+        text = _text(_run_async(mcp.call_tool("investigate", {
+            "name": "create_server",
+            "path": squackit_root,
+        })))
+        # With explicit path, the symbol IS found even though cwd is empty.
+        assert "create_server" in text, (
+            "investigate(path=...) didn't scope to the requested path; "
+            "should have found create_server but got: "
+            + text[:200]
+        )
 
 
 # ── Integration tests: review ──────────────────────────────────────
