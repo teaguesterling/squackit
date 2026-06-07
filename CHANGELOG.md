@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.6.0
+
+### Added — `investigate(path=)` for cross-project scoping
+`investigate(name, path=)` accepts an explicit `path` argument and scopes the
+symbol-lookup to that path's `scoped_code_pattern`. Without `path=`, defaults
+to the process `cwd`-scoped pattern (was: the global registry pattern, which
+substring-matched across every indexed project — e.g. `investigate("main")`
+returned hits from vendored JS in unrelated repos). Pre-existing
+`file_pattern=` overrides still work.
+
+### Added — per-root FTS search
+`search_*` tools now accept `root=<dir>` to index + search any repo on the
+fly. Indexes are LRU-cached per root for the session, so repeated queries
+in the same root stay cheap.
+
+### Fixed — agent-ergonomics findings
+- FTS now fails loud on index errors instead of silently returning empty.
+- `investigate` no longer mislabels callers in cross-file results.
+- Selector docs verified end-to-end against the running tool surface.
+- `lackpy` 0.12 dropped top-level re-exports; switched to submodule imports
+  to keep import-time light.
+
+### Docs
+- `:has(.call#NAME)` works now that pluckit delegates selector compilation
+  to sitting_duck (was a notable known-bug in 0.5.0).
+- Tool count corrected in README (~20 was wrong; actually ~35 / ~40 full).
+- Receiver-qualified call selectors (#4) marked DONE.
+- Response-type improvement proposals collected in `docs/proposals/`.
+
 ## 0.5.0
 
 ### Changed — migrate off pluckit/fledgling private internals
