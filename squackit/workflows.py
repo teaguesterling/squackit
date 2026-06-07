@@ -129,9 +129,25 @@ def explore(con, defaults, path=None):
     return _format_briefing(title, sections)
 
 
-def investigate(con, defaults, name, file_pattern=None):
-    """Deep dive on a specific function or symbol."""
-    file_pattern = file_pattern or defaults.code_pattern
+def investigate(con, defaults, name, file_pattern=None, path=None):
+    """Deep dive on a specific function or symbol.
+
+    Args:
+        name: Symbol to investigate.
+        file_pattern: Explicit glob to scope the search. If None, scopes to
+            `path` (or cwd if `path` is also None) via
+            `defaults.scoped_code_pattern`. Defaulting to
+            `defaults.code_pattern` directly would leak across project
+            boundaries — e.g. `investigate("main")` substring-matched
+            "remain" in vendored JS from a different project (Priya's
+            empirical hit, 2026-06-06).
+        path: Project root to scope the search to. Defaults to process cwd.
+            Only consulted when file_pattern is None.
+    """
+    if file_pattern is None:
+        import os
+        scope_path = path if path is not None else os.getcwd()
+        file_pattern = defaults.scoped_code_pattern(scope_path)
 
     # 1. Find definitions matching the name
     try:
@@ -405,14 +421,18 @@ def register_workflows(mcp, con, defaults):
             ("path", Optional[str], None),
         ])
 
-    async def investigate_tool(*, name, file_pattern=None):
-        return investigate(con, defaults, name=name, file_pattern=file_pattern)
+    async def investigate_tool(*, name, file_pattern=None, path=None):
+        return investigate(con, defaults, name=name, file_pattern=file_pattern, path=path)
 
     _add_workflow_tool(mcp, "investigate",
-        "Deep dive on a function or symbol: definition, source, callers, callees.",
+        "Deep dive on a function or symbol: definition, source, callers, callees. "
+        "Scoped to `path` (or process cwd if path is omitted) by default — pass "
+        "`file_pattern` to override the scope explicitly, or `path` to point at "
+        "a specific repo root.",
         investigate_tool, [
             ("name", str, _empty),
             ("file_pattern", Optional[str], None),
+            ("path", Optional[str], None),
         ])
 
     async def review_tool(*, from_rev=None, to_rev=None, file_pattern=None):
