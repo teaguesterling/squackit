@@ -145,9 +145,11 @@ def investigate(con, defaults, name, file_pattern=None, path=None):
             Only consulted when file_pattern is None.
     """
     if file_pattern is None:
-        import os
-        scope_path = path if path is not None else os.getcwd()
-        file_pattern = defaults.scoped_code_pattern(scope_path)
+        from squackit.runtime import resolve_scope_path
+        # Precedence: explicit path -> runtime.active_root -> process cwd.
+        # Runtime fallback lets a session set active_root once via
+        # `config(set={"active_root": X})` instead of passing path= per call.
+        file_pattern = defaults.scoped_code_pattern(resolve_scope_path(path))
 
     # 1. Find definitions matching the name
     try:
@@ -455,4 +457,29 @@ def register_workflows(mcp, con, defaults):
         search_tool, [
             ("query", str, _empty),
             ("file_pattern", Optional[str], None),
+        ])
+
+    async def config_tool(*, set=None, reset=False):
+        from squackit.runtime import get_runtime, reset_runtime, update_runtime
+        if reset:
+            cfg = reset_runtime()
+            return cfg.to_dict()
+        if set:
+            try:
+                cfg = update_runtime(set)
+            except ValueError as e:
+                return {"error": "invalid_config", "message": str(e)}
+            return cfg.to_dict()
+        return get_runtime().to_dict()
+
+    _add_workflow_tool(mcp, "config",
+        "Read or update squackit's in-memory session config. Keys: active_root "
+        "(fallback for tools that take path=/root=), log_level, max_results_default, "
+        "complexity_max_results_default, fts_cache_size. In-memory only — wiped on "
+        "server restart. Env-var seeded at launch (SQUACKIT_ACTIVE_ROOT, etc). "
+        "config() reads; config(set={...}) merges atomically; config(reset=true) "
+        "reverts to env seed. Mirrors jetsam's config() endpoint.",
+        config_tool, [
+            ("set", Optional[dict], None),
+            ("reset", bool, False),
         ])
