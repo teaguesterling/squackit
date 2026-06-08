@@ -225,6 +225,16 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
                     max_limit = int(val)
                 except (TypeError, ValueError):
                     pass
+            else:
+                # Caller passed limit=None — fall back to runtime config.
+                # `complexity` is its own bucket; everything else uses the
+                # general default_max_results.
+                from squackit.runtime import get_runtime
+                rt = get_runtime()
+                if tool_name == "complexity":
+                    max_limit = rt.complexity_max_results_default
+                elif limit_param == "max_results":
+                    max_limit = rt.max_results_default
 
         # Pop verbose param the same way — opts out of compact_columns
         # projection so the caller can see the full AST bookkeeping schema.
