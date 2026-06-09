@@ -1,6 +1,8 @@
 # tests/test_tools.py
 """Tests for squackit.tools -- pluckit-backed tool executors."""
 
+import os
+
 import pytest
 from squackit.tools import (
     PLUCKIT_TOOLS,
@@ -72,6 +74,36 @@ class TestComplexityExecutor:
         cx_idx = result.columns.index("complexity")
         complexities = [r[cx_idx] for r in rows]
         assert complexities == sorted(complexities, reverse=True)
+
+
+_HAS_FIXTURE = os.path.join(
+    os.path.dirname(__file__), "fixtures", "has_call_filter.py"
+)
+
+
+class TestHasCallSelectorRegression:
+    """:has(.call#name) must apply the nested #name filter, not drop it and
+    over-match every function (sitting_duck #72, squackit #8). The fixture has
+    4 functions; exactly 2 call `_target`."""
+
+    def test_has_call_filters_to_callers(self):
+        names = set(
+            find_names_executor(
+                source=_HAS_FIXTURE, selector=".function:has(.call#_target)"
+            )
+        )
+        assert names == {"calls_target_once", "calls_target_twice"}
+
+    def test_bare_function_matches_all_four(self):
+        # Sanity: without the :has predicate, every function matches — so the
+        # test above is exercising the filter, not an empty corpus.
+        names = set(find_names_executor(source=_HAS_FIXTURE, selector=".function"))
+        assert names == {
+            "_target",
+            "calls_target_once",
+            "calls_target_twice",
+            "calls_other",
+        }
 
 
 class TestPluckitToolsList:
