@@ -106,6 +106,64 @@ class TestHasCallSelectorRegression:
         }
 
 
+class TestSourceDeVendoring:
+    """find/view/complexity de-vendor the source glob via fledgling's ignore
+    policy so a whole-repo glob doesn't drown in submodules / vendored trees
+    (fledgling #47). A bare glob returns only the project's own code; an
+    explicitly vendor-targeted glob is still honored (not filtered to zero)."""
+
+    def _make_repo(self, tmp_path):
+        (tmp_path / "app.py").write_text("def own_func():\n    return 1\n")
+        nm = tmp_path / "node_modules" / "dep"
+        nm.mkdir(parents=True)
+        (nm / "lib.py").write_text("def vendored_func():\n    return 2\n")
+        return tmp_path
+
+    def test_whole_repo_glob_excludes_vendored(self, tmp_path):
+        repo = self._make_repo(tmp_path)
+        names = set(
+            find_names_executor(source=f"{repo}/**/*.py", selector=".function")
+        )
+        assert "own_func" in names
+        assert "vendored_func" not in names
+
+    def test_explicit_vendor_target_is_honored(self, tmp_path):
+        # Aiming straight at the vendored tree must still return it -- filtering
+        # it to zero would defeat an intentional query.
+        repo = self._make_repo(tmp_path)
+        names = set(
+            find_names_executor(
+                source=f"{repo}/node_modules/**/*.py", selector=".function"
+            )
+        )
+        assert "vendored_func" in names
+
+    def test_git_submodule_contents_excluded(self, tmp_path):
+        # A submodule dir with an arbitrary name no denylist could catch -- only
+        # .gitmodules-driven exclusion removes it. Root is derived from the glob.
+        (tmp_path / ".git").write_text("gitdir: /nowhere\n")
+        (tmp_path / ".gitmodules").write_text(
+            '[submodule "libfoo"]\n\tpath = libfoo\n\turl = https://x/libfoo\n'
+        )
+        (tmp_path / "main.py").write_text("def main_func():\n    return 1\n")
+        sub = tmp_path / "libfoo"
+        sub.mkdir()
+        (sub / "vend.py").write_text("def sub_func():\n    return 2\n")
+        names = set(
+            find_names_executor(source=f"{tmp_path}/**/*.py", selector=".function")
+        )
+        assert "main_func" in names
+        assert "sub_func" not in names
+
+    def test_single_file_source_passes_through(self, tmp_path):
+        # No glob -> explicit single target -> no filtering machinery.
+        (tmp_path / "solo.py").write_text("def solo_func():\n    return 1\n")
+        names = set(
+            find_names_executor(source=f"{tmp_path}/solo.py", selector=".function")
+        )
+        assert "solo_func" in names
+
+
 class TestPluckitToolsList:
 
     def test_five_tools_defined(self):

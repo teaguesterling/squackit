@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.7.0
+
+### Added — AST tools de-vendor the source glob (fledgling #47)
+`find` / `find_names` / `view` / `complexity` now exclude submodule, build,
+cache, and checked-in third-party trees from a whole-repo glob, so they focus on
+the project's own code instead of drowning in vendored deps. On a DuckDB
+extension with `duckdb/` + `rdkit/` git submodules, `find_names('**/*.cpp', '.function')`
+went from **35k+ names parsed in ~9 s to 164 in ~2 s** (~660× less work at the
+parse layer).
+
+- Reuses fledgling's single-source-of-truth ignore policy (`_is_vendored_path`
+  denylist + `_submodule_prefixes` git-awareness, new in fledgling 0.12) — the
+  filtered file set is handed to sitting_duck as an explicit `read_ast` list,
+  which parses identically to a glob (verified same results), so only *which*
+  files are parsed changes, not how selectors match.
+- The repo root for submodule exclusion is derived from the **source glob**
+  (walking up to the nearest `.gitmodules`/`.git`), not the server's cwd, so it
+  works when an agent queries a different project by absolute path.
+- Explicit targets are honored: a single-file source, a DuckDB table name, or a
+  glob aimed *into* a vendored/submodule tree (e.g. `rdkit/**/*.cpp`) is passed
+  through unfiltered rather than filtered to zero.
+
+### Changed
+- Require `fledgling-mcp>=0.12` for the `_is_vendored_path` / `_submodule_prefixes`
+  ignore-policy macros.
+
 ## 0.6.0
 
 ### Added — `investigate(path=)` for cross-project scoping
