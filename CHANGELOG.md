@@ -1,6 +1,16 @@
 # Changelog
 
-## 0.7.0
+## 0.7.1
+
+### Added — server consumes default-limit knobs
+`config()`'s `max_results_default` / `complexity_max_results_default` session
+knobs are now honored by the server's tool truncation, so the in-memory limits
+set via `config()` actually take effect.
+
+### Changed — ast-pluckit 0.14 selector delegation
+Consume ast-pluckit 0.14.0, which delegates CSS-selector matching to
+sitting_duck's `ast_select` (fixes `:has(.call#name)` over-match, sitting_duck
+#72 / squackit #8); pinned `ast-pluckit>=0.14,<0.15` with a regression test.
 
 ### Added — AST tools de-vendor the source glob (fledgling #47)
 `find` / `find_names` / `view` / `complexity` now exclude submodule, build,
