@@ -251,6 +251,84 @@ class TestInvestigate:
         )
 
 
+# ── Unit tests: investigate exact-name preference ──────────────────
+
+
+class _Rel:
+    """Minimal stand-in for a fledgling relation (columns + fetchall)."""
+
+    def __init__(self, columns, rows):
+        self.columns = columns
+        self._rows = rows
+
+    def fetchall(self):
+        return self._rows
+
+
+class _FakeCon:
+    """Fake connection exposing just the macros investigate() calls.
+
+    find_definitions emulates the real `name LIKE '%needle%'` substring macro
+    so we can prove investigate's Python-side exact-match preference.
+    """
+
+    _DEF_COLS = [
+        "file_path", "name", "kind", "start_line", "end_line", "signature",
+    ]
+
+    def __init__(self, defs):
+        self._defs = defs  # list of DEF_COLS-shaped tuples
+
+    def find_definitions(self, file_pattern, name_pattern):
+        needle = name_pattern.strip("%")
+        rows = [d for d in self._defs if needle in d[1]]
+        return _Rel(self._DEF_COLS, rows)
+
+    def function_callers(self, file_pattern, func_name):
+        return _Rel(["file_path", "call_line", "caller_name"], [])
+
+    def read_source(self, file_path, lines):
+        return _Rel(["line_number", "content"], [])
+
+    def find_in_ast(self, file_pattern, kind):
+        return _Rel(["start_line", "name"], [])
+
+
+class TestInvestigateExactMatch:
+    """Regression: `investigate("ensure_loaded")` used to substring-match
+    `_ensure_loaded` (and vendored copies), polluting the Definition table
+    and — since Source/Calls key off defs[0] — sometimes describing the
+    WRONG symbol entirely. Prefer exact name matches; fall back to substring
+    only when nothing matches exactly.
+    """
+
+    def _con(self):
+        return _FakeCon([
+            ("a.py", "ensure_loaded", "DEFINITION_FUNCTION", 1, 5,
+             "def ensure_loaded():"),
+            ("vendored/cli.py", "_ensure_loaded", "DEFINITION_FUNCTION", 1, 5,
+             "def _ensure_loaded():"),
+        ])
+
+    def test_prefers_exact_name_over_substring_superset(self):
+        from squackit.workflows import investigate
+        text = investigate(self._con(), None, "ensure_loaded",
+                           file_pattern="**/*.py")
+        assert "ensure_loaded" in text
+        # the substring-superset symbol must be excluded
+        assert "_ensure_loaded" not in text
+        assert "vendored/cli.py" not in text
+
+    def test_falls_back_to_substring_when_no_exact_match(self):
+        from squackit.workflows import investigate
+        # No symbol is named exactly "ensure"; both contain it, so the
+        # forgiving substring lookup should still surface them.
+        text = investigate(self._con(), None, "ensure",
+                           file_pattern="**/*.py")
+        assert "ensure_loaded" in text
+        assert "_ensure_loaded" in text
+
+
 # ── Integration tests: review ──────────────────────────────────────
 
 
