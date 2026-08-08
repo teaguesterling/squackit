@@ -151,7 +151,13 @@ def investigate(con, defaults, name, file_pattern=None, path=None):
         # `config(set={"active_root": X})` instead of passing path= per call.
         file_pattern = defaults.scoped_code_pattern(resolve_scope_path(path))
 
-    # 1. Find definitions matching the name
+    # 1. Find definitions matching the name. Fetch substring candidates, then
+    #    prefer EXACT name matches: a deep-dive on `ensure_loaded` must not drag
+    #    in `_ensure_loaded` (or `main` -> `remain`). The substring pollutes the
+    #    Definition table AND — because Source/Calls key off defs[0] — can make
+    #    the whole briefing describe the wrong symbol. Fall back to the full
+    #    substring set only when nothing matches exactly, preserving the
+    #    forgiving lookup for partial names / typos.
     try:
         rel = con.find_definitions(
             file_pattern=file_pattern, name_pattern=f"%{name}%",
@@ -161,6 +167,12 @@ def investigate(con, defaults, name, file_pattern=None, path=None):
     except Exception:
         defs = []
         def_cols = []
+
+    if defs and "name" in def_cols:
+        _n_idx = def_cols.index("name")
+        _exact = [d for d in defs if d[_n_idx] == name]
+        if _exact:
+            defs = _exact
 
     if not defs:
         return f"No definition found for '{name}'. Try a broader pattern or check spelling."
