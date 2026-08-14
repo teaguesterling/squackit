@@ -15,3 +15,7 @@ site/
 .kibitzer/
 scripts/example_grid_out/
 .lackpy/
+
+# pluckit AST cache (created in the working repo when the cache is enabled)
+.pluckit.duckdb
+.pluckit.duckdb.wal
