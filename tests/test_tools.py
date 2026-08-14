@@ -48,6 +48,30 @@ class TestFindExecutor:
         rows = result.fetchall()
         assert len(rows) >= 1
 
+    def test_peek_is_populated_by_default(self):
+        """find advertises "a peek of the source" and names peek in its compact
+        columns; a NULL peek breaks that contract."""
+        result = find_executor(source="squackit/cli.py", selector=".fn#cli")
+        cols = list(result.columns)
+        assert "peek" in cols
+        assert result.fetchall()[0][cols.index("peek")], "peek present but empty"
+
+    def test_peek_none_suppresses_source(self):
+        """'none' must empty the text without dropping the column."""
+        result = find_executor(source="squackit/cli.py", selector=".fn#cli", peek="none")
+        cols = list(result.columns)
+        assert "peek" in cols, "peek column disappeared instead of emptying"
+        assert not result.fetchall()[0][cols.index("peek")]
+
+    def test_peek_full_returns_whole_node(self):
+        """'full' returns the complete node; 'smart' is capped, so on a
+        non-trivial function full must be strictly longer."""
+        def peek_len(mode):
+            r = find_executor(source="squackit/cli.py", selector=".fn#cli", peek=mode)
+            cols = list(r.columns)
+            return len(r.fetchall()[0][cols.index("peek")] or "")
+        assert peek_len("full") > peek_len("smart")
+
 
 class TestFindNamesExecutor:
 
