@@ -6,7 +6,7 @@ from dataclasses import fields
 
 from squackit.db import create_connection
 from squackit.defaults import ProjectDefaults, TOOL_DEFAULTS, apply_defaults, load_config, infer_defaults
-from conftest import PROJECT_ROOT
+from conftest import PROJECT_ROOT, requires_fledgling_source
 
 
 class TestProjectDefaults:
@@ -194,6 +194,7 @@ class TestInferDefaults:
         defaults = infer_defaults(con, root=str(PROJECT_ROOT))
         assert "Python" in defaults.languages
 
+    @requires_fledgling_source
     def test_doc_pattern_finds_docs_dir(self, con):
         """This repo has a docs/ directory."""
         defaults = infer_defaults(con, root=str(PROJECT_ROOT))
@@ -242,6 +243,7 @@ class TestServerIntegration:
         assert hasattr(server, "_defaults")
         assert isinstance(server._defaults, ProjectDefaults)
 
+    @requires_fledgling_source
     def test_server_defaults_inferred(self, server):
         """Defaults reflect this project (Python, docs/)."""
         assert "py" in server._defaults.code_pattern

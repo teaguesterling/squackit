@@ -67,6 +67,38 @@ def __getattr__(name):
     raise AttributeError(f"module 'conftest' has no attribute {name!r}")
 
 
+def _fledgling_source_available() -> bool:
+    """True when the discovered root is a fledgling *source checkout*.
+
+    ``_discover_fledgling_repo`` accepts an installed-package layout (a wheel
+    that bundles ``sql/`` inside the package) because that is enough for the
+    macros. It is not enough for tests that read repo-shaped content — a
+    ``docs/`` tree, or module files like ``fledgling/pro/__main__.py`` — which
+    a wheel does not lay out the same way.
+
+    Without this check those tests fail on an assertion about the *content*
+    ("expected doc_pattern to start with docs/"), which points at squackit's
+    own defaults logic rather than at the missing checkout, and sends anyone
+    debugging it in the wrong direction.
+    """
+    try:
+        root = _get_project_root()
+    except RuntimeError:
+        return False
+    return os.path.isdir(os.path.join(root, "docs")) and os.path.isfile(
+        os.path.join(root, "fledgling", "pro", "__main__.py")
+    )
+
+
+requires_fledgling_source = pytest.mark.skipif(
+    not _fledgling_source_available(),
+    reason=(
+        "needs a fledgling source checkout (found an installed-package "
+        "layout). Set FLEDGLING_REPO_PATH to a fledgling clone."
+    ),
+)
+
+
 def load_sql(con, filename):
     """Load a SQL macro file into a DuckDB connection."""
     path = os.path.join(_get_project_root(), "sql", filename)
