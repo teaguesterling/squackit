@@ -14,7 +14,26 @@ from fledgling.tools import ToolInfo
 from squackit.tool_config import ToolPresentation
 
 
-def _filtered_source(plucker, source: str) -> str:
+#: How much source text ``read_ast`` puts in the ``peek`` column when squackit
+#: materializes its own table. ``'smart'`` matches what pluckit's cache uses by
+#: default, so a query returns the same peek whether or not de-vendoring kicked in.
+DEFAULT_PEEK = "smart"
+
+
+def _peek_arg(peek: str) -> str:
+    """Render a ``peek`` value as a ``read_ast`` named argument.
+
+    Accepts sitting_duck's vocabulary: ``'none'`` (suppress the text),
+    ``'smart'`` (short bounded preview), ``'full'`` (whole node), or an integer
+    size. ``+schema`` is appended so the column stays in the projection even for
+    ``'none'`` — squackit names ``peek`` in its compact columns, and a column
+    that disappears breaks the projection instead of merely emptying it.
+    """
+    value = str(peek).strip() or DEFAULT_PEEK
+    return f"peek := '{value}+schema'" if "+" not in value else f"peek := '{value}'"
+
+
+def _filtered_source(plucker, source: str, peek: str = DEFAULT_PEEK) -> str:
     """De-vendor a source glob before it reaches pluckit's AST engine.
 
     A bare ``**/*`` glob over a repo with git submodules or checked-in
@@ -90,7 +109,7 @@ def _filtered_source(plucker, source: str) -> str:
         lit = "[" + ", ".join("'" + f.replace("'", "''") + "'" for f in kept) + "]"
         db.execute(
             "CREATE OR REPLACE TEMP TABLE _squackit_src AS "
-            f"SELECT * FROM read_ast({lit}, peek := 'none+schema')"
+            f"SELECT * FROM read_ast({lit}, {_peek_arg(peek)})"
         )
         return "_squackit_src"
     except Exception:
@@ -99,7 +118,7 @@ def _filtered_source(plucker, source: str) -> str:
         return source
 
 
-def _make_plucker(source: str):
+def _make_plucker(source: str, peek: str = DEFAULT_PEEK):
     """Create a Plucker with AstViewer and Search for tool execution.
 
     The source glob is de-vendored first (see :func:`_filtered_source`) so the
@@ -109,8 +128,15 @@ def _make_plucker(source: str):
     from pluckit import Plucker
     from pluckit.pluckins.search import Search
     from pluckit.pluckins.viewer import AstViewer
-    p = Plucker(plugins=[AstViewer, Search])
-    p._code_source = _filtered_source(p, source)
+    # cache=True is what makes peek reachable. pluckit resolves a source three
+    # ways: a table name goes straight to ``ast_select_from`` (peek comes from
+    # the materialized table), a cached source is materialized then read the
+    # same way, and everything else falls through to ``ast_select`` — which
+    # parses with ``peek := 'none'`` and can only ever return NULL. Enabling the
+    # cache moves the un-filtered path onto ``ast_select_from`` too, so both
+    # paths return source text. It also stops re-parsing on every call.
+    p = Plucker(plugins=[AstViewer, Search], cache=True, peek=peek)
+    p._code_source = _filtered_source(p, source, peek)
     return p
 
 
@@ -120,9 +146,9 @@ def view_executor(*, source: str, selector: str):
     return p.view(selector)
 
 
-def find_executor(*, source: str, selector: str):
+def find_executor(*, source: str, selector: str, peek: str = DEFAULT_PEEK):
     """Execute a find query, returning matched AST nodes as a relation."""
-    p = _make_plucker(source)
+    p = _make_plucker(source, peek)
     return p.find(selector).relation
 
 

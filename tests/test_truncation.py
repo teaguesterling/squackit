@@ -16,7 +16,7 @@ from squackit.formatting import (
     _HINTS,
 )
 
-from conftest import PROJECT_ROOT
+from conftest import PROJECT_ROOT, requires_fledgling_source
 
 try:
     import fastmcp  # noqa: F401
@@ -186,6 +186,7 @@ class TestTextTruncation:
     """Test truncation of text-format tools via mcp.call_tool."""
 
     @pytest.mark.anyio
+    @requires_fledgling_source
     async def test_read_source_truncates_large_file(self, mcp):
         result = _text(await mcp.call_tool("read_source", {
             "file_path": f"{PROJECT_ROOT}/tests/conftest.py",
@@ -209,6 +210,7 @@ class TestTextTruncation:
         assert "--- omitted" not in result
 
     @pytest.mark.anyio
+    @requires_fledgling_source
     async def test_read_source_explicit_lines_bypasses(self, mcp):
         result = _text(await mcp.call_tool("read_source", {
             "file_path": f"{PROJECT_ROOT}/tests/conftest.py",
@@ -226,6 +228,7 @@ class TestTextTruncation:
         assert "--- omitted" not in result
 
     @pytest.mark.anyio
+    @requires_fledgling_source
     async def test_read_source_custom_max_lines(self, mcp):
         result = _text(await mcp.call_tool("read_source", {
             "file_path": f"{PROJECT_ROOT}/tests/conftest.py",
@@ -237,6 +240,7 @@ class TestTextTruncation:
         assert len(lines) == 12
 
     @pytest.mark.anyio
+    @requires_fledgling_source
     async def test_truncated_text_has_head_and_tail(self, mcp):
         result = _text(await mcp.call_tool("read_source", {
             "file_path": f"{PROJECT_ROOT}/tests/conftest.py",
