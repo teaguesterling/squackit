@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.8.0
+
+### Added — source text from `find`, and a cache instead of re-parsing
+`find` returns source text via a caller-chosen peek extent, and the AST cache
+is enabled so repeated calls query a materialized table rather than re-parsing
+the tree every time. Selection is delegated to sitting_duck's `ast_select`
+rather than reimplemented here.
+
+Cached tables now also carry `start_column` / `end_column`. These were not
+zeroed before — they were *absent*, since `read_ast` only adds them under
+`source := 'full'`. On minified input every node reports `start_line = 1`, so
+character offsets are the only way to isolate a node: peek says how much text a
+node carries, the columns say where it is.
+
+### Fixed — `investigate` preferred substrings over exact names
+`investigate(name)` resolved definitions with a LIKE substring
+(`name_pattern='%name%'`), so a deep-dive on `ensure_loaded` dragged in
+`_ensure_loaded` — including vendored copies under `.venv`. Because the Source
+and Calls sections key off `defs[0]`, the briefing could describe the **wrong
+function** entirely. Exact matches now win.
+
+### Changed — requires `ast-pluckit>=0.15,<0.16`
+This package calls `Plucker(..., cache=True, peek=...)`. That keyword arrived in
+pluckit 0.15.0; the 0.14.0 the previous constraint allowed does not have it, so
+a normal install resolved a pluckit whose every tool call raised `TypeError`.
+The suite had hidden this by running with `PYTHONPATH` pointed at a checkout;
+it is now verified against the published wheel.
+
+### Fixed — tests that need a fledgling checkout now skip
+Six tests read repo-shaped content (a `docs/` tree, `fledgling/pro/__main__.py`)
+that only a fledgling source checkout has. Under the installed-package layout
+they failed on assertions about *content* — reading as bugs in squackit's own
+defaults inference — instead of saying what was missing. They now skip, naming
+`FLEDGLING_REPO_PATH`.
+
 ## 0.7.1
 
 ### Added — server consumes default-limit knobs
