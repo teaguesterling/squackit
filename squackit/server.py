@@ -296,7 +296,12 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
             if is_text:
                 lines = []
                 for row in rows:
-                    parts = [str(v) for v in row if v is not None]
+                    # Strip each value's own line terminator: this branch joins
+                    # rows with "\n" itself, so a source line that already ends
+                    # in one renders double-spaced, every second line blank.
+                    # Only \r and \n come off — leading indentation is content,
+                    # and so is any trailing space a line genuinely carries.
+                    parts = [str(v).rstrip("\r\n") for v in row if v is not None]
                     lines.append("  ".join(parts))
                 if omission:
                     lines.append(omission)
@@ -594,16 +599,29 @@ def _register_tool(
 
         # Format output
         if is_text:
+            def _cell(value) -> str:
+                """Render one value as a line fragment.
+
+                Drops the value's own line terminator: this branch joins rows
+                with "\\n" itself, and `read_source` returns each line's content
+                WITH its trailing newline. Keeping both renders the file
+                double-spaced — every second line blank — which also breaks
+                head/tail truncation's line accounting, since the omission
+                message is inserted by row index. Only \\r and \\n come off;
+                leading indentation is content and must survive.
+                """
+                return str(value).rstrip("\r\n") if value is not None else ""
+
             if len(cols) == 1:
-                lines = [str(r[0]) for r in rows]
+                lines = [_cell(r[0]) for r in rows]
             elif "line_number" in cols and "content" in cols:
                 ln_idx = cols.index("line_number")
                 ct_idx = cols.index("content")
-                lines = [f"{r[ln_idx]:4d}  {r[ct_idx]}" for r in rows]
+                lines = [f"{r[ln_idx]:4d}  {_cell(r[ct_idx])}" for r in rows]
             else:
                 lines = []
                 for row in rows:
-                    parts = [str(v) for v in row if v is not None]
+                    parts = [_cell(v) for v in row if v is not None]
                     lines.append("  ".join(parts))
             if omission:
                 lines.insert(_HEAD_TAIL, omission)

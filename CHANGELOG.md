@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.8.2
+
+### Fixed — AST tools could not read a source outside the working directory
+
+`find` / `view` / `find_names` / `complexity` build their own connection with
+no root, so fledgling's sandbox confined them to the process working
+directory. An absolute source anywhere else — `find(source="/srv/code/x/**/*.py")`
+— raised a permission error. The connection is now rooted at the source's own
+directory, which is the scope the caller named. Relative sources are untouched:
+they already resolve against the working directory, and re-rooting them would
+double-prefix the path.
+
+Each rooted plucker gets its own AST cache file, keyed by root. DuckDB's
+filesystem allow-list belongs to the database *instance*, not the connection,
+and every connection to one file shares an instance — so a single shared cache
+meant the first lockdown won for the life of the process and later roots were
+silently ignored. The cache lives in the temp directory rather than inside the
+root, since a served corpus is mounted read-only.
+
+### Fixed — de-vendoring aborted the transaction and blamed the next query
+
+When a glob's tree had no `.git`/`.gitmodules` ancestor, the walk up degraded
+to `/` and `_submodule_prefixes('')` read the filesystem root — refused under
+the sandbox. The failure was swallowed by design (de-vendoring is an
+optimization, not a correctness gate), but the aborted DuckDB transaction was
+not rolled back, so the *next* statement failed with "Current transaction is
+aborted" — pointing at the AST cache, which had done nothing wrong. Submodule
+exclusion is now skipped when there is no repository to read, and the fallback
+rolls back so the connection stays usable.
+
+### Fixed — `read_source` output was double-spaced
+
+Rows carry each line's own trailing newline, and the text renderer joined them
+with another, so every second line was blank. That also broke head/tail
+truncation, whose omission message is inserted by row index.
+
 ## 0.8.1
 
 ### Fixed — every code query returned "not found" under fledgling >= 0.13

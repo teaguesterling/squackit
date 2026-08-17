@@ -279,7 +279,12 @@ class TestMarkdownTruncation:
         assert omission_idx == 7  # 0:header, 1:sep, 2-6:head, 7:omission
 
     @pytest.mark.anyio
+    @requires_fledgling_source
     async def test_max_results_zero_disables(self, mcp):
+        # recent_changes queries git history, so the dog-food corpus has to be
+        # a repository. An installed wheel in site-packages has no .git and the
+        # macro raises "No git repository found" — a fact about the corpus, not
+        # about truncation.
         result = _text(await mcp.call_tool("recent_changes", {
             "max_results": 0,
         }))

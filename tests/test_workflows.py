@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from conftest import PROJECT_ROOT
+from conftest import PROJECT_ROOT, requires_fledgling_source
 
 try:
     import fastmcp  # noqa: F401
@@ -174,7 +174,18 @@ class TestExplore:
 
 @requires_fastmcp
 class TestInvestigate:
-    """Test the investigate compound tool."""
+    """Test the investigate compound tool.
+
+    The section assertions below need a fledgling SOURCE checkout as the
+    dog-food corpus. Against an installed wheel the corpus is site-packages,
+    where the bundled sql/ outnumbers the Python, so the inferred code_pattern
+    is legitimately `**/*.sql` and investigating a Python symbol finds nothing
+    — the briefing then has no Definition/Source/Called-by sections. That is a
+    fact about the corpus, not about investigate, and asserting it against a
+    wheel sends anyone debugging it into squackit's scoping logic instead. The
+    tests that hold either way (registration, unknown-name handling, project
+    scoping) stay unmarked.
+    """
 
     @pytest.fixture(scope="class")
     def text(self, mcp):
@@ -185,12 +196,15 @@ class TestInvestigate:
     def test_returns_non_empty(self, text):
         assert len(text) > 0
 
+    @requires_fledgling_source
     def test_contains_definition_section(self, text):
         assert "Definition" in text
 
+    @requires_fledgling_source
     def test_contains_source_section(self, text):
         assert "Source" in text
 
+    @requires_fledgling_source
     def test_contains_called_by_section(self, text):
         assert "Called by" in text
 

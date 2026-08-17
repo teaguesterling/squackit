@@ -8,7 +8,10 @@ fledgling macro tools. They take priority over fledgling equivalents
 
 from __future__ import annotations
 
+import hashlib
 import os
+import re
+import tempfile
 
 from fledgling.tools import ToolInfo
 from squackit.tool_config import ToolPresentation
@@ -79,27 +82,41 @@ def _filtered_source(plucker, source: str, peek: str = DEFAULT_PEEK) -> str:
         # prefix (the path before the first wildcard) and walk up to the nearest
         # .gitmodules / .git. The denylist is absolute-pattern based, no root needed.
         prefix = resolved.split("*", 1)[0]
-        root = prefix if prefix.endswith("/") else os.path.dirname(prefix)
-        while root and root != "/":
-            if os.path.exists(os.path.join(root, ".gitmodules")) or os.path.exists(
-                os.path.join(root, ".git")
+        candidate = prefix if prefix.endswith("/") else os.path.dirname(prefix)
+        # Walk up to the repository that owns these files. If there ISN'T one,
+        # leave root empty and skip submodule exclusion entirely: there are no
+        # submodules to exclude, and the walk otherwise degrades to "/", whose
+        # rstrip("/") is the empty string. `_submodule_prefixes('')` then reads
+        # the filesystem root — which a sandboxed connection refuses, aborting
+        # the transaction and taking down every later query on this connection.
+        root = ""
+        while candidate and candidate != "/":
+            if os.path.exists(os.path.join(candidate, ".gitmodules")) or os.path.exists(
+                os.path.join(candidate, ".git")
             ):
+                root = candidate
                 break
-            root = os.path.dirname(root)
+            candidate = os.path.dirname(candidate)
         rq = resolved.replace("'", "''")
-        rootq = root.rstrip("/").replace("'", "''")
 
         total = db.sql(f"SELECT count(*) FROM glob('{rq}')").fetchone()[0]
         if total <= 1:
             return source
+
+        submodule_clause = ""
+        if root:
+            rootq = root.rstrip("/").replace("'", "''")
+            submodule_clause = (
+                f"AND NOT EXISTS (SELECT 1 FROM _submodule_prefixes('{rootq}') s "
+                f"WHERE file LIKE s.prefix || '%') "
+            )
 
         kept = [
             r[0]
             for r in db.sql(
                 f"SELECT file FROM glob('{rq}') "
                 f"WHERE NOT _is_vendored_path(file) "
-                f"AND NOT EXISTS (SELECT 1 FROM _submodule_prefixes('{rootq}') s "
-                f"WHERE file LIKE s.prefix || '%') "
+                f"{submodule_clause}"
                 f"ORDER BY file"
             ).fetchall()
         ]
@@ -115,7 +132,79 @@ def _filtered_source(plucker, source: str, peek: str = DEFAULT_PEEK) -> str:
     except Exception:
         # Ignore-policy macros unavailable / SQL error — fall back to the raw
         # glob. Unfiltered (flooded) results beat a broken tool.
+        #
+        # ROLL BACK FIRST. A failed statement leaves the DuckDB transaction in
+        # an aborted state, so swallowing the error without clearing it poisons
+        # every later query on this connection with "Current transaction is
+        # aborted (please ROLLBACK)" — including the AST cache lookup that runs
+        # moments later. The caller then sees a transaction error from a
+        # statement that never failed, pointing at the wrong subsystem entirely.
+        # Degrading gracefully means the connection is still usable afterwards,
+        # which is the whole promise of this except clause.
+        try:
+            db = plucker._ctx.db
+            if db is not None:
+                db.execute("ROLLBACK")
+        except Exception:
+            pass  # no transaction open, or the connection is beyond saving
         return source
+
+
+def _source_root(source: str) -> str | None:
+    """The directory that must be readable for *source* to resolve.
+
+    A fledgling connection is sandboxed to its root (fledgling >= 0.13), so a
+    Plucker built without one is confined to the process working directory and
+    cannot read a source anywhere else: ``find(source="/srv/code/x/**/*.py")``
+    raised a permission error instead of returning results. These tools take
+    their target as an argument, so the target is the scope — rooting the
+    connection at the source's own directory keeps the sandbox meaningful while
+    letting an explicit path resolve.
+
+    Returns None when there is nothing to root at (a bare table/view name, or a
+    directory that does not exist), leaving pluckit's default behaviour alone.
+    """
+    if not source:
+        return None
+    # A bare identifier is a DuckDB table/view name, not a path.
+    if not any(sep in source for sep in ("/", os.sep)):
+        return None
+    # RELATIVE sources are already handled: they resolve against the working
+    # directory, which is what an un-rooted Plucker sandboxes to. Re-rooting
+    # them would be actively wrong — _filtered_source joins a relative source
+    # onto the connection's repo, so pointing that repo at the source's own
+    # directory turns `squackit/**/*.py` into `.../squackit/squackit/**/*.py`
+    # and the tool finds nothing.
+    if not os.path.isabs(source):
+        return None
+    head = re.split(r"[*?\[]", source, maxsplit=1)[0]
+    directory = head if head.endswith(("/", os.sep)) else os.path.dirname(head)
+    if not directory:
+        return None
+    directory = os.path.abspath(directory)
+    return directory if os.path.isdir(directory) else None
+
+
+def _cache_path(root: str | None) -> str:
+    """Where the AST cache database lives for a Plucker rooted at *root*.
+
+    DuckDB's filesystem allow-list is a property of the database INSTANCE, not
+    of the connection, and every connection to the same file shares one
+    instance. A single shared cache file therefore means the FIRST lockdown
+    wins for the life of the process: a plucker rooted at /srv/code/x reuses
+    the instance already locked to the working directory and is refused access
+    to its own source, with no indication that its root was ignored.
+
+    So a rooted plucker gets its own cache file, keyed by the root. It goes in
+    the temp directory rather than inside the root: a served corpus is mounted
+    read-only, and writing a database into a tree we were only asked to read is
+    rude even where it succeeds. Keying by root keeps the cache reusable across
+    processes, which is the point of persisting it at all.
+    """
+    if root is None:
+        return os.path.join(os.getcwd(), ".pluckit.duckdb")
+    digest = hashlib.sha256(os.path.abspath(root).encode()).hexdigest()[:16]
+    return os.path.join(tempfile.gettempdir(), f"squackit-ast-{digest}.duckdb")
 
 
 def _make_plucker(source: str, peek: str = DEFAULT_PEEK):
@@ -135,7 +224,21 @@ def _make_plucker(source: str, peek: str = DEFAULT_PEEK):
     # parses with ``peek := 'none'`` and can only ever return NULL. Enabling the
     # cache moves the un-filtered path onto ``ast_select_from`` too, so both
     # paths return source text. It also stops re-parsing on every call.
-    p = Plucker(plugins=[AstViewer, Search], cache=True, peek=peek)
+    #
+    # The cache path is passed EXPLICITLY rather than left to `cache=True`.
+    # pluckit derives the default cache file from the repo (`<repo>/.pluckit.duckdb`),
+    # so rooting the connection at the source would also move the cache into the
+    # tree being analysed — which for a served corpus is a read-only mount, and
+    # for anyone else means writing a database into a repo they only asked us to
+    # read. Keeping it under the working directory preserves the location this
+    # had before the connection gained a root.
+    root = _source_root(source)
+    p = Plucker(
+        plugins=[AstViewer, Search],
+        cache=_cache_path(root),
+        peek=peek,
+        repo=root,
+    )
     p._code_source = _filtered_source(p, source, peek)
     return p
 
