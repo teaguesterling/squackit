@@ -1,5 +1,67 @@
 # Changelog
 
+## 0.8.3
+
+Three fixes with one theme: a failure must not be representable as an ordinary
+result. Nothing here changes what a working call returns.
+
+### Fixed — `investigate` reported failed lookups as confirmed absences (#14)
+
+Every exception from the definition query was caught and rendered with the
+sentence used for a genuine miss:
+
+    No definition found for 'X'. Try a broader pattern or check spelling.
+
+So a permission error, a binder error and "that symbol isn't here" were
+indistinguishable, and the advice actively misdirected — the pattern was never
+the problem. This is how the 0.8.1 sandbox bug presented: every symbol in a
+healthy project reported missing, for hours, while the server called all its
+tools healthy.
+
+A failed lookup now says so, names the underlying error, and reports the
+pattern it searched. The friendly wording is kept for the genuine empty case,
+where it is good advice.
+
+### Fixed — a raising pluckin lost its tools silently (#14)
+
+`collect_pluckin_tools` swallowed per-pluckin exceptions with a bare `pass`,
+under a comment claiming the error would be "surfaced contextually". Nothing
+surfaced it. The guard is right — one broken pluckin must not take down the
+registry — but it now logs a warning naming the pluckin and the error.
+
+Not reachable today (no shipped pluckin defines `squackit_tools`), fixed as
+latent. The symptom it would produce — a silently shorter tool surface — was
+independently hit through another mechanism and cost a four-combination version
+bisection, because a shorter tool list doesn't read as a failure. It reads as a
+different, reasonable version of the product.
+
+### Fixed — `ast_replace` / `ast_patch` read as mutating and are not (#16)
+
+Connection macros are published with a description generated from the
+signature, so these carried no semantics at all:
+
+    Query: ast_replace(source, selector, new_text, language)
+
+These are sitting_duck SQL macros. A SQL macro cannot write files — it computes
+the patched source and returns it, which is coherent, and sitting_duck is not
+misbehaving. But over MCP the caller reads a verb. One did: it called
+`ast_replace` to repair a bug, got a successful-looking table back, and changed
+nothing on disk.
+
+Generated descriptions for macros whose *name* implies an effect now state that
+they return the patched result and modify nothing. Read-only macros are
+unchanged — a disclaimer on all ninety is context every agent pays for.
+
+For an actually-mutating primitive, see #17.
+
+### Fixed — `__version__` was four releases stale (#15, #2)
+
+`squackit.__version__` was a hand-written `"0.4.1"` against a distribution
+version of `0.8.2`, and survived `--force-reinstall` because it derived from
+nothing. It is now read from `importlib.metadata`, and the smoke test asserts
+that correspondence rather than a literal — which is what let both drift in
+agreement with each other and with nothing else.
+
 ## 0.8.2
 
 ### Fixed — AST tools could not read a source outside the working directory

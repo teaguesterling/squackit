@@ -37,6 +37,21 @@ _FALLBACK_NUMERIC = {
 }
 
 
+#: Name tokens that read as an effect. A macro whose name contains one of these
+#: gets an explicit "does not modify any file" note in its generated
+#: description. Missing a verb costs nothing beyond the status quo; a false
+#: positive adds a sentence that is true of every SQL macro anyway.
+_MUTATION_VERBS = frozenset({
+    "replace", "patch", "apply", "write", "insert", "update", "delete",
+    "remove", "rename", "edit", "set", "modify", "save", "commit",
+})
+
+
+def _name_implies_mutation(name: str) -> bool:
+    """True when a tool's NAME reads as an effect it does not perform."""
+    return any(token in _MUTATION_VERBS for token in name.split("_"))
+
+
 @dataclass
 class ToolPresentation:
     """Wraps fledgling ToolInfo with squackit's presentation/UX config."""
@@ -100,7 +115,23 @@ class ToolPresentation:
     def description(self) -> str:
         if self.description_override is not None:
             return self.description_override
-        return self.info.description or f"Query: {self.name}({', '.join(self.params)})"
+        if self.info.description:
+            return self.info.description
+        signature = f"{self.name}({', '.join(self.params)})"
+        if _name_implies_mutation(self.name):
+            # SQL macros cannot write files — they compute and return a result
+            # set. But a caller reads a verb: `ast_replace` was called to repair
+            # a bug, returned a successful-looking table, and changed nothing on
+            # disk. The bare signature said nothing either way, and the only
+            # hint was the "Query:" prefix — a category label competing against
+            # an imperative. Spell it out for the names where it misleads, and
+            # only those: a disclaimer on all ~90 macros is context every agent
+            # pays for on every call.
+            return (
+                f"Query: {signature} — computes and RETURNS the patched result "
+                f"as text. Does not modify any file."
+            )
+        return f"Query: {signature}"
 
     @property
     def parameters_schema(self) -> dict | None:

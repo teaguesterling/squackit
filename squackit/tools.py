@@ -9,12 +9,15 @@ fledgling macro tools. They take priority over fledgling equivalents
 from __future__ import annotations
 
 import hashlib
+import logging
 import os
 import re
 import tempfile
 
 from fledgling.tools import ToolInfo
 from squackit.tool_config import ToolPresentation
+
+log = logging.getLogger(__name__)
 
 
 #: How much source text ``read_ast`` puts in the ``peek`` column when squackit
@@ -305,10 +308,20 @@ def collect_pluckin_tools(plucker) -> list:
         if callable(fn):
             try:
                 tools.extend(fn())
-            except Exception:
-                # A broken pluckin shouldn't break the whole registry.
-                # Squackit's server/CLI will surface the error contextually.
-                pass
+            except Exception as exc:
+                # Keep the guard — one broken pluckin must not take down the
+                # whole registry — but SAY SO. Dropping its tools silently
+                # yields a shorter tool surface, and a shorter tool list does
+                # not read as a failure: it reads as a different, reasonable
+                # version of the product, so callers reason forward from it
+                # instead of doubting it. (An earlier comment here claimed the
+                # server/CLI would "surface the error contextually". Nothing
+                # did.)
+                log.warning(
+                    "pluckin %s failed to contribute squackit tools (%s); its "
+                    "tools are missing from this session's registry",
+                    type(pluckin).__name__, exc, exc_info=True,
+                )
     return tools
 
 

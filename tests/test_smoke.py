@@ -3,7 +3,23 @@
 
 def test_import_squackit():
     import squackit
-    assert squackit.__version__ == "0.4.1"
+    assert squackit.__version__
+
+
+def test_version_matches_the_installed_distribution():
+    """Pin the exported version to the distribution, not to a literal.
+
+    Asserting a hardcoded string here is what let `__version__` drift four
+    releases behind pyproject.toml: bumping the release left the module and
+    this test agreeing with each other and with nothing else. See #2 and #15.
+    """
+    from importlib.metadata import PackageNotFoundError, version
+    import squackit
+    try:
+        expected = version("squackit")
+    except PackageNotFoundError:
+        expected = "0.0.0.dev0"
+    assert squackit.__version__ == expected
 
 
 def test_fledgling_available():

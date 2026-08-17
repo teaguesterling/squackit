@@ -160,13 +160,22 @@ def investigate(con, defaults, name, file_pattern=None, path=None):
     #    the whole briefing describe the wrong symbol. Fall back to the full
     #    substring set only when nothing matches exactly, preserving the
     #    forgiving lookup for partial names / typos.
+    # A FAILED LOOKUP IS NOT AN ABSENT SYMBOL. Both used to return the "no
+    # definition found" sentence below, which made a permission error, a binder
+    # error and a genuine miss indistinguishable — and told the reader to
+    # broaden a pattern that was never the problem. That is exactly how the
+    # 0.8.1 sandbox bug presented: every symbol in a healthy project reported
+    # missing, for hours, while the server called all its tools healthy.
+    lookup_error: Exception | None = None
     try:
         rel = con.find_definitions(
             file_pattern=file_pattern, name_pattern=f"%{name}%",
         )
         defs = rel.fetchall()
         def_cols = rel.columns
-    except Exception:
+    except Exception as exc:
+        log.debug("find_definitions failed for %r", name, exc_info=True)
+        lookup_error = exc
         defs = []
         def_cols = []
 
@@ -175,6 +184,14 @@ def investigate(con, defaults, name, file_pattern=None, path=None):
         _exact = [d for d in defs if d[_n_idx] == name]
         if _exact:
             defs = _exact
+
+    if lookup_error is not None:
+        return (
+            f"Could not look up '{name}' — the definition query failed, so "
+            f"whether this symbol exists is UNKNOWN.\n"
+            f"{type(lookup_error).__name__}: {lookup_error}\n"
+            f"Searched: {file_pattern}"
+        )
 
     if not defs:
         return f"No definition found for '{name}'. Try a broader pattern or check spelling."
