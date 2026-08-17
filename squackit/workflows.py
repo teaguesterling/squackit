@@ -95,8 +95,8 @@ def _sorted_table(con, macro_name, kwargs, sort_col, max_rows, descending=True):
 def explore(con, defaults, path=None):
     """First-contact codebase briefing."""
     # Scope patterns to path if provided
-    code_pattern = defaults.scoped_code_pattern(path) if path else defaults.code_pattern
-    doc_pattern = str(Path(path) / "**" / "*.md") if path else defaults.doc_pattern
+    code_pattern = defaults.scoped_code_pattern(path) if path else defaults.code_glob
+    doc_pattern = defaults.scoped_doc_pattern(path) if path else defaults.doc_glob
 
     sections = []
 
@@ -149,7 +149,9 @@ def investigate(con, defaults, name, file_pattern=None, path=None):
         # Precedence: explicit path -> runtime.active_root -> process cwd.
         # Runtime fallback lets a session set active_root once via
         # `config(set={"active_root": X})` instead of passing path= per call.
-        file_pattern = defaults.scoped_code_pattern(resolve_scope_path(path))
+        file_pattern = defaults.scoped_code_pattern(
+            resolve_scope_path(path, default=defaults.root)
+        )
 
     # 1. Find definitions matching the name. Fetch substring candidates, then
     #    prefer EXACT name matches: a deep-dive on `ensure_loaded` must not drag
@@ -269,7 +271,7 @@ def review(con, defaults, from_rev=None, to_rev=None, file_pattern=None):
     """Code review prep for a revision range."""
     from_rev = from_rev or defaults.from_rev
     to_rev = to_rev or defaults.to_rev
-    file_pattern = file_pattern or defaults.code_pattern
+    file_pattern = file_pattern or defaults.code_glob
 
     sections = []
 
@@ -349,7 +351,7 @@ def review(con, defaults, from_rev=None, to_rev=None, file_pattern=None):
 
 def search(con, defaults, query, file_pattern=None):
     """Multi-source search across code, docs, and git."""
-    file_pattern = file_pattern or defaults.code_pattern
+    file_pattern = file_pattern or defaults.code_glob
 
     sections = []
 
@@ -371,7 +373,7 @@ def search(con, defaults, query, file_pattern=None):
     # 3. Documentation sections matching the query
     sections.append(_section("Documentation", lambda: _table(
         con, "doc_outline",
-        {"file_pattern": defaults.doc_pattern, "search": query},
+        {"file_pattern": defaults.doc_glob, "search": query},
         max_rows=10,
     )))
 

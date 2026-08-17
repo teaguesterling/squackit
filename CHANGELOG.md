@@ -1,5 +1,58 @@
 # Changelog
 
+## 0.8.1
+
+### Fixed — every code query returned "not found" under fledgling >= 0.13
+
+fledgling 0.13 added `sandbox: bool = True` to `connect()`, restricting the
+connection's filesystem allow-list to the project root. squackit's inferred
+default patterns were relative (`**/*.py`), and DuckDB resolves a relative
+glob against the process working directory — not against the root. A server's
+cwd is never the corpus it serves, so the glob landed outside the allow-list
+and the query raised:
+
+    Permission Error: Cannot access file "**/*.py"
+                      - file system operations are disabled by configuration
+
+`investigate` catches query failures and reports them as a miss, so the
+visible symptom was:
+
+    No definition found for 'parse_config'. Try a broader pattern or check spelling.
+
+for every symbol, in a project where those symbols existed — while the server
+reported all of its tools healthy. A missing-result message is
+indistinguishable from an empty corpus, which is what made this quiet.
+
+Patterns are now anchored at the project root wherever they reach DuckDB:
+
+- `ProjectDefaults` carries `root` and exposes `code_glob` / `doc_glob`;
+  `TOOL_DEFAULTS` names those rather than the raw pattern fields.
+- `scoped_code_pattern` / `scoped_doc_pattern` anchor their results.
+- Caller-supplied *relative* patterns are anchored too, so `docs/**/*.md`
+  means "docs in this project" rather than a permission error.
+- Absolute patterns are passed through untouched.
+
+The raw `code_pattern` / `doc_pattern` fields stay relative — `prompts.py`
+shows them to users, where an absolute corpus path is noise.
+
+### Changed — unscoped `investigate` falls back to the served root, not cwd
+
+`resolve_scope_path` gained a `default` argument, giving the chain
+`explicit path -> runtime.active_root -> served project root -> cwd`.
+Previously an unscoped call scoped to the process working directory, which
+was a workable stand-in only when the tool ran from inside the repo. For a
+served corpus it searched an unrelated directory, and under the sandbox it
+failed outright. Cross-project isolation is unchanged: results still come
+from one project, now named explicitly instead of inferred from cwd.
+
+### Changed — dependency bounds relaxed to `<1.0`
+
+The `fledgling-mcp>=0.12,<0.13` bound excluded 0.13.1, which is where
+fledgling relaxed its own exact `duckdb==1.5.2` pin to a range. Against a
+`duckdb==1.5.5` requirement pip did not report a conflict — it backtracked
+to squackit 0.7.0 and installed that, reporting success while shipping code
+two releases old.
+
 ## 0.8.0
 
 ### Added — source text from `find`, and a cache instead of re-parsing

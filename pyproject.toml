@@ -1,6 +1,6 @@
 [project]
 name = "squackit"
-version = "0.8.0"
+version = "0.8.1"
 description = "Semi-QUalified Agent Companion Kit — the stateful intelligence + MCP server layer for fledgling-equipped agents."
 readme = "README.md"
 license = "Apache-2.0"
@@ -17,8 +17,14 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
-    "ast-pluckit>=0.15,<0.16",
-    "fledgling-mcp>=0.12,<0.13",
+    # Upper bounds relaxed to <1.0. The tight `<0.13` on fledgling-mcp excluded
+    # 0.13.1, which is where fledgling relaxed its own `duckdb==1.5.2` exact pin
+    # to a range. Anything needing a specific DuckDB (e.g. matching a bundled
+    # extension set) then conflicted, and pip resolved it by SILENTLY
+    # BACKTRACKING to squackit 0.7.0 rather than failing — reporting success
+    # while installing code two releases old.
+    "ast-pluckit>=0.15,<1.0",
+    "fledgling-mcp>=0.12,<1.0",
     "click>=8.0",
     "fastmcp>=3.0",
 ]

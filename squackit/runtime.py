@@ -136,19 +136,33 @@ def reset_runtime() -> SquackitRuntimeConfig:
     return _runtime
 
 
-def resolve_scope_path(explicit_path: str | None = None) -> str:
+def resolve_scope_path(
+    explicit_path: str | None = None,
+    default: str | None = None,
+) -> str:
     """Resolve a scope path with the runtime config fallback chain.
 
-    Precedence: explicit_path -> runtime.active_root -> process cwd.
+    Precedence: explicit_path -> runtime.active_root -> *default* -> cwd.
+
     Used by tools that scope queries to a directory (investigate, etc.)
     so a single `config(set={"active_root": X})` call configures the whole
     session.
+
+    *default* is the served project root. It sits ahead of cwd because a
+    server's cwd is not the corpus it serves: falling through to cwd scoped
+    every unscoped query to an unrelated directory, and — once fledgling
+    began sandboxing connections to the project root — put the resulting
+    glob outside the filesystem allow-list, so the query failed outright
+    rather than merely searching the wrong tree. cwd stays as the last
+    resort for callers with no known root.
     """
     if explicit_path is not None:
         return explicit_path
     runtime_root = _runtime.active_root
     if runtime_root is not None:
         return runtime_root
+    if default is not None:
+        return default
     return os.getcwd()
 
 

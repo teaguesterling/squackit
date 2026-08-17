@@ -209,22 +209,33 @@ class TestInvestigate:
     def test_scopes_to_project_by_default(self, mcp, tmp_path, monkeypatch):
         """Regression: `investigate(name="main")` used to substring-match
         across every indexed project, so a user in repo A would get hits
-        from a vendored JS file in repo B. The fix: default file_pattern
-        to the cwd-scoped pattern, not the global one.
+        from a vendored JS file in repo B. Results must come from the
+        project this server was built for, and nowhere else.
+
+        This originally asserted that invariant by chdir'ing to an EMPTY
+        directory and requiring a miss — using cwd as a stand-in for "the
+        current project". That stand-in only holds for a CLI run from
+        inside the repo. A served corpus has an arbitrary cwd (whatever
+        the launcher started in), so cwd-scoping searched a directory
+        unrelated to the project; and once fledgling began sandboxing
+        connections to the project root, a cwd outside that root failed
+        the query outright rather than searching the wrong tree. Scoping
+        now falls back to the served root, so the check below uses a
+        FOREIGN symbol: cwd holds a definition the served project does
+        not have, and it must not surface.
         """
-        # Make a tmp dir with no source files — chdir there.
-        empty = tmp_path / "isolated"
-        empty.mkdir()
-        monkeypatch.chdir(empty)
+        foreign = tmp_path / "other-project"
+        foreign.mkdir()
+        (foreign / "mod.py").write_text(
+            "def foreign_only_symbol():\n    return 1\n")
+        monkeypatch.chdir(foreign)
 
         text = _text(_run_async(mcp.call_tool("investigate", {
-            "name": "create_server",
+            "name": "foreign_only_symbol",
         })))
-        # With proper scoping, `create_server` shouldn't be found in an
-        # empty tmpdir even though it exists in the squackit index globally.
         assert "no definition found" in text.lower(), (
-            "investigate leaked across project boundaries — found "
-            "create_server while cwd was an empty tmp dir"
+            "investigate leaked across project boundaries — found a symbol "
+            "that exists only in cwd, not in the project this server serves"
         )
 
     def test_explicit_path_argument_overrides_cwd(self, mcp, tmp_path, monkeypatch):

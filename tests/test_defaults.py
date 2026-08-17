@@ -46,11 +46,14 @@ class TestToolDefaults:
         for tool in code_tools:
             assert tool in TOOL_DEFAULTS
             assert "file_pattern" in TOOL_DEFAULTS[tool]
-            assert TOOL_DEFAULTS[tool]["file_pattern"] == "code_pattern"
+            # The ANCHORED accessor, not the raw pattern: a substituted value
+            # goes straight to DuckDB, which resolves a relative glob against
+            # the process cwd rather than the sandboxed project root.
+            assert TOOL_DEFAULTS[tool]["file_pattern"] == "code_glob"
 
     def test_doc_tools_mapped(self):
         assert "doc_outline" in TOOL_DEFAULTS
-        assert TOOL_DEFAULTS["doc_outline"]["file_pattern"] == "doc_pattern"
+        assert TOOL_DEFAULTS["doc_outline"]["file_pattern"] == "doc_glob"
 
     def test_git_tools_mapped(self):
         git_tools = ["file_changes", "file_diff", "structural_diff"]
@@ -60,12 +63,20 @@ class TestToolDefaults:
             assert TOOL_DEFAULTS[tool]["to_rev"] == "to_rev"
 
     def test_all_field_names_are_valid(self):
-        """Every value in TOOL_DEFAULTS must name a real ProjectDefaults field."""
-        valid_fields = {f.name for f in fields(ProjectDefaults)}
+        """Every value in TOOL_DEFAULTS must name something apply_defaults can
+        actually read off ProjectDefaults.
+
+        Checks attributes rather than dataclass fields: the pattern entries
+        name read-only properties (code_glob / doc_glob), which apply_defaults
+        reaches via getattr just the same. The point of the test is that a
+        typo here fails loudly at import rather than substituting None into a
+        query, and that survives the field-vs-property distinction.
+        """
+        probe = ProjectDefaults()
         for tool, mapping in TOOL_DEFAULTS.items():
-            for _param, field_name in mapping.items():
-                assert field_name in valid_fields, (
-                    f"{tool}: '{field_name}' is not a ProjectDefaults field"
+            for _param, attr_name in mapping.items():
+                assert hasattr(probe, attr_name), (
+                    f"{tool}: '{attr_name}' is not a ProjectDefaults attribute"
                 )
 
 
@@ -185,8 +196,16 @@ class TestInferDefaults:
     def con(self):
         return create_connection(repo=str(PROJECT_ROOT))
 
+    @requires_fledgling_source
     def test_code_pattern_is_python(self, con):
-        """This repo is primarily Python, so code_pattern should be **/*.py."""
+        """This repo is primarily Python, so code_pattern should be **/*.py.
+
+        Needs a source checkout, like its doc_pattern sibling below: an
+        installed fledgling wheel bundles sql/ as package data, so SQL
+        outnumbers Python in that layout and the inferred pattern is
+        legitimately **/*.sql. Asserting against the wheel fails on the
+        content of the dog-food corpus, not on the inference logic.
+        """
         defaults = infer_defaults(con, root=str(PROJECT_ROOT))
         assert "py" in defaults.code_pattern
 
