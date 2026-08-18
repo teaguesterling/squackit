@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.8.4
+
+A review of 0.8.1–0.8.3 found both fixes had reached the macro-tool layer and
+stopped there. The compound tools have their own parameters and never pass
+through `apply_defaults`, so each gap was reachable through a different door.
+
+### Fixed — the compound tools did not anchor explicit patterns
+
+0.8.1 anchored caller-supplied relative patterns, but only in the macro-tool
+wrapper. `investigate`, `review` and `search` take `file_pattern` themselves and
+handed it to the macro unchanged, so a relative glob still resolved against the
+process working directory. On a server whose cwd is not the corpus — the exact
+deployment 0.8.1 was written for — this reproduced the original failure:
+
+    investigate(name="parse_config", file_pattern="src/**/*.py")
+    -> IOException: Failed to initialize file processing ... Permission
+
+Verified against the published 0.8.3 before fixing. The 0.8.1 note that
+"caller-supplied relative patterns are anchored too" was true of the macro path
+only; it is now true of both. Absolute patterns are still passed through
+untouched, and an explicit pattern still works without a defaults object.
+
+### Fixed — briefing sections named no cause
+
+`_section` wraps every part of `explore`, `review` and `search`, and
+`investigate`'s Source/Called-by/Calls. It caught everything, logged at DEBUG —
+invisible at normal levels — and rendered a bare `(could not load)`. A
+permission error, a missing git revision and an unloaded macro were
+indistinguishable from each other and from a section that legitimately had
+nothing.
+
+That is the same defect 0.8.3 fixed in `investigate`'s primary lookup and did
+not carry to the siblings. Sections now report the exception type and message,
+capped at 200 characters with the truncation marked, and log at WARNING. One
+failing section still cannot take down a briefing.
+
+
 ## 0.8.3
 
 Three fixes with one theme: a failure must not be representable as an ordinary

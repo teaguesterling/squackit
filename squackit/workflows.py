@@ -32,20 +32,41 @@ def _format_briefing(title: str, sections: list[tuple[str, str]]) -> str:
     return "\n".join(parts)
 
 
+#: How much of a failing section's error text reaches the briefing. DuckDB
+#: errors run to hundreds of characters and a briefing is prose, but a cause
+#: the reader cannot see is the thing this whole clause exists to avoid.
+_SECTION_ERROR_CHARS = 200
+
+
 def _section(heading: str, fn):
     """Run fn() with error handling, return (heading, content) tuple.
 
-    Returns "(no data)" for empty/None results,
-    "(could not load)" on exceptions.
+    Returns "(no data)" for empty/None results, and "(could not load — <type>:
+    <message>)" on exceptions.
+
+    THE CAUSE IS IN THE TEXT ON PURPOSE. This wrapper covers every section of
+    explore/review/search and investigate's Source/Called-by/Calls. It used to
+    return a bare "(could not load)" and log at DEBUG, which is invisible at
+    normal levels — so a permission error, a missing git revision and a macro
+    that simply is not loaded all rendered identically, and none of them said
+    why. That is the same "a failure must not be representable as an ordinary
+    result" defect fixed in investigate's primary lookup in 0.8.3; it was not
+    extended to the sibling sections until 0.8.4.
+
+    Still non-fatal: one broken section must not take down the briefing, which
+    is why the guard stays.
     """
     try:
         content = fn()
         if not content:
             return (heading, "(no data)")
         return (heading, content)
-    except Exception:
-        log.debug("section %s failed", heading, exc_info=True)
-        return (heading, "(could not load)")
+    except Exception as exc:
+        log.warning("section %r failed: %s", heading, exc, exc_info=True)
+        detail = str(exc).strip().replace("\n", " ")
+        if len(detail) > _SECTION_ERROR_CHARS:
+            detail = detail[:_SECTION_ERROR_CHARS] + "…"
+        return (heading, f"(could not load — {type(exc).__name__}: {detail})")
 
 
 def _has_module(con, module_name: str) -> bool:
@@ -90,6 +111,31 @@ def _sorted_table(con, macro_name, kwargs, sort_col, max_rows, descending=True):
 
 
 # ── Compound tools ─────────────────────────────────────────────────
+
+
+def _anchored(defaults, file_pattern):
+    """Root a caller-supplied file pattern, the way apply_defaults does.
+
+    The compound tools take `file_pattern` as their own parameter and never
+    pass through `apply_defaults`, so 0.8.1's anchoring of explicit relative
+    patterns reached the macro tools only. A relative glob handed to
+    `investigate`/`review`/`search` still resolved against the process cwd and,
+    under fledgling's sandbox, failed outright — the same deployment shape
+    0.8.1 was written for, reached through a different door.
+
+    `anchor()` passes absolute patterns through untouched, so a caller who
+    named a path in full still gets it.
+
+    Tolerates ``defaults=None``. An explicit ``file_pattern`` previously needed
+    no defaults object at all — the caller had already said where to look — and
+    callers rely on that: several tests drive ``investigate`` with a fake
+    connection and no defaults to isolate the name-matching logic. There is
+    also nothing to anchor *against* without a root, which is the same reason
+    ``anchor()`` itself passes patterns through when ``root`` is None.
+    """
+    if file_pattern is None or defaults is None:
+        return file_pattern
+    return defaults.anchor(file_pattern)
 
 
 def explore(con, defaults, path=None):
@@ -144,6 +190,7 @@ def investigate(con, defaults, name, file_pattern=None, path=None):
         path: Project root to scope the search to. Defaults to process cwd.
             Only consulted when file_pattern is None.
     """
+    file_pattern = _anchored(defaults, file_pattern)
     if file_pattern is None:
         from squackit.runtime import resolve_scope_path
         # Precedence: explicit path -> runtime.active_root -> process cwd.
@@ -288,7 +335,7 @@ def review(con, defaults, from_rev=None, to_rev=None, file_pattern=None):
     """Code review prep for a revision range."""
     from_rev = from_rev or defaults.from_rev
     to_rev = to_rev or defaults.to_rev
-    file_pattern = file_pattern or defaults.code_glob
+    file_pattern = _anchored(defaults, file_pattern) or defaults.code_glob
 
     sections = []
 
@@ -368,7 +415,7 @@ def review(con, defaults, from_rev=None, to_rev=None, file_pattern=None):
 
 def search(con, defaults, query, file_pattern=None):
     """Multi-source search across code, docs, and git."""
-    file_pattern = file_pattern or defaults.code_glob
+    file_pattern = _anchored(defaults, file_pattern) or defaults.code_glob
 
     sections = []
 

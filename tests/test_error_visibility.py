@@ -196,3 +196,58 @@ class TestMutationNamedMacrosSayTheyDoNotMutate:
         d = ToolPresentation(info=_Info("ast_replace", ["source"]),
                              description_override="Overridden.")
         assert d.description == "Overridden."
+
+
+# ── Briefing sections name their failure (#2 from the 0.8.3 review) ──
+
+
+class TestSectionFailuresAreNamed:
+    """`_section` wraps every part of explore/review/search/investigate.
+
+    It caught everything, logged at DEBUG (invisible at normal levels) and
+    rendered "(could not load)" — a string that cannot be told apart from a
+    section that legitimately has nothing, and which names no cause. 0.8.3
+    fixed exactly this shape in investigate's primary lookup but never reached
+    the sibling sections, so the same permission error that motivated 0.8.1
+    still arrived as undifferentiated text in three of the four compound tools.
+    """
+
+    def test_a_failing_section_still_reports_could_not_load(self):
+        """Keep the recognisable phrase — callers and tests match on it."""
+        from squackit.workflows import _section
+
+        heading, content = _section("Diffs", lambda: (_ for _ in ()).throw(
+            RuntimeError("boom")))
+        assert heading == "Diffs"
+        assert "could not load" in content.lower()
+
+    def test_a_failing_section_names_the_error(self):
+        from squackit.workflows import _section
+
+        _heading, content = _section("Diffs", lambda: (_ for _ in ()).throw(
+            RuntimeError("permission denied on **/*.py")))
+        assert "RuntimeError" in content, content
+        assert "permission denied" in content, content
+
+    def test_an_empty_section_is_distinguishable_from_a_failed_one(self):
+        from squackit.workflows import _section
+
+        _h, empty = _section("Docs", lambda: "")
+        _h2, failed = _section("Docs", lambda: (_ for _ in ()).throw(
+            RuntimeError("boom")))
+        assert empty != failed
+        assert "no data" in empty.lower()
+
+    def test_a_very_long_error_is_capped_visibly(self):
+        """DuckDB errors run to hundreds of characters; a briefing is prose."""
+        from squackit.workflows import _section
+
+        _h, content = _section("Diffs", lambda: (_ for _ in ()).throw(
+            RuntimeError("x" * 4000)))
+        assert len(content) < 400, len(content)
+        assert "…" in content or "..." in content, content
+
+    def test_a_working_section_is_untouched(self):
+        from squackit.workflows import _section
+
+        assert _section("Docs", lambda: "| a | b |") == ("Docs", "| a | b |")

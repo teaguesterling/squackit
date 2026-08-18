@@ -156,6 +156,19 @@ def repo(tmp_path_factory):
     subprocess.run(["git", "add", "-A"], cwd=root, check=True)
     subprocess.run(["git", "-c", "user.email=t@e", "-c", "user.name=t",
                     "commit", "-qm", "initial"], cwd=root, check=True)
+    # A SECOND commit, so HEAD~1 resolves. `review` defaults to HEAD~1..HEAD,
+    # and on a one-commit repo its git sections fail for that reason alone —
+    # which renders as "(could not load)", exactly like the sandbox failure
+    # this file is about. Without this the review test passes or fails for the
+    # wrong reason.
+    (root / "src" / "mod.py").write_text(
+        "def parse_widget_config(path):\n"
+        "    '''Load the widget config.'''\n"
+        "    return {'version': 1}\n"
+    )
+    subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+    subprocess.run(["git", "-c", "user.email=t@e", "-c", "user.name=t",
+                    "commit", "-qm", "second"], cwd=root, check=True)
     return root
 
 
@@ -221,3 +234,85 @@ class TestServedFromForeignCwd:
         mcp = create_server(root=str(repo), init=False)
         result = _run_async(mcp.call_tool("doc_outline", {}))
         assert "Widget Guide" in result.content[0].text or "guide.md" in result.content[0].text
+
+
+# ── Workflow tools anchor explicit patterns too (0.8.4) ─────────────
+
+
+@requires_fastmcp
+class TestWorkflowToolsAnchorExplicitPatterns:
+    """The compound tools never passed through `apply_defaults`.
+
+    0.8.1 anchored caller-supplied relative patterns — but only on the macro
+    tool wrapper in server.py. `investigate`, `review` and `search` take
+    `file_pattern` as their own parameter and handed it to the macro unchanged,
+    so an explicit relative glob still resolved against the process cwd and,
+    under fledgling's sandbox, failed outright:
+
+        investigate(name="parse_config", file_pattern="src/**/*.py")
+        -> IOException: Failed to initialize file processing ... Permission
+
+    Same deployment shape 0.8.1 was written for, reached through a different
+    door. The CHANGELOG claim "caller-supplied relative patterns are anchored
+    too" was true of the macro path only.
+    """
+
+    def _server(self, repo):
+        from squackit.server import create_server
+        return create_server(root=str(repo), init=False)
+
+    def test_investigate_with_an_explicit_relative_pattern(self, repo, outside_cwd):
+        mcp = self._server(repo)
+        text = _run_async(mcp.call_tool(
+            "investigate", {"name": "parse_widget_config",
+                            "file_pattern": "src/**/*.py"})).content[0].text
+        assert "Could not look up" not in text, (
+            f"explicit relative pattern was not anchored:\n{text[:300]}")
+        assert "parse_widget_config" in text
+
+    def test_search_with_an_explicit_relative_pattern(self, repo, outside_cwd):
+        mcp = self._server(repo)
+        text = _run_async(mcp.call_tool(
+            "search", {"query": "parse", "file_pattern": "src/**/*.py"})).content[0].text
+        assert "could not load" not in text.lower(), (
+            f"search section failed with an explicit relative pattern:\n{text[:400]}")
+
+    def test_review_with_an_explicit_relative_pattern(self, repo, outside_cwd):
+        mcp = self._server(repo)
+        text = _run_async(mcp.call_tool(
+            "review", {"file_pattern": "src/**/*.py"})).content[0].text
+        assert "could not load" not in text.lower(), (
+            f"review section failed with an explicit relative pattern:\n{text[:400]}")
+
+    def test_an_explicit_absolute_pattern_is_still_honoured(self, repo, outside_cwd):
+        """Anchoring must not re-root a path the caller gave in full."""
+        mcp = self._server(repo)
+        text = _run_async(mcp.call_tool(
+            "investigate", {"name": "parse_widget_config",
+                            "file_pattern": f"{repo}/src/**/*.py"})).content[0].text
+        assert "parse_widget_config" in text
+
+
+class TestAnchoringToleratesMissingDefaults:
+    """An explicit pattern needs no defaults object.
+
+    Regression: the 0.8.4 anchoring helper dereferenced `defaults` whenever a
+    pattern was supplied, which broke callers that pass `defaults=None` to
+    drive a workflow against a fake connection. The old code never touched
+    defaults on that path — the caller had already said where to look.
+    """
+
+    def test_explicit_pattern_survives_a_none_defaults(self):
+        from squackit.workflows import _anchored
+
+        assert _anchored(None, "src/**/*.py") == "src/**/*.py"
+
+    def test_none_pattern_with_none_defaults(self):
+        from squackit.workflows import _anchored
+
+        assert _anchored(None, None) is None
+
+    def test_a_rootless_defaults_leaves_the_pattern_alone(self):
+        from squackit.workflows import _anchored
+
+        assert _anchored(ProjectDefaults(), "src/**/*.py") == "src/**/*.py"
