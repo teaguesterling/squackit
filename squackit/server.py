@@ -21,6 +21,7 @@ Usage::
 from __future__ import annotations
 
 import inspect
+import json as _json
 import threading
 from collections import OrderedDict
 from pathlib import Path
@@ -246,6 +247,8 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
             elif v is not None:
                 verbose = bool(v)
 
+        as_json = _as_json_requested(kwargs)
+
         filtered = {k: v for k, v in kwargs.items() if v is not None}
 
         try:
@@ -259,6 +262,16 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
         # View -> markdown (truncate by blocks if too many)
         if hasattr(result, 'markdown') and hasattr(result, 'blocks'):
             blocks = result.blocks
+            if as_json:
+                tabular = getattr(result, "tabular", None)
+                if tabular is not None:
+                    vcols, vrows = tabular
+                    kept, omitted = _limit_rows(list(vrows), max_limit)
+                    return _json_envelope(
+                        [dict(zip(vcols, r)) for r in kept], vcols, omitted)
+                kept, omitted = _limit_rows(list(blocks), max_limit)
+                return _json_envelope(
+                    [b.markdown for b in kept if b.markdown], (), omitted)
             if max_limit > 0 and len(blocks) > max_limit:
                 kept = blocks[:max_limit]
                 omitted = len(blocks) - max_limit
@@ -269,6 +282,13 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
         if hasattr(result, 'columns') and hasattr(result, 'fetchall'):
             cols = result.columns
             rows = result.fetchall()
+            if as_json:
+                # Projection still applies, so a JSON caller gets the same
+                # columns a markdown caller would unless it asks for verbose.
+                jcols, jrows = _project(cols, rows, presentation, verbose)
+                kept, omitted = _limit_rows(jrows, max_limit)
+                return _json_envelope(
+                    [dict(zip(jcols, r)) for r in kept], jcols, omitted)
             if not rows:
                 return "(no results)"
             omission = None
@@ -312,6 +332,9 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
             return text
         # list -> joined (truncate)
         if isinstance(result, list):
+            if as_json:
+                kept, omitted = _limit_rows(list(result), max_limit)
+                return _json_envelope(kept, (), omitted)
             if not result:
                 return "(no results)"
             if max_limit > 0 and len(result) > max_limit:
@@ -324,7 +347,7 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
 
     tool_fn.__name__ = tool_name
     tool_fn.__qualname__ = tool_name
-    tool_fn.__doc__ = description
+    tool_fn.__doc__ = description + _AS_JSON_NOTE
 
     required_set = set(presentation.required)
     annotations = {}
@@ -354,6 +377,13 @@ def _register_executor_tool(mcp, presentation: ToolPresentation):
             "verbose", inspect.Parameter.KEYWORD_ONLY,
             default=None, annotation=Optional[bool],
         ))
+    # Every one of these tools returns data, so the structured mode is offered
+    # unconditionally rather than per-tool.
+    annotations["as_json"] = Optional[bool]
+    sig_params.append(inspect.Parameter(
+        "as_json", inspect.Parameter.KEYWORD_ONLY,
+        default=None, annotation=Optional[bool],
+    ))
     tool_fn.__annotations__ = {**annotations, "return": str}
     tool_fn.__signature__ = inspect.Signature(
         sig_params, return_annotation=str,
@@ -448,6 +478,76 @@ def _fts_con_for_root(mcp, root: str):
         return con
 
 
+#: Appended to every tool's description. A caller that has to GUESS the return
+#: shape guesses wrong: measured at 0/24 correct while calling the right tool
+#: 17/24 times, because `len()` on a rendered table counts characters. Naming
+#: the shape beside the signature is the cheapest fix for that, and it is the
+#: reason the envelope is a stable object rather than a bare array.
+_AS_JSON_NOTE = (
+    "\n\nPass as_json=true for structured output: "
+    '{"rows": [...], "columns": [...], "omitted": <int>}. '
+    "`omitted` is how many rows the limit dropped — it is 0 when the result is "
+    "complete, so a truncated result can never be mistaken for a whole one."
+)
+
+
+def _limit_rows(rows, max_limit):
+    """Apply the presentation limit, returning (kept, omitted_count)."""
+    if max_limit and max_limit > 0 and len(rows) > max_limit:
+        return rows[:max_limit], len(rows) - max_limit
+    return rows, 0
+
+
+def _project(cols, rows, presentation, verbose):
+    """Apply the compact_columns projection, if the tool declares one.
+
+    Shared so JSON and markdown callers see the same columns; a caller opts
+    out of both with verbose=True.
+    """
+    if not presentation.compact_columns or verbose:
+        return list(cols), list(rows)
+    keep_idx = [i for i, name in enumerate(cols)
+                if name in presentation.compact_columns]
+    order = {name: pos for pos, name in enumerate(presentation.compact_columns)}
+    keep_idx.sort(key=lambda i: order.get(cols[i], len(order)))
+    if not keep_idx:
+        return list(cols), list(rows)
+    return ([cols[i] for i in keep_idx],
+            [tuple(row[i] for i in keep_idx) for row in rows])
+
+
+def _json_envelope(rows, columns=(), omitted: int = 0) -> str:
+    """The one shape every tool returns under `as_json=True`.
+
+        {"rows": [...], "columns": [...], "omitted": <int>}
+
+    One envelope for every tool, so a caller learns the shape once instead of
+    per tool. `omitted` exists so truncation stays REPRESENTABLE: a bare array
+    that had been cut is indistinguishable from a complete one, and shipping
+    silent truncation on the programmatic path would reproduce the exact defect
+    this output mode was added to fix.
+
+    The trade is that `len()` of the envelope is 3, not the row count — which
+    is the misread that motivated this ("0/24 correct while 17/24 called the
+    right tool"). That is why the shape is stated in the tool description
+    rather than left to be guessed.
+    """
+    return _json.dumps(
+        {"rows": list(rows), "columns": list(columns), "omitted": int(omitted)},
+        indent=2, default=str,
+    )
+
+
+def _as_json_requested(kwargs) -> bool:
+    """Pop `as_json`, accepting the string forms MCP clients send."""
+    if "as_json" not in kwargs:
+        return False
+    v = kwargs.pop("as_json")
+    if isinstance(v, str):
+        return v.lower() in ("true", "1", "yes")
+    return bool(v) if v is not None else False
+
+
 def _register_tool(
     mcp,  # FastMCP type annotation removed to avoid import at module level
     con,
@@ -510,6 +610,10 @@ def _register_tool(
             max_rows = 0
 
         # Remove None values; coerce known numeric params to int.
+        # Pop before building macro args: `as_json` is a presentation choice,
+        # not a macro parameter, and passing it through raises a binder error.
+        as_json = _as_json_requested(kwargs)
+
         # Only numeric_params are coerced — blanket isdigit() would
         # break git SHAs like "1234567".
         filtered = {}
@@ -587,9 +691,17 @@ def _register_tool(
             elapsed = (_time.time() - t0) * 1000
             access_log.record(tool_name, cache_args, 0,
                               cached=False, elapsed_ms=elapsed)
-            return _empty_msg()
+            # A program needs an empty list it can iterate, not a sentence.
+            return _json_envelope([], cols, 0) if as_json else _empty_msg()
 
         total_rows = len(rows)
+
+        if as_json:
+            # Structured callers get every row the limit allows plus an
+            # explicit count of what was dropped — never a quietly short list.
+            kept, omitted = _limit_rows(list(rows), max_rows if limit_param else 0)
+            return _json_envelope([dict(zip(cols, r)) for r in kept],
+                                  cols, omitted)
 
         # Apply truncation
         omission = None
@@ -669,7 +781,7 @@ def _register_tool(
             "DIFFERENT repository, pass `root=<repository directory>` (an absolute path) — the "
             "repo is indexed on first use and cached."
         )
-    tool_fn.__doc__ = description
+    tool_fn.__doc__ = description + _AS_JSON_NOTE
 
     # Build parameter annotations for FastMCP schema generation.
     # All params get default=None so FastMCP validation passes even when
@@ -697,6 +809,13 @@ def _register_tool(
             "root", inspect.Parameter.KEYWORD_ONLY, default=None,
             annotation=Optional[str],
         ))
+    # Every one of these tools returns data, so the structured mode is offered
+    # unconditionally rather than per-tool.
+    annotations["as_json"] = Optional[bool]
+    sig_params.append(inspect.Parameter(
+        "as_json", inspect.Parameter.KEYWORD_ONLY,
+        default=None, annotation=Optional[bool],
+    ))
     tool_fn.__annotations__ = {**annotations, "return": str}
 
     tool_fn.__signature__ = inspect.Signature(

@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.9.0
+
+### Added — structured output for programmatic callers (#18)
+
+Every tool accepts `as_json=true` and returns one envelope:
+
+    {"rows": [...], "columns": [...], "omitted": <int>}
+
+squackit renders for a human reader — markdown tables and newline-joined text.
+That is right for an agent reading a briefing and close to useless to a program
+composing calls. Measured by a session driving four local models through
+lackpy: **0/24 correct while 17/24 called the correct tool**. `len()` on
+`find_names`' newline-joined string gives 67 (characters) where the answer is
+8; on `find`'s table it gives 2239.
+
+The structure was never lost, only discarded at the last step: the executors
+already return DuckDB relations and View objects, and the CLI already had
+`--json`. This exposes that over MCP, on both the macro and pluckit wrappers.
+
+Deliberate choices:
+
+- **One envelope for every tool**, so a caller learns the shape once.
+- **`omitted` rather than a bare array.** A truncated array is
+  indistinguishable from a complete one, and shipping silent truncation on the
+  programmatic path would reproduce the defect this mode exists to fix.
+- **The shape is stated in every tool's description.** The cost of the
+  envelope is that `len()` of it is 3, not the row count — the same misread
+  that produced the 0/24 — so it is named beside the signature rather than left
+  to be inferred.
+- **An empty result is `[]`**, not the prose `(no results)`.
+- **The default is unchanged.** Existing callers see exactly what they saw
+  before; `as_json` is opt-in, so this is additive rather than a migration.
+
+The `compact_columns` projection and `verbose` still apply, so a JSON caller
+sees the same columns a markdown caller would unless it asks for more.
+
+
 ## 0.8.4
 
 A review of 0.8.1–0.8.3 found both fixes had reached the macro-tool layer and
