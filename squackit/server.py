@@ -44,6 +44,88 @@ from squackit.tool_config import ToolPresentation, build_tool_registry
 from squackit.workflows import register_workflows
 
 
+# Extensions fledgling 0.13.2 LOADs in `load_extensions`. Only consulted when
+# fledgling's own (private) list cannot be read — see `_ensure_extensions`.
+_FALLBACK_EXTENSIONS = ["read_lines", "sitting_duck", "markdown",
+                        "duck_tails", "fts"]
+
+
+def _ensure_extensions() -> None:
+    """INSTALL the DuckDB extensions fledgling LOADs when it opens a connection.
+
+    fledgling's ``load_extensions`` issues a bare ``LOAD`` and never
+    ``INSTALL``, and an explicit ``LOAD`` does not autoinstall. So on any
+    machine whose ``~/.duckdb/extensions`` cache is incomplete — which is every
+    fresh ``pip install squackit`` — ``fledgling.connect`` raises
+    ``IOException``. pluckit catches that broadly and hands back a bare
+    ``duckdb.DuckDBPyConnection`` instead (``pluckit/_context.py``), and
+    ``create_server`` then died on ``con.con`` with an opaque
+    ``AttributeError`` that named neither the extension nor the fallback.
+
+    This must run BEFORE the Plucker is built. ``fledgling.connect`` sandboxes
+    by default, which locks the configuration after setup, so installing on the
+    real connection afterwards is refused. A throwaway connection in this same
+    process shares the same DuckDB version and the same extension directory,
+    so what it installs is what fledgling then finds.
+
+    ``LOAD`` is tried first, so a warm cache costs no network. Install failures
+    are tolerated rather than raised: an offline machine with a complete cache
+    still boots, and one without it gets the explicit error from
+    ``_require_fledgling_connection`` instead of a silently crippled server.
+    """
+    import duckdb
+
+    try:
+        from fledgling.connection import _DEFAULT_EXTENSIONS as extensions
+    except Exception:
+        # Private name, so tolerate a rename; the guard below reports the
+        # resulting drift rather than letting it degrade silently again.
+        extensions = _FALLBACK_EXTENSIONS
+
+    try:
+        probe = duckdb.connect()
+    except Exception:
+        return
+    try:
+        for ext in extensions:
+            try:
+                probe.execute(f"LOAD {ext}")
+                continue
+            except duckdb.Error:
+                pass
+            # The AST/docs extractors are community extensions; `fts` ships in
+            # the core repository. Community first — it covers four of five.
+            for stmt in (f"INSTALL {ext} FROM community", f"INSTALL {ext}"):
+                try:
+                    probe.execute(stmt)
+                    break
+                except duckdb.Error:
+                    continue
+    finally:
+        probe.close()
+
+
+def _require_fledgling_connection(con):
+    """Fail loudly when pluckit degraded to a bare DuckDB connection.
+
+    ``plucker.connection`` is a ``fledgling.Connection`` proxy exposing
+    ``.con`` and ``.tools`` only while ``fledgling.connect`` succeeds;
+    otherwise pluckit substitutes a bare connection with neither. Everything
+    below this point assumes the proxy, so say what actually broke here
+    instead of raising ``AttributeError`` several frames later.
+    """
+    if hasattr(con, "con") and hasattr(con, "tools"):
+        return con
+    raise RuntimeError(
+        "pluckit returned a bare DuckDB connection, which means "
+        "`fledgling.connect` failed and the error was swallowed. The usual "
+        "cause is a missing DuckDB extension: fledgling LOADs "
+        f"{', '.join(_FALLBACK_EXTENSIONS)} and does not install them. "
+        "Install them once with `INSTALL <name> FROM community` (`INSTALL "
+        "fts` for fts), or run `python -c \"import fledgling; "
+        "fledgling.connect()\"` to see the underlying error."
+    )
+
 
 def create_server(
     name: str = "squackit",
@@ -68,11 +150,12 @@ def create_server(
     from pluckit.pluckins.search import Search
     from pluckit.pluckins.viewer import AstViewer
 
+    _ensure_extensions()
     plucker = Plucker(
         repo=root, profile=profile, modules=modules, init=init,
         plugins=[AstViewer, Search],
     )
-    con = plucker.connection
+    con = _require_fledgling_connection(plucker.connection)
     mcp = FastMCP(name)
 
     # Infer smart defaults, merge with config file overrides
