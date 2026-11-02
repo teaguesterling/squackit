@@ -50,6 +50,21 @@ _FALLBACK_EXTENSIONS = ["read_lines", "sitting_duck", "markdown",
                         "duck_tails", "fts"]
 
 
+def _extension_list() -> list[str]:
+    """The extensions fledgling will LOAD, from fledgling itself when possible.
+
+    ``_DEFAULT_EXTENSIONS`` is private, so tolerate a rename rather than
+    breaking at import time. A stale fallback would reproduce exactly the bug
+    these helpers exist to prevent, which is why
+    ``_require_fledgling_connection`` reports whichever list was actually used.
+    """
+    try:
+        from fledgling.connection import _DEFAULT_EXTENSIONS
+        return list(_DEFAULT_EXTENSIONS)
+    except Exception:
+        return list(_FALLBACK_EXTENSIONS)
+
+
 def _ensure_extensions() -> None:
     """INSTALL the DuckDB extensions fledgling LOADs when it opens a connection.
 
@@ -62,11 +77,13 @@ def _ensure_extensions() -> None:
     ``create_server`` then died on ``con.con`` with an opaque
     ``AttributeError`` that named neither the extension nor the fallback.
 
-    This must run BEFORE the Plucker is built. ``fledgling.connect`` sandboxes
-    by default, which locks the configuration after setup, so installing on the
-    real connection afterwards is refused. A throwaway connection in this same
-    process shares the same DuckDB version and the same extension directory,
-    so what it installs is what fledgling then finds.
+    This must run BEFORE the Plucker is built, on a connection of its own.
+    The traceback shows why: ``connect`` → ``configure`` → ``load_extensions``
+    raises during setup, so ``fledgling.connect`` never returns and there is no
+    fledgling connection left to install onto — by the time ``create_server``
+    holds anything, pluckit has already substituted the bare one. A throwaway
+    connection in this same process shares the DuckDB version and the extension
+    directory, so what it installs is what fledgling then finds.
 
     ``LOAD`` is tried first, so a warm cache costs no network. Install failures
     are tolerated rather than raised: an offline machine with a complete cache
@@ -75,12 +92,7 @@ def _ensure_extensions() -> None:
     """
     import duckdb
 
-    try:
-        from fledgling.connection import _DEFAULT_EXTENSIONS as extensions
-    except Exception:
-        # Private name, so tolerate a rename; the guard below reports the
-        # resulting drift rather than letting it degrade silently again.
-        extensions = _FALLBACK_EXTENSIONS
+    extensions = _extension_list()
 
     try:
         probe = duckdb.connect()
@@ -120,7 +132,7 @@ def _require_fledgling_connection(con):
         "pluckit returned a bare DuckDB connection, which means "
         "`fledgling.connect` failed and the error was swallowed. The usual "
         "cause is a missing DuckDB extension: fledgling LOADs "
-        f"{', '.join(_FALLBACK_EXTENSIONS)} and does not install them. "
+        f"{', '.join(_extension_list())} and does not install them. "
         "Install them once with `INSTALL <name> FROM community` (`INSTALL "
         "fts` for fts), or run `python -c \"import fledgling; "
         "fledgling.connect()\"` to see the underlying error."
