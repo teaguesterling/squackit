@@ -1,0 +1,147 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# The suite existed for months with nothing running it: .github/workflows held
+# release.yml alone, so `gh pr checks` returned an empty list on every PR. An
+# empty list is an ABSENCE OF GATES, and it reads exactly like a pass.
+jobs:
+  test:
+    name: pytest (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # All three legs MEASURED green at 375 passed / 0 skipped (2026-11-02,
+        # duckdb 1.5.6, fledgling v0.13.2).
+        #
+        # 3.10 IS MISSING ON PURPOSE, and not because it is untested:
+        # squackit/defaults.py:12 imports `tomllib`, which is stdlib only from
+        # 3.11, so six test modules fail at COLLECTION there — while
+        # pyproject.toml declares requires-python = ">=3.10". That is a shipped
+        # bug in 0.9.0, not a CI problem, and a red leg here would report it
+        # against every unrelated PR. Add the leg back with the fix: either
+        # raise requires-python to >=3.11, or fall back to `tomli` on 3.10.
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # pytest is PINNED. An unpinned test tool moves CI with no commit: three
+      # red runs across this fleet on 2026-11-02 came from unbounded ranges
+      # (mcp 2.x renaming FastMCP, and ruff widening its DEFAULT rule set).
+      # 9.2.0 is the version the 375-pass baseline was measured with.
+      - name: Install squackit
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . "pytest==9.2.0"
+
+      # The tests dog-food fledgling's SQL MACROS, not just its Python. The
+      # wheel bundles sql/ inside the package, which is enough for the macros
+      # and NOT enough for the tests that read repo-shaped paths (docs/,
+      # fledgling/pro/__main__.py). Without a source checkout, conftest's
+      # `requires_fledgling_source` turns 11 tests into GREEN SKIPS and 8 more
+      # fail on content assertions. Measured: 8 failed / 11 skipped without the
+      # checkout, 375 passed / 0 skipped with it.
+      #
+      # The ref is DERIVED FROM THE INSTALLED WHEEL, not pinned here by hand. A
+      # hand-pinned tag drifts away from whatever squackit's `fledgling-mcp>=0.12,<1.0`
+      # range actually resolves to, and then the macros under test come from one
+      # release while the Python comes from another, with no commit in between.
+      - name: Resolve the fledgling release under test
+        id: fledgling
+        run: |
+          ver="$(python -c 'from importlib.metadata import version; print(version("fledgling-mcp"))')"
+          echo "fledgling-mcp wheel: $ver"
+          echo "ver=$ver" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: teaguesterling/fledgling
+          ref: v${{ steps.fledgling.outputs.ver }}
+          path: .fledgling-src
+
+      # DuckDB extensions are installed per DuckDB version into
+      # ~/.duckdb/extensions/v<VER>/, and a GitHub runner starts with that
+      # directory EMPTY. fledgling's init issues six bare LOADs and zero
+      # INSTALLs (init/init-fledgling-base.sql), so on a cold cache the first
+      # LOAD raises — which is the whole of squackit's fresh-install failure.
+      #
+      # The list is READ FROM fledgling's own init SQL at the ref above, never
+      # hand-copied. A hand-copied list is a second source of truth that goes
+      # stale the moment fledgling LOADs a seventh extension, and it goes stale
+      # silently.
+      - name: Install the DuckDB extensions fledgling loads
+        run: |
+          python - <<'PY'
+          import pathlib, re, duckdb
+
+          init = pathlib.Path(".fledgling-src/init/init-fledgling-base.sql")
+          names = list(dict.fromkeys(
+              re.findall(r"^\s*LOAD\s+([A-Za-z_][A-Za-z0-9_]*)\s*;", init.read_text(), re.M)
+          ))
+          # A regex that matches nothing would install nothing and still exit 0.
+          if not names:
+              raise SystemExit(f"no LOAD statements found in {init} — the parse broke, not the SQL")
+          print(f"{init} LOADs: {', '.join(names)}")
+
+          con = duckdb.connect()
+          for name in names:
+              # Community first, then core: `INSTALL fts FROM community` is an
+              # HTTP 404 (measured), and the five others are community-only.
+              for statement in (f"INSTALL {name} FROM community", f"INSTALL {name}"):
+                  try:
+                      con.execute(statement)
+                  except Exception as exc:
+                      last = exc
+                      continue
+                  # LOAD is the positive evidence. A downloaded file is not a
+                  # working extension.
+                  con.execute(f"LOAD {name}")
+                  print(f"  ok  {statement}")
+                  break
+              else:
+                  raise SystemExit(f"could not install {name}: {last}")
+          PY
+
+      - name: Run tests
+        env:
+          FLEDGLING_REPO_PATH: ${{ github.workspace }}/.fledgling-src
+        run: python -m pytest tests/ -q --junitxml=junit.xml
+
+      # A green pytest step is not a passing suite. `0 passed, 375 skipped` is
+      # green, and so is a run whose collection quietly shrank. This step reads
+      # the tallies back and fails on any of them:
+      #   skipped > 0  — the fledgling checkout went missing, so the tests that
+      #                  need it turned into skips instead of failures
+      #   tests < 350  — collection shrank (baseline 375)
+      - name: The gate must not pass vacuously
+        if: always()
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+
+          root = ET.parse("junit.xml").getroot()
+          suite = root if root.tag == "testsuite" else root.find("testsuite")
+          total, failures, errors, skipped = (
+              int(suite.get(k, 0)) for k in ("tests", "failures", "errors", "skipped")
+          )
+          print(f"tests={total} failures={failures} errors={errors} skipped={skipped}")
+
+          problems = []
+          if failures or errors:
+              problems.append(f"{failures} failed, {errors} errored")
+          if skipped:
+              problems.append(f"{skipped} skipped — expected 0; is .fledgling-src present?")
+          if total < 350:
+              problems.append(f"only {total} tests collected — expected ~375")
+          if problems:
+              raise SystemExit("gate failed: " + "; ".join(problems))
+          print("gate satisfied")
+          PY
