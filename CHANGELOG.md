@@ -1,5 +1,73 @@
 # Changelog
 
+## 0.9.1
+
+### Fixed — a clean `pip install squackit` could not boot its server (#21)
+
+`squackit mcp serve` died at `squackit/server.py:85` with
+`AttributeError: '_duckdb.DuckDBPyConnection' object has no attribute 'con'`,
+a message that named neither the cause nor the layer that produced it. The
+chain, measured end to end:
+
+1. fledgling's `load_extensions` issues a bare `LOAD` for each of `read_lines,
+   sitting_duck, markdown, duck_tails, fts` and never `INSTALL`
+   (`fledgling/connection.py:183`). An explicit `LOAD` does not autoinstall,
+   so an incomplete `~/.duckdb/extensions` cache makes it raise `IOException`.
+   That cache is empty on every fresh machine and on every CI runner.
+2. pluckit catches that broadly and substitutes a bare `duckdb.connect()`
+   (`pluckit/_context.py`), returning a `False` flag with it.
+3. `create_server` ignored the flag and read `.con` off the bare connection.
+
+`create_server` now installs that set first, on a throwaway connection, and
+rejects a degraded connection with a message that names the swallowed failure.
+Measured on an empty `~/.duckdb`: before, exit 1 with one traceback; after,
+exit 0, zero tracebacks, `Starting MCP server 'squackit'`, and the five
+extensions installed by the boot itself.
+
+**This was not an ast-pluckit API change.** `ast-pluckit>=0.15,<1.0` admits
+exactly one published version, 0.15.0, and 0.15.0 still returns the proxy
+whenever fledgling connects. `pip index versions ast-pluckit` tops out there.
+The trigger was environmental and no pin changed.
+
+**Correction to the record.** The squash commit message for #21 says the
+install must come first because "fledgling sandboxes by default and locks the
+configuration after setup". That claim was never measured, and commit
+`d502e7d` replaced it before the merge; the squash body was built from the
+concatenated commit messages, so the superseded paragraph landed on main
+anyway. The measured reason is different: `connect` → `configure` →
+`load_extensions` raises *during setup*, so `fledgling.connect` never returns
+and there is no fledgling connection left to install onto. The docstring at
+`server.py` carries the corrected version.
+
+### Added — CI runs the suite that was already here (#22)
+
+`.github/workflows/` held `release.yml` alone, so `gh pr checks` returned an
+empty list on every PR, and an empty list of gates reads exactly like a pass.
+The tests were never missing: 17 modules and 375 assertions, with nothing
+running any of them.
+
+`tests.yml` runs them on 3.11, 3.12 and 3.13. Three details are load-bearing:
+
+- **The DuckDB extensions are read out of fledgling's own init SQL** at the
+  resolved ref, never copied into the workflow. A copied list becomes a second
+  source of truth and goes stale silently.
+- **The fledgling checkout ref is derived from the installed wheel version**,
+  so the macros under test and the Python under test come from one release.
+- **The run ends with an explicit tally check.** `0 passed, 375 skipped` is
+  green, and without the fledgling checkout `conftest.requires_fledgling_source`
+  produces exactly that for 11 tests. The check fails on any skip, any failure
+  or error, and on fewer than 350 collected. Measured baselines: 375 passed /
+  0 skipped with the checkout, 8 failed / 11 skipped without it, and 29 failed
+  / 109 errors on a cold extension cache.
+
+### Known — `requires-python` claims 3.10, which does not work
+
+`squackit/defaults.py:12` imports `tomllib`, which is stdlib only from 3.11,
+so six test modules fail at collection on 3.10 while `pyproject.toml` still
+declares `requires-python = ">=3.10"`. The CI matrix starts at 3.11 and says
+why. Unfixed here.
+
+
 ## 0.9.0
 
 ### Added — structured output for programmatic callers (#18)
